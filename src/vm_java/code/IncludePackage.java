@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import vm_java.code.lib.VMPackage;
 import vm_java.context.VMContext;
+import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 
 /**
@@ -16,12 +17,13 @@ import vm_java.context.VMScope;
  */
 public class IncludePackage extends Statement {
 
-    public IncludePackage(VMContext pContext,Class<? extends VMPackage> pClass) {
+    public IncludePackage(VMContext pContext,Class<? extends VMPackage> pClass) throws VMExceptionOutOfMemory {
         super(pContext);
         mClass=pClass;
     }
 
     @Override
+	public
     void execute(VMScope scope) {
         try {
             VMPackage pkg = mClass.newInstance();

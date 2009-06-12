@@ -9,9 +9,9 @@ package vm_java.types;
  *
  * @author davidkamphausen
  */
-public class Class extends Module{
+public class Klass extends Module{
 
   
     
-  Class mParent;
+  Klass mParent;
 }

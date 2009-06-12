@@ -4,14 +4,19 @@
  */
 package vm_java.types;
 
+import vm_java.context.BasicObject;
+import vm_java.context.VMContext;
+import vm_java.context.VMExceptionOutOfMemory;
+
 /**
  *
  * @author davidkamphausen
  */
-public class ObjectName {
+public class ObjectName extends BasicObject {
 
-    public ObjectName(String pName) {
-        this.mName = pName;
+    public ObjectName(VMContext pContext,String string) throws VMExceptionOutOfMemory {
+    	super(pContext);
+        this.mName = string;
     }
 
     public String getName() {

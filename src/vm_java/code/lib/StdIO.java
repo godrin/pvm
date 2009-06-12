@@ -18,7 +18,7 @@ public class StdIO extends VMPackage {
     public void init() {
         addFunc("puts");
     }
-
+    
     public void puts(String i) {
         System.out.println(i);
     }

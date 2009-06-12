@@ -4,6 +4,7 @@
  */
 package vm_java.code;
 
+import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 
 /**
@@ -12,12 +13,13 @@ import vm_java.context.VMScope;
  */
 public class UserFunction extends Function {
 
-    UserFunction(Block pBlock) {
+    UserFunction(Block pBlock) throws VMExceptionOutOfMemory {
         super(pBlock.getContext());
         mBlock = pBlock;
     }
 
-    public void execute(VMScope pScope) {
+    @Override
+    public void execute(VMScope pScope) throws VMException {
         mBlock.execute(pScope);
     }
     Block mBlock;

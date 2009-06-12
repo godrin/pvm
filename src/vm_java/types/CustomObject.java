@@ -21,5 +21,5 @@ public class CustomObject {
   }
 
   Map<ObjectName,CustomObject> mObjects;
-  Class mClass;
+  Klass mClass;
 }

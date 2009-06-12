@@ -4,9 +4,17 @@
  */
 package vm_java.code;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import vm_java.context.BasicObject;
-import vm_java.context.VMScope;
 import vm_java.context.VMContext;
+import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.context.VMScope;
+import vm_java.types.ObjectName;
 
 /**
  *
@@ -14,20 +22,56 @@ import vm_java.context.VMContext;
  */
 public class FunctionCall extends Statement {
 
-    public FunctionCall(VMContext pContext, String pFuncName) {
+    public FunctionCall(VMContext pContext, String pFuncName) throws VMExceptionOutOfMemory {
         super(pContext);
 
-        mFuncName=pFuncName;
+        mFuncName = pFuncName;
     }
 
-    void execute(VMScope scope) {
-        BasicObject bo=scope.get(mFuncName);
-        if(bo instanceof Function)
-            {
-            Function f=(Function)bo;
-            f.execute(scope);
+    public FunctionCall(VMContext pContext, String pFuncName, Object[] pArgs) throws VMExceptionOutOfMemory {
+        super(pContext);
+        mFuncName = pFuncName;
+        List args = new ArrayList();
+        for (Object o : pArgs) {
+        	if(o instanceof BasicObject) {
+            args.add(o);
+        	}
+        	else {
+        		args.add(BasicObject.convert(pContext,o));
+        	}
+        }
+        mArgs = args;
+    }
+
+    public FunctionCall(VMContext pContext, String pFuncName, Collection<? extends BasicObject> pArgs) throws VMExceptionOutOfMemory {
+        super(pContext);
+
+        mFuncName = pFuncName;
+        mArgs = pArgs;
+    }
+
+    public void execute(VMScope scope)
+            throws VMException {
+        BasicObject bo = scope.get(mFuncName);
+        if (bo instanceof Function) {
+            Function f = (Function) bo;
+            VMScope subScope=new VMScope(scope,f);
+            
+
+            if (mArgs != null) {
+            	Map<String, BasicObject> map=f.assignParameters(mArgs);
+                for(Entry<String, BasicObject> entry:map.entrySet()) {
+                	if(entry.getValue() instanceof ObjectName) {
+                		map.put(entry.getKey(),scope.get((ObjectName)entry.getValue()));
+                	}
+                }
+                subScope.setArgs(map);
+            }
+            f.execute(subScope);
+        } else {
+            throw new VMException(this, mFuncName + " is not a valid funcName in scope " + scope);
         }
     }
-
     String mFuncName;
+    Collection<? extends BasicObject> mArgs;
 }

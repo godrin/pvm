@@ -4,22 +4,46 @@
  */
 package vm_java.context;
 
+import vm_java.types.VMString;
+
 /**
- *
+ * 
  * @author davidkamphausen
  */
 public class BasicObject {
 
-    public BasicObject(VMContext pContext) {
-        mContext = pContext;
-        mContext.add(this);
-    }
+	private final long BASICOBJECT_OVERHEAD = 8;
 
-    public VMContext getContext()
-            {
-        return mContext;
-    }
+	public BasicObject(VMContext pContext) throws VMExceptionOutOfMemory {
+		mContext = pContext;
+		mContext.add(this);
+	}
 
-    VMContext mContext;
-    static public BasicObject nil = null;
+	public VMContext getContext() {
+		return mContext;
+	}
+
+	VMContext mContext;
+	static public BasicObject nil = null;
+
+	long getMemoryUsage() {
+		return BASICOBJECT_OVERHEAD;
+	}
+
+	public static Object convert(VMContext context, Object o)
+			throws VMExceptionOutOfMemory {
+		if (o instanceof java.lang.String) {
+			VMString s = new VMString(context);
+			s.setContent((String) o);
+			return s;
+		}
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	public Object convertTo(Object pk) {
+		System.out.println("BASIC");
+		return null;
+	}
 }
