@@ -24,7 +24,7 @@ public class IncludePackage extends Statement {
 
     @Override
 	public
-    void execute(VMScope scope) {
+    Result execute(VMScope scope) {
         try {
             VMPackage pkg = mClass.newInstance();
             pkg.init();
@@ -34,6 +34,7 @@ public class IncludePackage extends Statement {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(IncludePackage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return Result.NONE;
     }
 
     Class<? extends VMPackage> mClass;

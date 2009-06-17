@@ -1,0 +1,6 @@
+def a(myvar)
+  sleep 0.2
+  puts myvar
+end
+~a("ARGH")
+puts "HELLO"

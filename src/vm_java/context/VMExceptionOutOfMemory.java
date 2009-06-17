@@ -4,7 +4,6 @@
  */
 package vm_java.context;
 
-import vm_java.code.VMException;
 
 /**
  *
@@ -12,7 +11,12 @@ import vm_java.code.VMException;
  */
 public class VMExceptionOutOfMemory extends Exception {
 
-    VMExceptionOutOfMemory() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	VMExceptionOutOfMemory() {
         super("Out of memory");
     }
 }

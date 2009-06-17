@@ -7,19 +7,28 @@ package vm_java.types;
 
 import java.util.Map;
 
+import vm_java.context.BasicObject;
+
 /**
- *
+ * 
  * @author davidkamphausen
  */
-public class CustomObject {
+public class CustomObject implements MemberContainer {
+	Map<ObjectName, BasicObject> mObjects;
+	Klass mClass;
 
+	public CustomObject assign(CustomObject pObject) {
 
-  public CustomObject assign(CustomObject pObject)
-          {
+		return this;
+	}
 
-      return this;
-  }
+	@Override
+	public BasicObject get(ObjectName objectName) {
+		return mObjects.get(objectName);
+	}
 
-  Map<ObjectName,CustomObject> mObjects;
-  Klass mClass;
+	@Override
+	public void set(ObjectName memberName, BasicObject r) {
+		mObjects.put(memberName,r);
+	}
 }

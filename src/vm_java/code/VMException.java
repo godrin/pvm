@@ -10,7 +10,11 @@ package vm_java.code;
  */
 public class VMException extends Exception {
 
-    private Statement mStatement;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Statement mStatement;
     private String what;
 
     public VMException(Statement aThis, String string) {

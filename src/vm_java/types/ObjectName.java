@@ -22,5 +22,10 @@ public class ObjectName extends BasicObject {
     public String getName() {
         return mName;
     }
+    
+    public boolean isInternal() {
+    	return mName.matches(":.*");
+    }
+    
     String mName;
 }

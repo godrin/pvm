@@ -1,0 +1,10 @@
+def hello
+  "hello"
+end
+
+def compute(a,b)
+  a+b
+end
+
+hello
+compute(1,2)

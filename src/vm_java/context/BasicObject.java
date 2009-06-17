@@ -4,6 +4,7 @@
  */
 package vm_java.context;
 
+import vm_java.types.VMInteger;
 import vm_java.types.VMString;
 
 /**
@@ -26,16 +27,20 @@ public class BasicObject {
 	VMContext mContext;
 	static public BasicObject nil = null;
 
-	long getMemoryUsage() {
+	public long getMemoryUsage() {
 		return BASICOBJECT_OVERHEAD;
 	}
 
-	public static Object convert(VMContext context, Object o)
+	public static BasicObject convert(VMContext context, Object o)
 			throws VMExceptionOutOfMemory {
 		if (o instanceof java.lang.String) {
 			VMString s = new VMString(context);
 			s.setContent((String) o);
 			return s;
+		} else if(o instanceof java.lang.Integer) {
+			VMInteger i= new VMInteger(context);
+			i.set((Integer)o);
+			return i;
 		}
 		// TODO Auto-generated method stub
 		return null;

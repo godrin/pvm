@@ -6,6 +6,8 @@ package vm_java.code;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import vm_java.code.Statement.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -32,9 +34,14 @@ public class Block extends BasicObject{
         statements.add(pStatement);
     }
 
-    void execute(VMScope pScope) throws VMException {
-        for(Statement s:statements)
-            s.execute(pScope);
+    Result execute(VMScope pScope) throws VMException {
+    	Result result;
+        for(Statement s:statements) {
+            result=s.execute(pScope);
+            if(result!=Result.NONE)
+            	return result;
+        }
+		return Result.NONE;
     }
 
 	public Statement getStatement(int currentLine) {

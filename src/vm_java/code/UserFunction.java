@@ -4,14 +4,18 @@
  */
 package vm_java.code;
 
+import vm_java.code.Statement.Result;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.Function;
+
 
 /**
  *
  * @author davidkamphausen
  */
 public class UserFunction extends Function {
+    Block mBlock;
 
     UserFunction(Block pBlock) throws VMExceptionOutOfMemory {
         super(pBlock.getContext());
@@ -19,8 +23,7 @@ public class UserFunction extends Function {
     }
 
     @Override
-    public void execute(VMScope pScope) throws VMException {
-        mBlock.execute(pScope);
+    public Result execute(VMScope pScope) throws VMException {
+        return mBlock.execute(pScope);
     }
-    Block mBlock;
 }

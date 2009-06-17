@@ -1,0 +1,18 @@
+block0=begin
+  parameter[0]="hello"
+  v0=VMString.new
+  return v0
+end
+self.addFunction(:hello,block0)
+block1=begin
+  v1=parameter[0]
+  v2=parameter[1]
+  parameter[0]=v2
+  v3=v1.run(:plus)
+  return v3
+end
+self.addFunction(:compute,block1)
+self.run(:hello)
+parameter[0]=1
+parameter[1]=2
+self.run(:compute)

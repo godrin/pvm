@@ -16,8 +16,6 @@ import vm_java.machine.Job;
 import vm_java.machine.Options;
 import vm_java.machine.Process;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
-
 /**
  * 
  * @author davidkamphausen
@@ -31,7 +29,7 @@ public class VM {
 
 	}
 
-	synchronized VMContext createContext() {
+	public synchronized VMContext createContext() {
 		VMContext c = new VMContext(this);
 		mContexts.add(c);
 		return c;

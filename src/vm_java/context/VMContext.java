@@ -6,10 +6,10 @@ package vm_java.context;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import vm_java.VM;
 import vm_java.code.Block;
 import vm_java.code.Program;
-import vm_java.code.VMException;
 import vm_java.types.ObjectName;
 
 /**
@@ -19,6 +19,9 @@ import vm_java.types.ObjectName;
 public class VMContext {
 
     private final long MAX_MEMORY = 1024 * 1024;
+    
+    // TODO: maybe eleminate this array ???
+    // so that GC does collect !!!
     private List<BasicObject> mObjects;
     private VM mVM;
     private long mMaxMemory;
@@ -63,6 +66,12 @@ public class VMContext {
 
 	public ObjectName intern(String string) throws VMExceptionOutOfMemory {
 		ObjectName on=new ObjectName(this,string);
+		add(on);
+		return on;
+	}
+
+	public ObjectName internal(String string) throws VMExceptionOutOfMemory {
+		ObjectName on=new ObjectName(this,":"+string);
 		add(on);
 		return on;
 	}

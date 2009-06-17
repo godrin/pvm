@@ -11,7 +11,12 @@ package vm_java.code.lib;
  */
 class MethodNotFoundException extends Exception{
 
-    public MethodNotFoundException(String mName, VMPackage aThis) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public MethodNotFoundException(String mName, VMPackage aThis) {
     }
 
 }

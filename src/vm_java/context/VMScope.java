@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import vm_java.code.Block;
-import vm_java.code.Function;
+import vm_java.types.Function;
 import vm_java.code.Statement;
 import vm_java.code.lib.VMPackage;
 import vm_java.types.ObjectName;
@@ -26,6 +25,10 @@ public class VMScope {
     VMScope mParentScope;
     VMContext mContext;
     Map<String, BasicObject> mArgs = null;
+    /** return value of this block. */
+    BasicObject mReturn=null;
+    /** return value of last function call */
+    BasicObject mLastReturn=null;
 
     public VMScope(VMContext pContext) {
         mContext = pContext;
@@ -36,6 +39,14 @@ public class VMScope {
     	mParentScope = scope;
 		// TODO Auto-generated constructor stub
 	}
+    
+    public void setReturn(BasicObject pReturn) {
+    	mReturn=pReturn;
+    }
+    
+    public BasicObject getReturn() {
+    	return mReturn;
+    }
 
 	public BasicObject get(String name) {
         BasicObject ret = null;
@@ -88,4 +99,20 @@ public class VMScope {
 	public void put(ObjectName objectName, BasicObject value) {
 		mReferences.put(objectName.getName(), value);
 	}
+
+	/**
+	 * @return the mLastReturn
+	 */
+	public synchronized final BasicObject getLastReturn() {
+		return mLastReturn;
+	}
+
+	/**
+	 * @param lastReturn the mLastReturn to set
+	 */
+	public synchronized final void setLastReturn(BasicObject lastReturn) {
+		mLastReturn = lastReturn;
+	}
+	
+	
 }

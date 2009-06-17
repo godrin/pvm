@@ -14,6 +14,8 @@ public class Options {
 	public static final long KB = 1024;
 	public static final long MB = 1024 * KB;
 	public static final long GB = 1024 * MB;
+	
+	public static final int GRANULARITY_MS = 10; 
 
 	public static synchronized Options getInstance() {
 		if (mInstance == null)
@@ -22,7 +24,7 @@ public class Options {
 	}
 
 	private Options() {
-		threadCount = 2;
+		threadCount = 4;
 		maxTotalMemory = 512 * MB;
 		maxMemoryPerProgram = 128 * MB;
 		maxPrograms = 16;

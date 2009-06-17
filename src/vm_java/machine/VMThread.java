@@ -25,16 +25,35 @@ public class VMThread extends Thread {
 			getJob();
 			if(job==null)
 			{
+				try {
+					Thread.sleep(Options.GRANULARITY_MS);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				continue;
 			}
-			Statement statement=job.getNextStatement();
+			long startTime=System.currentTimeMillis();
+			long endTime=startTime;
 			VMScope scope=job.getScope();
-			try {
-				statement.execute(scope);
-			} catch (VMException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			do {
+				Statement statement=job.getNextStatement();
+				if(statement==null)
+					break;
+				
+				try {
+					statement.execute(scope);
+				} catch (VMException e) {
+					//FIXME: implement exceptions !!!
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				
+				endTime=System.currentTimeMillis();
+			}while((endTime-startTime)<Options.GRANULARITY_MS);
+			System.out.println("ONE RUN:"+(endTime-startTime));
 			
 			putJob();
 		}

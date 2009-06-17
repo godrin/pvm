@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import vm_java.code.Function;
+
 import vm_java.context.BasicObject;
+import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.context.VMContext;
+import vm_java.types.Function;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class VMPackage {
 		}
 
 		@Override
-		public void execute(VMScope pScope) {
+		public vm_java.code.Statement.Result execute(VMScope pScope) {
 			try {
 				System.out.println("PackageFunction");
 				Method method = getMethod();
@@ -42,10 +43,10 @@ public class VMPackage {
 				Map<String, BasicObject> args = pScope.getFuncCallArgs();
 				Collection<?> margs = convertArgs(args);
 				Object[] os = new Object[(margs.size())];
-				Class[] pklasses = method.getParameterTypes();
+				Class<?>[] pklasses = method.getParameterTypes();
 				int i = 0;
 				for (Object o : margs) {
-					Class pk = pklasses[i];
+					Class<?> pk = pklasses[i];
 					if (!pk.isInstance(o)) {
 						if (o instanceof BasicObject) {
 							BasicObject bo = (BasicObject) o;
@@ -76,6 +77,8 @@ public class VMPackage {
 				Logger.getLogger(VMPackage.class.getName()).log(Level.SEVERE,
 						null, ex);
 			}
+			//FIXME
+			return vm_java.code.Statement.Result.NONE;
 
 		}
 
@@ -91,7 +94,7 @@ public class VMPackage {
 			if (!mFunctions.contains(mName))
 				throw new MethodNotFoundException(mName, VMPackage.this);
 
-			Class klass = VMPackage.this.getClass();
+			Class<? extends VMPackage> klass = VMPackage.this.getClass();
 
 			Method[] methods = klass.getMethods();
 

@@ -4,7 +4,6 @@
  */
 package vm_java.code.lib;
 
-import vm_java.context.VMContext;
 
 /**
  *
@@ -17,9 +16,21 @@ public class StdIO extends VMPackage {
 
     public void init() {
         addFunc("puts");
+        addFunc("sleep");
     }
     
     public void puts(String i) {
         System.out.println(i);
+    }
+    
+    /**
+     * TODO
+     * This one should not be used, because control should be given back to
+     * VMThread instead, so that other things can be done
+     * @param i
+     * @throws InterruptedException
+     */
+    public void sleep(Integer i) throws InterruptedException {
+    	Thread.sleep(i);
     }
 }

@@ -3,11 +3,9 @@ package vm_java.machine;
 import vm_java.VM;
 
 public class Process {
-	private VM vm;
 	private VMThread thread;
 
 	public Process(VM pVm) {
-		vm=pVm;
 		thread=new VMThread(pVm);
 	}
 	
