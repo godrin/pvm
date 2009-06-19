@@ -15,9 +15,9 @@ import vm_java.types.Function;
  * @author davidkamphausen
  */
 public class UserFunction extends Function {
-    Block mBlock;
+    CodeBlock mBlock;
 
-    UserFunction(Block pBlock) throws VMExceptionOutOfMemory {
+    UserFunction(CodeBlock pBlock) throws VMExceptionOutOfMemory {
         super(pBlock.getContext());
         mBlock = pBlock;
     }

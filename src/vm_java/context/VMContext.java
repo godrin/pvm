@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.VM;
-import vm_java.code.Block;
+import vm_java.code.CodeBlock;
 import vm_java.code.Program;
 import vm_java.types.ObjectName;
 
@@ -34,13 +34,13 @@ public class VMContext {
         mLastCheckedMemorySize = 0;
     }
 
-    public Block createBlock() throws VMExceptionOutOfMemory {
-        Block b = new Block(this);
+    public CodeBlock createBlock() throws VMExceptionOutOfMemory {
+        CodeBlock b = new CodeBlock(this);
         add(b);
         return b;
     }
 
-    public Program createProgram(Block pBlock) throws VMExceptionOutOfMemory {
+    public Program createProgram(CodeBlock pBlock) throws VMExceptionOutOfMemory {
         Program p = new Program(this, pBlock);
         add(p);
         return p;

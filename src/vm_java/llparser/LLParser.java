@@ -11,7 +11,7 @@ import java.util.TreeMap;
 
 import vm_java.VM;
 import vm_java.code.Assignment;
-import vm_java.code.Block;
+import vm_java.code.CodeBlock;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.DoReturn;
 import vm_java.code.FunctionCall;
@@ -39,7 +39,7 @@ public class LLParser {
 		}
 	}
 
-	private List<Block> blocks = new ArrayList<Block>();
+	private List<CodeBlock> blocks = new ArrayList<CodeBlock>();
 	private List<Rule> rules = new ArrayList<Rule>();
 	private Map<String, BasicObject> parameters = new TreeMap<String, BasicObject>();
 	private VMContext mContext;
@@ -53,7 +53,7 @@ public class LLParser {
 
 	public void startBlock(Result var, Result assign, Result begin)
 			throws VMExceptionOutOfMemory {
-		Block block = new Block(mContext);
+		CodeBlock block = new CodeBlock(mContext);
 
 		mScope.put(var.string, block);
 		blocks.add(block);
@@ -91,9 +91,9 @@ public class LLParser {
 	}
 	
 	public void assignFromParameter(Result var,Result assign,Result parameter) {
-		lastBlock().add(new AssignFromParameter(mContext,
+		/*lastBlock().add(new AssignFromParameter(mContext,
 				var.string,parameter.string
-				))
+				))*/
 	}
 
 
@@ -117,7 +117,7 @@ public class LLParser {
 		
 	}
 
-	private Block lastBlock() {
+	private CodeBlock lastBlock() {
 		return blocks.get(blocks.size() - 1);
 	}
 
@@ -132,7 +132,7 @@ public class LLParser {
 		LineLexer2 ll = new LineLexer2();
 		
 		
-		Block block = new Block(mContext);
+		CodeBlock block = new CodeBlock(mContext);
 
 		program=new Program(mContext,block);
 		blocks.add(block);

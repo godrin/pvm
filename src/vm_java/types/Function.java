@@ -11,7 +11,7 @@ import java.util.TreeMap;
 
 import javax.naming.Context;
 
-import vm_java.code.Block;
+import vm_java.code.CodeBlock;
 import vm_java.code.Statement;
 import vm_java.code.VMException;
 import vm_java.code.Statement.Result;
@@ -31,7 +31,7 @@ public class Function extends BasicObject {
 	}
 
 	Map<ObjectName, Object> mArgs;
-	Block mBlock;
+	CodeBlock mBlock;
 
 	public BasicObject execute(VMContext context, Arguments args) {
 		// TODO Auto-generated method stub

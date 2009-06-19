@@ -6,7 +6,7 @@
 package vm_java;
 
 import vm_java.code.Assignment;
-import vm_java.code.Block;
+import vm_java.code.CodeBlock;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.FunctionCall;
 import vm_java.code.IncludePackage;
@@ -35,7 +35,7 @@ public class Main {
 
       VMContext context=vm.createContext();
 
-      Block block=context.createBlock();
+      CodeBlock block=context.createBlock();
 
       block.add(new IncludePackage(context,StdIO.class));
       block.add(new FunctionCall(context,"puts", new String[]{"MUUkjhsdfUU"}));

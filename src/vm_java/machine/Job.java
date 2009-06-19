@@ -1,6 +1,6 @@
 package vm_java.machine;
 
-import vm_java.code.Block;
+import vm_java.code.CodeBlock;
 import vm_java.code.Program;
 import vm_java.code.Statement;
 import vm_java.context.VMContext;
@@ -9,7 +9,7 @@ import vm_java.context.VMScope;
 public class Job {
 
 	VMContext context;
-	Block block;
+	CodeBlock block;
 	VMScope scope;
 	int currentLine;
 

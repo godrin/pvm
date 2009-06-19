@@ -15,9 +15,9 @@ import vm_java.context.VMContext;
  */
 public class Program extends BasicObject{
 
-    private Block mBlock;
+    private CodeBlock mBlock;
 
-    public Program(VMContext pContext,Block pBlock) throws VMExceptionOutOfMemory {
+    public Program(VMContext pContext,CodeBlock pBlock) throws VMExceptionOutOfMemory {
         super(pContext);
         mBlock=pBlock;
     }
@@ -26,7 +26,7 @@ public class Program extends BasicObject{
         mBlock.execute(pScope);
     }
 
-	public Block getBlock() {
+	public CodeBlock getBlock() {
 		return mBlock;
 	}
 }

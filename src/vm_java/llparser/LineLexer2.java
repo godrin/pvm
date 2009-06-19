@@ -14,22 +14,23 @@ public class LineLexer2 {
 		BEGIN, END, TYPE, PARAMETER,
 		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
 		//BRACKETS_OPEN, BRACKETS_CLOSE, 
-		BRACES_OPEN, BRACES_CLOSE, COMMA
+		BRACES_OPEN, BRACES_CLOSE, COMMA,
+		EOF
 	};
 
-	class Lex {
+	public static class Lex {
 		String pattern;
 		SYMBOLS symbol;
 		Pattern pat;
 
-		Lex(String p, SYMBOLS sym) {
+		public Lex(String p, SYMBOLS sym) {
 			pattern = p;
 			symbol = sym;
 			pat = Pattern.compile("(" + pattern + ")(.*)", Pattern.MULTILINE);
 		}
 	}
 
-	public class Result {
+	public static class Result {
 		Lex lex;
 		String string;
 
@@ -54,8 +55,8 @@ public class LineLexer2 {
 		add("end", SYMBOLS.END);
 		add("return", SYMBOLS.RETURN);
 		add("parameter\\[[0-9]*\\]",SYMBOLS.PARAMETER);
-		add("[a-z][a-zA-Z0-9_]*", SYMBOLS.VAR);
-		add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
+		add("[a-zA-Z][a-zA-Z0-9_]*", SYMBOLS.VAR);
+		//add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
 		add("==", SYMBOLS.EQUAL);
 		add("=", SYMBOLS.ASSIGN);
 		add("\\.", SYMBOLS.DOT);
@@ -120,10 +121,15 @@ public class LineLexer2 {
 
 		return content;
 	}
+	
+	public static void output(Result r) {
+		System.out.print(r.lex.symbol + "(" + r.string + ") ");
+		
+	}
 
 	public static void output(List<Result> results) {
 		for (Result r : results) {
-			System.out.print(r.lex.symbol + "(" + r.string + ") ");
+			output(r);
 		}
 		System.out.println();
 	}

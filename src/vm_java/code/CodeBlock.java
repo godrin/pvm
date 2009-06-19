@@ -17,11 +17,11 @@ import vm_java.context.VMContext;
  *
  * @author davidkamphausen
  */
-public class Block extends BasicObject{
+public class CodeBlock extends BasicObject{
     List<Statement> statements;
     private boolean isFinal=false;
 
-    public Block(VMContext pContext) throws VMExceptionOutOfMemory {
+    public CodeBlock(VMContext pContext) throws VMExceptionOutOfMemory {
         super(pContext);
 
         statements=new ArrayList<Statement>();
