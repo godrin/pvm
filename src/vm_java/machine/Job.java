@@ -2,7 +2,7 @@ package vm_java.machine;
 
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;
-import vm_java.code.Statement;
+import vm_java.code.CodeStatement;
 import vm_java.context.VMContext;
 import vm_java.context.VMScope;
 
@@ -21,8 +21,8 @@ public class Job {
 		// TODO Auto-generated constructor stub
 	}
 	
-	Statement getNextStatement() {
-		Statement statement= block.getStatement(currentLine);
+	CodeStatement getNextStatement() {
+		CodeStatement statement= block.getStatement(currentLine);
 		currentLine +=1;
 		return statement;
 	}

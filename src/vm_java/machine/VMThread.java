@@ -1,9 +1,11 @@
 package vm_java.machine;
 
 import vm_java.VM;
-import vm_java.code.Statement;
+import vm_java.code.CodeStatement;
 import vm_java.code.VMException;
+import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.VMExceptionFunctionNotFound;
 
 public class VMThread extends Thread {
 	
@@ -38,7 +40,7 @@ public class VMThread extends Thread {
 			VMScope scope=job.getScope();
 			
 			do {
-				Statement statement=job.getNextStatement();
+				CodeStatement statement=job.getNextStatement();
 				if(statement==null)
 					break;
 				
@@ -46,6 +48,12 @@ public class VMThread extends Thread {
 					statement.execute(scope);
 				} catch (VMException e) {
 					//FIXME: implement exceptions !!!
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (VMExceptionOutOfMemory e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (VMExceptionFunctionNotFound e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

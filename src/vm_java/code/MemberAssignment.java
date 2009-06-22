@@ -1,5 +1,6 @@
 package vm_java.code;
 
+import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -9,7 +10,7 @@ import vm_java.types.ObjectName;
 
 
 // TODO: merge with Assignment
-public class MemberAssignment extends Statement {
+public class MemberAssignment extends CodeStatement {
 
 	ObjectName lObject, lMember;
 	ObjectName rObject, rMember;
@@ -25,7 +26,7 @@ public class MemberAssignment extends Statement {
 	}
 
 	@Override
-	public Result execute(VMScope scope) throws VMException {
+	public IntermedResult execute(VMScope scope) throws VMException {
 		BasicObject l=scope.get(lObject);
 		BasicObject r=scope.get(rObject);
 		if(rMember!=null) {
@@ -36,12 +37,13 @@ public class MemberAssignment extends Statement {
 		if(lMember!=null) {
 			if(l instanceof MemberContainer) {
 				((MemberContainer)l).set(lMember,r);
+				return new IntermedResult(lMember,Result.NONE);
 			} else {
 				throw new VMException(this, "l is not member container");
 			}
 		} else {
 			scope.put(lObject, r);
+			return new IntermedResult(lObject,Result.NONE);
 		}
-		return null;
 	}
 }

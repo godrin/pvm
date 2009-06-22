@@ -5,9 +5,14 @@
 
 package vm_java.types;
 
+import java.util.List;
+
+import vm_java.code.IntermedResult;
+import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.context.VMScope;
 
 /**
  * 
@@ -23,19 +28,31 @@ public class Klass extends Module {
 	BasicObject create() {
 		return BasicObject.nil;
 	}
+	
+	public BasicObject get(ObjectName name) {
+		BasicObject o=super.get(name);
+		if(o==null) {
+			if(mParent!=null) {
+				o=mParent.get(name);
+			}
+		}
+		return o;
+	}
 
-	BasicObject send(ObjectName pName, Arguments pArgs)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
+
+	/*
+	IntermedResult send(VMScope scope,ObjectName pName, List<ObjectName> pArgs)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
 		try {
-			BasicObject ret = super.send(pName, pArgs);
+			IntermedResult ret = super.send(scope,pName, pArgs);
 
 			return ret;
 		} catch (VMExceptionFunctionNotFound e) {
 			if (mParent != null) {
-				return mParent.send(pName, pArgs);
+				return mParent.send(scope, pName, pArgs);
 			}
 			throw e;
 		}
-	}
+	}*/
 
 }

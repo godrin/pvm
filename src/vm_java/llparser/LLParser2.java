@@ -6,20 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.VM;
+import vm_java.code.BlockIsFinalException;
+import vm_java.code.Program;
+import vm_java.code.VMException;
+import vm_java.code.lib.StdIO;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.context.VMScope;
 import vm_java.llparser.LineLexer2.Lex;
 import vm_java.llparser.LineLexer2.Result;
 import vm_java.llparser.LineLexer2.SYMBOLS;
+import vm_java.llparser.ast.ASTProgram;
 import vm_java.llparser.ast.ASTString;
 import vm_java.llparser.ast.Assign;
-import vm_java.llparser.ast.ParsedBlock;
-import vm_java.llparser.ast.Function;
 import vm_java.llparser.ast.MethodCall;
-import vm_java.llparser.ast.Program;
+import vm_java.llparser.ast.ParsedBlock;
+import vm_java.llparser.ast.ParsedFunction;
 import vm_java.llparser.ast.RValue;
 import vm_java.llparser.ast.Statement;
 import vm_java.llparser.ast.Var;
+import vm_java.types.VMExceptionFunctionNotFound;
 
 public class LLParser2 {
 
@@ -44,13 +50,13 @@ public class LLParser2 {
 		lexer = new LineLexer2();
 	}
 
-	Program parse(String content) throws ParseError {
+	ASTProgram parse(String content) throws ParseError {
 		for (String line : content.split("\n")) {
 			lines.add(line);
 		}
-		Program program = new Program();
+		ASTProgram program = new ASTProgram();
 		ParsedBlock block = new ParsedBlock();
-		program.add(block);
+		program.setBlock(block);
 		fetchToken();
 		while (mResult != null) {
 			Statement s = parseLine();
@@ -100,6 +106,8 @@ public class LLParser2 {
 				s = parseAssign(v);
 			} else if (t == SYMBOLS.DOT) {
 				s = parseMemberAccess(v);
+			} else if (t == SYMBOLS.BRACES_OPEN) {
+				s = parseFunctionCall(v);
 			} else {
 				parseError();
 			}
@@ -115,6 +123,12 @@ public class LLParser2 {
 		else
 			fetchToken();
 		return s;
+	}
+
+	private Statement parseFunctionCall(Var v) throws ParseError {
+		List<Var> ps = parseParameters();
+		fetchToken();
+		return new MethodCall(null,v,ps);
 	}
 
 	private Statement parseMemberAccess(Var v) throws ParseError {
@@ -195,7 +209,7 @@ public class LLParser2 {
 
 	}
 
-	private Function parseBegin() throws ParseError {
+	private ParsedFunction parseBegin() throws ParseError {
 		assertTrue(token() == SYMBOLS.BEGIN);
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.BRACES_OPEN) {
@@ -204,7 +218,7 @@ public class LLParser2 {
 
 			t = fetchToken();
 			if (t == SYMBOLS.NEWLINE) {
-				return new Function(parameters, parseBlock());
+				return new ParsedFunction(parameters, parseBlock());
 			} else {
 				parseError();
 			}
@@ -265,16 +279,22 @@ public class LLParser2 {
 	}
 
 	public static void main(String[] args) throws IOException,
-			VMExceptionOutOfMemory, ParseError {
+			VMExceptionOutOfMemory, ParseError, BlockIsFinalException,
+			VMException, VMExceptionFunctionNotFound {
 		VM vm = new VM();
+		VMContext vmc = vm.createContext();
 
-		LLParser2 lp = new LLParser2(vm.createContext());
+		LLParser2 lp = new LLParser2(vmc);
 		String curDir = System.getProperty("user.dir");
 		System.out.println(curDir);
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				+ "very_simple.pvm";
 		String content = LineLexer2.loadFile(fn);
-		lp.parse(content);
+		ASTProgram astP = lp.parse(content);
+		Program prg = astP.instantiate(vmc);
+		VMScope scope = vmc.createScope();
+		scope.addPackage(new StdIO(vmc));
+		prg.execute(scope);
 	}
 }

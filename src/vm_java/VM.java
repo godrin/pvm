@@ -11,6 +11,7 @@ import java.util.Queue;
 
 import vm_java.code.Program;
 import vm_java.context.VMContext;
+import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Job;
 import vm_java.machine.Options;
@@ -43,7 +44,7 @@ public class VM {
 		return s;
 	}
 
-	public void run(Program program) {
+	public void run(Program program) throws VMExceptionOutOfMemory {
 		VMScope scope = new VMScope(program.getContext());
 		addJob(new Job(program, scope));
 

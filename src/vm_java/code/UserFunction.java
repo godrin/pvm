@@ -4,26 +4,43 @@
  */
 package vm_java.code;
 
-import vm_java.code.Statement.Result;
+import java.util.List;
+
+import vm_java.context.BasicObject;
+import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.Function;
-
+import vm_java.types.ObjectName;
+import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
- *
+ * 
  * @author davidkamphausen
  */
+@Deprecated
 public class UserFunction extends Function {
-    CodeBlock mBlock;
+	CodeBlock mBlock;
+	List<ObjectName> mArgs;
 
-    UserFunction(CodeBlock pBlock) throws VMExceptionOutOfMemory {
-        super(pBlock.getContext());
-        mBlock = pBlock;
-    }
+	public UserFunction(VMContext pContext, CodeBlock pBlock,
+			List<ObjectName> pArgs) throws VMExceptionOutOfMemory {
+		super(pContext);
+		mBlock = pBlock;
+		mArgs = pArgs;
+	}
 
-    @Override
-    public Result execute(VMScope pScope) throws VMException {
-        return mBlock.execute(pScope);
-    }
+	@Override
+	public IntermedResult runFunction(VMScope scope, List<? extends BasicObject> args)
+			throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+		VMScope subScope = new VMScope(scope, this);
+		int i=0;
+		
+		for(;i<args.size();i++) {
+			subScope.put(mArgs.get(i), args.get(i));
+		}
+
+		IntermedResult res=mBlock.execute(subScope);
+		return res;
+	}
 }

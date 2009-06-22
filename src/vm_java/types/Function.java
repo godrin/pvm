@@ -5,16 +5,11 @@
 
 package vm_java.types;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.List;
 
-import javax.naming.Context;
-
-import vm_java.code.CodeBlock;
-import vm_java.code.Statement;
+import vm_java.code.CodeExpression;
+import vm_java.code.IntermedResult;
 import vm_java.code.VMException;
-import vm_java.code.Statement.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -24,24 +19,13 @@ import vm_java.context.VMScope;
  * 
  * @author davidkamphausen
  */
-public class Function extends BasicObject {
-
-	public BasicObject execute(Context pContext) {
-		return BasicObject.nil;
-	}
-
-	Map<ObjectName, Object> mArgs;
-	CodeBlock mBlock;
-
-	public BasicObject execute(VMContext context, Arguments args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+public abstract class Function extends BasicObject implements CodeExpression {
 
 	public Function(VMContext pContext) throws VMExceptionOutOfMemory {
 		super(pContext);
 	}
 
+	/*
 	public Map<String, BasicObject> assignParameters(
 			Collection<? extends BasicObject> pArgs) {
 		Map<String, BasicObject> map = new TreeMap<String, BasicObject>();
@@ -53,11 +37,13 @@ public class Function extends BasicObject {
 		}
 
 		return map;
-	}
+	}*/
+	
+    public abstract IntermedResult runFunction(VMScope pScope,List<? extends BasicObject> args) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
 
-	public Statement.Result execute(VMScope pScope) throws VMException {
-		// FIXME
-		// TODO
-		return Result.NONE;
+	
+	@Override
+	public IntermedResult compute(VMScope scope) {
+		return new IntermedResult(this,vm_java.code.IntermedResult.Result.NONE);
 	}
 }

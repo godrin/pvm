@@ -4,50 +4,48 @@
  */
 package vm_java.code;
 
+import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.ObjectName;
+import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class Assignment extends Statement {
-	public static final int LAST_RETURN = 11;
-	public static final int RVALUE = 12;
-
+public class Assignment extends CodeStatement {
 	private ObjectName objectName;
 	private BasicObject rValue;
-	private int whatToDo;
 
-	Assignment(VMContext pContext) throws VMExceptionOutOfMemory {
-		super(pContext);
-	}
-
-	@Deprecated
 	public Assignment(VMContext context, ObjectName on, BasicObject bo)
 			throws VMExceptionOutOfMemory {
 		super(context);
 		objectName = on;
 		rValue = bo;
-		whatToDo = RVALUE;
 	}
 
-	public Assignment(VMContext context, ObjectName on, int pWhatToDo)
-			throws VMExceptionOutOfMemory {
-		super(context);
-		objectName = on;
-		whatToDo = pWhatToDo;
-	}
+	/*
+	 * public Assignment(VMContext context, ObjectName name, CodeExpression
+	 * instantiate) throws VMExceptionOutOfMemory { super(context);
+	 * objectName=name; rValue=null; rExpression=instantiate; }
+	 */
+	public IntermedResult execute(VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
+		BasicObject bo;
+		if (rValue instanceof CodeExpression) {
+			CodeExpression rExpression = (CodeExpression) rValue;
 
-	public Result execute(VMScope scope) {
-		if (whatToDo == LAST_RETURN) {
-			scope.put(objectName, scope.getLastReturn());
-		} else if (whatToDo == RVALUE) {
-			scope.put(objectName, rValue);
+			IntermedResult res = rExpression.compute(scope);
+			if (!res.exception())
+				bo = res.content();
+			else
+				return res;
+		} else {
+			bo = rValue;
 		}
-		return Result.NONE;
+		scope.put(objectName, bo);
+		return new IntermedResult(bo, Result.NONE);
 	}
 }

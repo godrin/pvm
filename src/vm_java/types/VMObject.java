@@ -3,9 +3,11 @@ package vm_java.types;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.runtime.MemberFunction;
 
 public class VMObject extends BasicObject {
 	private Klass mKlass;
@@ -20,9 +22,27 @@ public class VMObject extends BasicObject {
 		return mKlass;
 	}
 
-	public BasicObject send(ObjectName funcName, Arguments args)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
-		return mKlass.send(funcName, args);
+	/*
+	public IntermedResult send(VMScope scope,ObjectName funcName, List<ObjectName> args)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
+		return mKlass.send(scope,funcName, args);
 	}
-
+*/
+	
+	public BasicObject get(ObjectName name) {
+		BasicObject o=data.get(name);
+		if(o==null) {
+			o=mKlass.get(name);
+		}
+		return o;
+	}
+	
+	public MemberFunction getFunction(ObjectName name) throws VMException {
+		
+		BasicObject bo=get(name);
+		if(bo instanceof Function) {
+			return new MemberFunction(this,(Function)bo);
+		}
+		return null;
+	}
 }

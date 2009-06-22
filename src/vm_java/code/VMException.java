@@ -14,10 +14,10 @@ public class VMException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Statement mStatement;
+	private CodeStatement mStatement;
     private String what;
 
-    public VMException(Statement aThis, String string) {
+    public VMException(CodeStatement aThis, String string) {
         mStatement = aThis;
         what = string;
     }

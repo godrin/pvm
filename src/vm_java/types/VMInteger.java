@@ -3,6 +3,7 @@ package vm_java.types;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.context.VMScope;
 
 public class VMInteger extends BasicObject {
 	Integer i=null;
@@ -19,7 +20,7 @@ public class VMInteger extends BasicObject {
 		return i;
 	}
 	
-	public Object convertTo(Object pk) {
+	public Object convertToJava(Object pk,VMScope scope) {
 		if (pk.equals(java.lang.Integer.class)) {
 			return i;
 		} 

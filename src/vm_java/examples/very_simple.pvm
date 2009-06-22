@@ -1,2 +1,2 @@
 hi="hello"
-self.run(:puts, hi)
+StdIO.puts(hi)

@@ -4,6 +4,11 @@
  */
 package vm_java.context;
 
+import vm_java.code.CodeExpression;
+import vm_java.code.IntermedResult;
+import vm_java.code.VMException;
+import vm_java.code.IntermedResult.Result;
+import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMInteger;
 import vm_java.types.VMString;
 
@@ -11,7 +16,7 @@ import vm_java.types.VMString;
  * 
  * @author davidkamphausen
  */
-public class BasicObject {
+public class BasicObject implements CodeExpression {
 
 	private final long BASICOBJECT_OVERHEAD = 8;
 
@@ -47,8 +52,16 @@ public class BasicObject {
 	}
 
 
-	public Object convertTo(Object pk) {
+	public Object convertToJava(Object pk,VMScope scope) {
 		System.out.println("BASIC");
+		System.out.println(this);
 		return null;
 	}
+
+	@Override
+	public IntermedResult compute(VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
+		return new IntermedResult(this,Result.NONE);
+	}
+
+	
 }

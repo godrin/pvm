@@ -38,15 +38,15 @@ public class Main {
       CodeBlock block=context.createBlock();
 
       block.add(new IncludePackage(context,StdIO.class));
-      block.add(new FunctionCall(context,"puts", new String[]{"MUUkjhsdfUU"}));
+      block.add(new FunctionCall(context,context.intern("puts"), new String[]{"MUUkjhsdfUU"}));
       
       ObjectName on=context.intern("myVar");
       VMString s=new VMString(context);
       s.setContent("someString");
       block.add(new Assignment(context,on,s));
-      block.add(new FunctionCall(context,"puts", new Object[]{on}));
-      block.add(new FunctionCall(context,"sleep", new Object[]{2000}));
-      block.add(new FunctionCall(context,"puts", new Object[]{on}));
+      block.add(new FunctionCall(context,context.intern("puts"), new Object[]{on}));
+      block.add(new FunctionCall(context,context.intern("sleep"), new Object[]{2000}));
+      block.add(new FunctionCall(context,context.intern("puts"), new Object[]{on}));
 
       Program program=context.createProgram(block);
 

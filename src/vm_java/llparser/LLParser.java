@@ -17,6 +17,7 @@ import vm_java.code.DoReturn;
 import vm_java.code.FunctionCall;
 import vm_java.code.MemberAssignment;
 import vm_java.code.Program;
+import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -45,7 +46,7 @@ public class LLParser {
 	private VMContext mContext;
 	private VMScope mScope;
 
-	public LLParser(VMContext pContext) {
+	public LLParser(VMContext pContext) throws VMExceptionOutOfMemory {
 		init();
 		mContext = pContext;
 		mScope = mContext.createScope();
@@ -55,10 +56,9 @@ public class LLParser {
 			throws VMExceptionOutOfMemory {
 		CodeBlock block = new CodeBlock(mContext);
 
-		mScope.put(var.string, block);
+		mScope.put(mContext.intern(var.string), block);
 		blocks.add(block);
 	}
-
 
 	public void assignString(Result parameter, Result assign, Result str)
 			throws VMExceptionOutOfMemory {
@@ -66,55 +66,66 @@ public class LLParser {
 		vms.setContent(str.string);
 		parameters.put(parameter.string, vms);
 	}
-	
+
 	public void assignFromCall(Result var, Result assign, Result klass,
-			Result dot, Result newp) throws BlockIsFinalException, VMExceptionOutOfMemory {
-		
-		lastBlock().add(new FunctionCall(mContext,newp.string));
-		lastBlock().add(new Assignment(mContext,mContext.intern(
-				var.string),Assignment.LAST_RETURN));
-	}
-	public void setReturn(Result ret,Result var) throws BlockIsFinalException, VMExceptionOutOfMemory {
-		lastBlock().add(new DoReturn(mContext,mContext.intern(var.string)));
-	}
-	
-	public void end(Result end) {
-		blocks.remove(blocks.size()-1);
-	}
-	
-	public void addFunction(Result pself,Result dot,Result addFunc,Result braceOpen,Result symbol,Result comma,Result block,
-	Result braceClose) throws BlockIsFinalException, VMExceptionOutOfMemory {
-		ObjectName self=mContext.internal("self");
-		lastBlock().add(new MemberAssignment(mContext,self,
-				mContext.intern(symbol.string.substring(1)),
-				mContext.intern(block.string)));
-	}
-	
-	public void assignFromParameter(Result var,Result assign,Result parameter) {
-		/*lastBlock().add(new AssignFromParameter(mContext,
-				var.string,parameter.string
-				))*/
+			Result dot, Result newp) throws BlockIsFinalException,
+			VMExceptionOutOfMemory, VMException {
+
+		lastBlock()
+				.add(
+						new Assignment(mContext, mContext.intern(var.string),
+								new FunctionCall(mContext, mContext
+										.intern(newp.string))));
 	}
 
+	public void setReturn(Result ret, Result var) throws BlockIsFinalException,
+			VMExceptionOutOfMemory, VMException {
+		lastBlock().add(new DoReturn(mContext, mContext.intern(var.string)));
+	}
+
+	public void end(Result end) {
+		blocks.remove(blocks.size() - 1);
+	}
+
+	public void addFunction(Result pself, Result dot, Result addFunc,
+			Result braceOpen, Result symbol, Result comma, Result block,
+			Result braceClose) throws BlockIsFinalException,
+			VMExceptionOutOfMemory, VMException {
+		ObjectName self = mContext.internal("self");
+		lastBlock().add(
+				new MemberAssignment(mContext, self, mContext
+						.intern(symbol.string.substring(1)), mContext
+						.intern(block.string)));
+	}
+
+	public void assignFromParameter(Result var, Result assign, Result parameter) {
+		/*
+		 * lastBlock().add(new AssignFromParameter(mContext,
+		 * var.string,parameter.string ))
+		 */
+	}
 
 	void init() {
 		add("startBlock", "VAR ASSIGN BEGIN BRACES_OPEN PARAMETER (COMMA ");
-		
+
 		add("startBlock", new SYMBOLS[] { SYMBOLS.VAR, SYMBOLS.ASSIGN,
 				SYMBOLS.BEGIN });
 		add("assignString", new SYMBOLS[] { SYMBOLS.PARAMETER, SYMBOLS.ASSIGN,
 				SYMBOLS.STRING });
-		add("assignFromCall", new SYMBOLS[]{SYMBOLS.VAR,SYMBOLS.ASSIGN,SYMBOLS.TYPE,SYMBOLS.DOT,SYMBOLS.VAR});
-		add("setReturn", new SYMBOLS[]{SYMBOLS.RETURN,SYMBOLS.VAR});
-		add("end", new SYMBOLS[]{SYMBOLS.END});
-		add("addFunction", new SYMBOLS[]{SYMBOLS.VAR, SYMBOLS.DOT, SYMBOLS.VAR, SYMBOLS.BRACES_OPEN,SYMBOLS.SYMBOL, SYMBOLS.COMMA,
-				SYMBOLS.VAR,SYMBOLS.BRACES_CLOSE});
-		
+		add("assignFromCall", new SYMBOLS[] { SYMBOLS.VAR, SYMBOLS.ASSIGN,
+				SYMBOLS.TYPE, SYMBOLS.DOT, SYMBOLS.VAR });
+		add("setReturn", new SYMBOLS[] { SYMBOLS.RETURN, SYMBOLS.VAR });
+		add("end", new SYMBOLS[] { SYMBOLS.END });
+		add("addFunction", new SYMBOLS[] { SYMBOLS.VAR, SYMBOLS.DOT,
+				SYMBOLS.VAR, SYMBOLS.BRACES_OPEN, SYMBOLS.SYMBOL,
+				SYMBOLS.COMMA, SYMBOLS.VAR, SYMBOLS.BRACES_CLOSE });
+
 		// PARAMETER(parameter[0]) ASSIGN(=) STRING("hello")
 	}
+
 	private void add(String methodName, String pattern) {
-		String[] pt=pattern.split(" ");
-		
+		String[] pt = pattern.split(" ");
+
 	}
 
 	private CodeBlock lastBlock() {
@@ -130,17 +141,15 @@ public class LLParser {
 		Program program = null;
 
 		LineLexer2 ll = new LineLexer2();
-		
-		
+
 		CodeBlock block = new CodeBlock(mContext);
 
-		program=new Program(mContext,block);
+		program = new Program(mContext, block);
 		blocks.add(block);
 
-		
 		for (String line : inStr.split("\n")) {
 			List<Result> result = ll.lex(line);
-			result=filterWhitespaces(result);
+			result = filterWhitespaces(result);
 			tryParseLine(result);
 		}
 
@@ -148,9 +157,9 @@ public class LLParser {
 	}
 
 	private List<Result> filterWhitespaces(List<Result> result) {
-		List<Result> l=new ArrayList<Result>();
-		for(Result r:result) {
-			if(r.lex.symbol!=SYMBOLS.WHITESPACE)
+		List<Result> l = new ArrayList<Result>();
+		for (Result r : result) {
+			if (r.lex.symbol != SYMBOLS.WHITESPACE)
 				l.add(r);
 		}
 		return l;
@@ -177,7 +186,7 @@ public class LLParser {
 					try {
 						Object[] rs = new Object[lineTokens.size()];
 						for (int i = 0; i < rs.length; i++) {
-								rs[i] = lineTokens.get(i);
+							rs[i] = lineTokens.get(i);
 						}
 						m.invoke(this, rs);
 						return;
@@ -213,7 +222,8 @@ public class LLParser {
 		return null;
 	}
 
-	public static void main(String[] args) throws IOException, VMExceptionOutOfMemory {
+	public static void main(String[] args) throws IOException,
+			VMExceptionOutOfMemory {
 		VM vm = new VM();
 
 		LLParser lp = new LLParser(vm.createContext());

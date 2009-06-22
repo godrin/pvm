@@ -4,6 +4,9 @@
  */
 package vm_java.code.lib;
 
+import vm_java.context.VMContext;
+import vm_java.context.VMExceptionOutOfMemory;
+
 
 /**
  *
@@ -11,7 +14,9 @@ package vm_java.code.lib;
  */
 public class StdIO extends VMPackage {
 
-    public StdIO() {
+    public StdIO(VMContext pContext) throws VMExceptionOutOfMemory {
+    	super(pContext);
+    	init();
     }
 
     public void init() {

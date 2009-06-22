@@ -6,7 +6,10 @@ package vm_java.code;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import vm_java.code.IntermedResult.Result;
 import vm_java.code.lib.VMPackage;
+import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -15,7 +18,7 @@ import vm_java.context.VMScope;
  *
  * @author davidkamphausen
  */
-public class IncludePackage extends Statement {
+public class IncludePackage extends CodeStatement {
 
     public IncludePackage(VMContext pContext,Class<? extends VMPackage> pClass) throws VMExceptionOutOfMemory {
         super(pContext);
@@ -24,7 +27,7 @@ public class IncludePackage extends Statement {
 
     @Override
 	public
-    Result execute(VMScope scope) {
+    IntermedResult execute(VMScope scope) throws VMExceptionOutOfMemory {
         try {
             VMPackage pkg = mClass.newInstance();
             pkg.init();
@@ -34,7 +37,7 @@ public class IncludePackage extends Statement {
         } catch (IllegalAccessException ex) {
             Logger.getLogger(IncludePackage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return Result.NONE;
+        return new IntermedResult(BasicObject.nil,Result.NONE);
     }
 
     Class<? extends VMPackage> mClass;

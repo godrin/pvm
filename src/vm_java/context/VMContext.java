@@ -7,6 +7,8 @@ package vm_java.context;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
+
 import vm_java.VM;
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;
@@ -53,7 +55,7 @@ public class VMContext {
         mObjects.add(pObject);
     }
 
-    public VMScope createScope() {
+    public VMScope createScope() throws VMExceptionOutOfMemory {
         return new VMScope(this);
     }
 
@@ -65,7 +67,9 @@ public class VMContext {
 	}
 
 	public ObjectName intern(String string) throws VMExceptionOutOfMemory {
-		ObjectName on=new ObjectName(this,string);
+		if(string==null)
+			return null;
+		ObjectName on=new ObjectName(this,"nv_"+string);
 		add(on);
 		return on;
 	}
@@ -75,5 +79,6 @@ public class VMContext {
 		add(on);
 		return on;
 	}
+	
 
 }
