@@ -7,17 +7,14 @@ package vm_java.code;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.types.Arguments;
-import vm_java.types.ObjectName;
 import vm_java.types.Function;
+import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**

@@ -6,7 +6,7 @@ import vm_java.code.VMException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
-public interface Statement {
+public interface ASTStatementInterface {
 
 	CodeStatement instantiate(VMContext context) throws VMExceptionOutOfMemory, BlockIsFinalException, VMException;
 

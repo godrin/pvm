@@ -1,9 +1,9 @@
 package vm_java.llparser.ast;
 
-public class Var extends AST {
+public class ASTVar extends AST {
 	public String name;
 
-	public Var(String pname) {
+	public ASTVar(String pname) {
 		name = pname;
 	}
 }

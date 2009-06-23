@@ -31,6 +31,7 @@ public class PackageFunction implements RuntimeFunction {
 
 	}
 
+	@Deprecated
 	public IntermedResult execute(VMScope pScope) throws VMExceptionOutOfMemory {
 		boolean ok = false;
 		Object result = null;
@@ -49,7 +50,7 @@ public class PackageFunction implements RuntimeFunction {
 					if (o instanceof BasicObject) {
 						BasicObject bo = (BasicObject) o;
 						Object tmp;
-						tmp = bo.convertToJava(pk,pScope);
+						tmp = bo.convertToJava(pk, pScope);
 						if (tmp != null)
 							o = tmp;
 					}
@@ -94,8 +95,8 @@ public class PackageFunction implements RuntimeFunction {
 	}
 
 	private Method getMethod() throws PackageMethodNotFoundException {
-		System.out.println("Searching:"+mName);
-		
+		System.out.println("Searching:" + mName);
+
 		if (!mPackage.getFunctions().contains(mName))
 			throw new PackageMethodNotFoundException(mName, mPackage);
 
@@ -127,7 +128,7 @@ public class PackageFunction implements RuntimeFunction {
 		System.out.println("PackageFunction");
 		Method method;
 		Object result = null;
-		boolean ok=false;
+		boolean ok = false;
 
 		try {
 			method = getMethod();
@@ -144,7 +145,7 @@ public class PackageFunction implements RuntimeFunction {
 						// is a basicobject
 						BasicObject bo = (BasicObject) o;
 						Object tmp;
-						tmp = bo.convertToJava(signaturKlass,scope);
+						tmp = bo.convertToJava(signaturKlass, scope);
 						if (tmp != null)
 							o = tmp;
 					}
@@ -170,9 +171,9 @@ public class PackageFunction implements RuntimeFunction {
 			e.printStackTrace();
 			throw new VMException(null, "Unimplemented");
 		}
-		
-		BasicObject bo=BasicObject.convert(scope.getContext(), result);
 
-		return new IntermedResult(bo,Result.NONE);
+		BasicObject bo = BasicObject.convert(scope.getContext(), result);
+
+		return new IntermedResult(bo, Result.NONE);
 	}
 }

@@ -1,12 +1,11 @@
 package vm_java.llparser.ast;
 
-import vm_java.code.CodeExpression;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.VMString;
 
-public class ASTString implements RV{
+public class ASTString implements ASTRightValue{
 	String s;
 
 	public ASTString(String string) {

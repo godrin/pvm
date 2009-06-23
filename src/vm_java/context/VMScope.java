@@ -4,23 +4,18 @@
  */
 package vm_java.context;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.CodeStatement;
+import vm_java.code.UserFunction;
+import vm_java.code.VMException;
+import vm_java.code.lib.VMPackage;
 import vm_java.runtime.MemberFunction;
 import vm_java.types.Function;
 import vm_java.types.Module;
-import vm_java.types.VMObject;
-import vm_java.code.CodeStatement;
-import vm_java.code.FunctionCall;
-import vm_java.code.UserFunction;
-import vm_java.code.VMException;
-import vm_java.code.lib.StdIO;
-import vm_java.code.lib.VMPackage;
 import vm_java.types.ObjectName;
+import vm_java.types.VMObject;
 
 /**
  * 

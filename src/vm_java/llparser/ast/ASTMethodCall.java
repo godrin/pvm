@@ -9,12 +9,12 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.ObjectName;
 
-public class MethodCall implements Statement {
+public class ASTMethodCall implements ASTStatementInterface {
 	String var;
 	String method;
-	List<Var> parameters;
+	List<ASTVar> parameters;
 
-	public MethodCall(Var v, Var m, List<Var> ps) {
+	public ASTMethodCall(ASTVar v, ASTVar m, List<ASTVar> ps) {
 		if (v != null)
 			var = v.name;
 
@@ -26,7 +26,7 @@ public class MethodCall implements Statement {
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory {
 		List<ObjectName> ps = new ArrayList<ObjectName>();
-		for (Var p : parameters) {
+		for (ASTVar p : parameters) {
 			ps.add(context.intern(p.name));
 		}
 		return new CodeMethodCall(context, context.intern(var), context

@@ -7,8 +7,6 @@ package vm_java.context;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
-
 import vm_java.VM;
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;

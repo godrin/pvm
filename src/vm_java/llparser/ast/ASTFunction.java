@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.CodeExpression;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
@@ -13,11 +12,11 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.Function;
 import vm_java.types.ObjectName;
 
-public class ParsedFunction implements RV {
-	List<Var> mParameters;
-	ParsedBlock mBlock;
+public class ASTFunction implements ASTRightValue {
+	List<ASTVar> mParameters;
+	ASTBlock mBlock;
 
-	public ParsedFunction(List<Var> parameters, ParsedBlock parsedBlock) {
+	public ASTFunction(List<ASTVar> parameters, ASTBlock parsedBlock) {
 		mParameters = parameters;
 		mBlock = parsedBlock;
 		// TODO Auto-generated constructor stub
@@ -27,7 +26,7 @@ public class ParsedFunction implements RV {
 	public BasicObject instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		List<ObjectName> ps = new ArrayList<ObjectName>();
-		for (Var v : mParameters) {
+		for (ASTVar v : mParameters) {
 			ps.add(context.intern(v.name));
 		}
 

@@ -8,9 +8,9 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
 public class ASTProgram {
-	ParsedBlock mBlock = null;
+	ASTBlock mBlock = null;
 
-	public void setBlock(ParsedBlock block) {
+	public void setBlock(ASTBlock block) {
 		mBlock=block;
 		
 	}

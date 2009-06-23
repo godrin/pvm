@@ -18,13 +18,13 @@ import vm_java.llparser.LineLexer2.Result;
 import vm_java.llparser.LineLexer2.SYMBOLS;
 import vm_java.llparser.ast.ASTProgram;
 import vm_java.llparser.ast.ASTString;
-import vm_java.llparser.ast.Assign;
-import vm_java.llparser.ast.MethodCall;
-import vm_java.llparser.ast.ParsedBlock;
-import vm_java.llparser.ast.ParsedFunction;
+import vm_java.llparser.ast.ASTAssign;
+import vm_java.llparser.ast.ASTMethodCall;
+import vm_java.llparser.ast.ASTBlock;
+import vm_java.llparser.ast.ASTFunction;
 import vm_java.llparser.ast.RValue;
-import vm_java.llparser.ast.Statement;
-import vm_java.llparser.ast.Var;
+import vm_java.llparser.ast.ASTStatementInterface;
+import vm_java.llparser.ast.ASTVar;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class LLParser2 {
@@ -55,11 +55,11 @@ public class LLParser2 {
 			lines.add(line);
 		}
 		ASTProgram program = new ASTProgram();
-		ParsedBlock block = new ParsedBlock();
+		ASTBlock block = new ASTBlock();
 		program.setBlock(block);
 		fetchToken();
 		while (mResult != null) {
-			Statement s = parseLine();
+			ASTStatementInterface s = parseLine();
 			if (s != null)
 				block.add(s);
 		}
@@ -97,10 +97,10 @@ public class LLParser2 {
 		return n;
 	}
 
-	private Statement parseLine() throws ParseError {
-		Statement s = null;
+	private ASTStatementInterface parseLine() throws ParseError {
+		ASTStatementInterface s = null;
 		if (mResult.lex.symbol == SYMBOLS.VAR) {
-			Var v = parseVar();
+			ASTVar v = parseVar();
 			SYMBOLS t = fetchToken();
 			if (t == SYMBOLS.ASSIGN) {
 				s = parseAssign(v);
@@ -125,20 +125,20 @@ public class LLParser2 {
 		return s;
 	}
 
-	private Statement parseFunctionCall(Var v) throws ParseError {
-		List<Var> ps = parseParameters();
+	private ASTStatementInterface parseFunctionCall(ASTVar v) throws ParseError {
+		List<ASTVar> ps = parseParameters();
 		fetchToken();
-		return new MethodCall(null,v,ps);
+		return new ASTMethodCall(null,v,ps);
 	}
 
-	private Statement parseMemberAccess(Var v) throws ParseError {
+	private ASTStatementInterface parseMemberAccess(ASTVar v) throws ParseError {
 		fetchToken();
-		Var m = parseVar();
+		ASTVar m = parseVar();
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.BRACES_OPEN) {
-			List<Var> ps = parseParameters();
+			List<ASTVar> ps = parseParameters();
 			fetchToken();
-			return new MethodCall(v, m, ps);
+			return new ASTMethodCall(v, m, ps);
 		}
 		parseError();
 		// TODO Auto-generated method stub
@@ -159,20 +159,20 @@ public class LLParser2 {
 		return mResult.lex.symbol;
 	}
 
-	private Var parseVar() throws ParseError {
-		Var v = new Var(mResult.string);
+	private ASTVar parseVar() throws ParseError {
+		ASTVar v = new ASTVar(mResult.string);
 		return v;
 	}
 
-	private Assign parseAssign(Var lValue) throws ParseError {
+	private ASTAssign parseAssign(ASTVar lValue) throws ParseError {
 		SYMBOLS t = fetchToken();
-		Assign s = null;
+		ASTAssign s = null;
 		if (t == SYMBOLS.BEGIN) {
-			s = new Assign(lValue, parseBegin());
+			s = new ASTAssign(lValue, parseBegin());
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
-			s = new Assign(lValue, parseRValue());
+			s = new ASTAssign(lValue, parseRValue());
 		} else if (t == SYMBOLS.STRING) {
-			s = new Assign(lValue, new ASTString(mResult.string));
+			s = new ASTAssign(lValue, new ASTString(mResult.string));
 		} else {
 			parseError();
 		}
@@ -183,13 +183,13 @@ public class LLParser2 {
 	}
 
 	private RValue parseRValue() throws ParseError {
-		Var v = parseVar();
+		ASTVar v = parseVar();
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.DOT) {
 			fetchToken();
-			Var m = parseVar();
+			ASTVar m = parseVar();
 			t = fetchToken();
-			List<Var> parameters = null;
+			List<ASTVar> parameters = null;
 			if (t == SYMBOLS.BRACES_OPEN) {
 				parameters = parseParameters();
 				t = fetchToken();
@@ -209,16 +209,16 @@ public class LLParser2 {
 
 	}
 
-	private ParsedFunction parseBegin() throws ParseError {
+	private ASTFunction parseBegin() throws ParseError {
 		assertTrue(token() == SYMBOLS.BEGIN);
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.BRACES_OPEN) {
 
-			List<Var> parameters = parseParameters();
+			List<ASTVar> parameters = parseParameters();
 
 			t = fetchToken();
 			if (t == SYMBOLS.NEWLINE) {
-				return new ParsedFunction(parameters, parseBlock());
+				return new ASTFunction(parameters, parseBlock());
 			} else {
 				parseError();
 			}
@@ -229,13 +229,13 @@ public class LLParser2 {
 		return null;
 	}
 
-	private List<Var> parseParameters() throws ParseError {
+	private List<ASTVar> parseParameters() throws ParseError {
 
-		List<Var> parameters = new ArrayList<Var>();
+		List<ASTVar> parameters = new ArrayList<ASTVar>();
 
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.VAR || t == SYMBOLS.SYMBOL) {
-			Var v = null;
+			ASTVar v = null;
 			while (true) {
 				if (token() == SYMBOLS.VAR || token() == SYMBOLS.SYMBOL)
 					v = parseVar();
@@ -263,9 +263,9 @@ public class LLParser2 {
 
 	}
 
-	private ParsedBlock parseBlock() throws ParseError {
+	private ASTBlock parseBlock() throws ParseError {
 		SYMBOLS t = fetchToken();
-		ParsedBlock block = new ParsedBlock();
+		ASTBlock block = new ASTBlock();
 		if (t == SYMBOLS.END) {
 			parseError();
 		} else {

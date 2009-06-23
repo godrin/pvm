@@ -6,7 +6,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
-public interface RV {
+public interface ASTRightValue {
 
 	BasicObject instantiate(VMContext context) throws VMExceptionOutOfMemory, BlockIsFinalException, VMException;
 

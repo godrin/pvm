@@ -7,11 +7,11 @@ import vm_java.code.VMException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
-public class Assign extends AST implements Statement {
-	public Var left;
-	public RV right;
+public class ASTAssign extends AST implements ASTStatementInterface {
+	public ASTVar left;
+	public ASTRightValue right;
 
-	public Assign(Var pleft, RV pright) {
+	public ASTAssign(ASTVar pleft, ASTRightValue pright) {
 		left = pleft;
 		right = pright;
 	}

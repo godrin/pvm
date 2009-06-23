@@ -1,14 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package vm_java.types;
 
 import vm_java.code.CodeExpression;
 import vm_java.code.IntermedResult;
 import vm_java.code.IntermedResult.Result;
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
