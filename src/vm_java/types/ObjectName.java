@@ -41,8 +41,13 @@ public class ObjectName extends BasicObject implements Comparable<ObjectName> {
 	}
 	
 	public Object convertToJava(Object pk,VMScope scope) {
-		BasicObject v=scope.get(this);
-		return v.convertToJava(pk, scope);
+		return toString();
+		//BasicObject v=scope.get(this);
+		//return v.convertToJava(pk, scope);
+	}
+	
+	public String toString() {
+		return super.toString()+" ["+mName+"]";
 	}
 
 }

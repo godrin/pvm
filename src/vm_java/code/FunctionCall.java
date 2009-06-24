@@ -24,23 +24,23 @@ import vm_java.types.VMExceptionFunctionNotFound;
 public class FunctionCall extends CodeStatement {
 	ObjectName mFuncName;
 	Collection<? extends CodeExpression> mArgs;
-	
-	public FunctionCall(VMContext pContext, ObjectName pFuncName)
-			throws VMExceptionOutOfMemory {
-		super(pContext);
+
+	public FunctionCall(VMContext pContext, SourceInfo source,
+			ObjectName pFuncName) throws VMExceptionOutOfMemory {
+		super(pContext, source);
 
 		mFuncName = pFuncName;
 	}
 
-	public FunctionCall(VMContext pContext, ObjectName pFuncName, Object[] pArgs)
-			throws VMExceptionOutOfMemory {
-		super(pContext);
+	public FunctionCall(VMContext pContext, SourceInfo source,
+			ObjectName pFuncName, Object[] pArgs) throws VMExceptionOutOfMemory {
+		super(pContext, source);
 		mFuncName = pFuncName;
 		List<BasicObject> args = new ArrayList<BasicObject>();
 		for (Object o : pArgs) {
 			if (o instanceof CodeExpression) {
 				args.add((BasicObject) o);
-			}else if (o instanceof BasicObject) {
+			} else if (o instanceof BasicObject) {
 				args.add((BasicObject) o);
 			} else {
 				args.add(BasicObject.convert(pContext, o));
@@ -49,10 +49,10 @@ public class FunctionCall extends CodeStatement {
 		mArgs = args;
 	}
 
-	public FunctionCall(VMContext pContext, ObjectName pFuncName,
-			Collection<? extends BasicObject> pArgs)
+	public FunctionCall(VMContext pContext, SourceInfo source,
+			ObjectName pFuncName, Collection<? extends BasicObject> pArgs)
 			throws VMExceptionOutOfMemory {
-		super(pContext);
+		super(pContext, source);
 
 		mFuncName = pFuncName;
 		mArgs = pArgs;
@@ -72,13 +72,12 @@ public class FunctionCall extends CodeStatement {
 	 * " is not a valid funcName in scope " + scope); } }
 	 */
 
-	public static IntermedResult execute(VMScope scope, Function f, List<BasicObject> args)
-			throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+	public static IntermedResult execute(VMScope scope, Function f,
+			List<BasicObject> args) throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound {
 		return f.runFunction(scope, args);
 
 	}
-
-
 
 	@Override
 	public IntermedResult execute(VMScope scope) throws VMException,

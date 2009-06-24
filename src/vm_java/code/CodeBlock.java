@@ -42,7 +42,7 @@ public class CodeBlock extends BasicObject{
         for(CodeStatement s:statements) {
         	if(s==null)
         		throw new VMException(s,"Statement is null");
-        	System.out.println("exec:"+s);
+        	System.out.println("exec:"+s+" line."+s.info().lineNo);
             result=s.execute(pScope);
             if(result==null)
         		throw new VMException(s,"result is null");

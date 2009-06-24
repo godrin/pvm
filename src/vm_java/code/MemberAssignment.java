@@ -7,43 +7,63 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.MemberContainer;
 import vm_java.types.ObjectName;
-
+import vm_java.types.VMExceptionFunctionNotFound;
 
 // TODO: merge with Assignment
 public class MemberAssignment extends CodeStatement {
 
 	ObjectName lObject, lMember;
-	ObjectName rObject, rMember;
+	BasicObject rObject;
+	ObjectName rMember;
 
-	public MemberAssignment(VMContext context, ObjectName self,
-			ObjectName intern, ObjectName intern2)
+	public MemberAssignment(VMContext context, SourceInfo source,
+			ObjectName self, ObjectName leftMember, BasicObject rightObject)
 			throws VMExceptionOutOfMemory {
-		super(context);
+		super(context, source);
 		lObject = self;
-		lMember = intern;
-		rObject = intern2;
+		lMember = leftMember;
+		rObject = rightObject;
 		rMember = null;
 	}
 
 	@Override
-	public IntermedResult execute(VMScope scope) throws VMException {
-		BasicObject l=scope.get(lObject);
-		BasicObject r=scope.get(rObject);
-		if(rMember!=null) {
-			if(r instanceof MemberContainer) {
-		  	  r=((MemberContainer)r).get(rMember);
+	public IntermedResult execute(VMScope scope) throws VMException, VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
+		BasicObject l = scope.get(lObject);
+		BasicObject r = rObject;
+		if (r instanceof ObjectName)
+			r = scope.get((ObjectName) r);
+
+		if (rMember != null) {
+			if (r instanceof MemberContainer) {
+				r = ((MemberContainer) r).get(rMember);
 			}
 		}
-		if(lMember!=null) {
-			if(l instanceof MemberContainer) {
-				((MemberContainer)l).set(lMember,r);
-				return new IntermedResult(lMember,Result.NONE);
+		r=resolve(r,scope);
+		if (lMember != null) {
+			if (l instanceof MemberContainer) {
+				((MemberContainer) l).set(lMember, r);
+				return new IntermedResult(lMember, Result.NONE);
 			} else {
+				System.out.println(lObject);
+				System.out.println(l);
 				throw new VMException(this, "l is not member container");
 			}
 		} else {
+			
 			scope.put(lObject, r);
-			return new IntermedResult(lObject,Result.NONE);
+			return new IntermedResult(lObject, Result.NONE);
 		}
+	}
+
+	private BasicObject resolve(BasicObject o, VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
+		if(o instanceof CodeResolveVar) {
+			IntermedResult res=o.compute(scope);
+			System.out.println("Trying to resolve:"+o);
+			if(res.result()!=Result.NONE)
+				return o;
+			o=res.content();
+			System.out.println("resolved:"+o);
+		}
+		return o;
 	}
 }

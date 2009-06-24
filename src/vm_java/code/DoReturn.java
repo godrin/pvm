@@ -9,16 +9,16 @@ import vm_java.types.ObjectName;
 public class DoReturn extends CodeStatement {
 	ObjectName objectName;
 
-	public DoReturn(VMContext context, ObjectName pobjectName)
+	public DoReturn(VMContext context, SourceInfo source, ObjectName pobjectName)
 			throws VMExceptionOutOfMemory {
-		super(context);
+		super(context, source);
 		objectName = pobjectName;
 	}
 
 	@Override
 	public IntermedResult execute(VMScope scope) throws VMException {
 		// TODO Auto-generated method stub
-		return new IntermedResult(scope.get(objectName),Result.QUIT_FUNCTION);
+		return new IntermedResult(scope.get(objectName), Result.QUIT_FUNCTION);
 	}
 
 }

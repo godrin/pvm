@@ -7,18 +7,21 @@ package vm_java.code.lib;
 import java.util.ArrayList;
 import java.util.List;
 
+import vm_java.code.FunctionProvider;
+import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.runtime.PackageFunction;
+import vm_java.runtime.RuntimeFunction;
 import vm_java.types.ObjectName;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class VMPackage extends BasicObject{
+public class VMPackage extends BasicObject implements FunctionProvider{
 
 
 
@@ -51,7 +54,7 @@ public class VMPackage extends BasicObject{
 		return null;
 	}
 */
-	public void registerPackage(VMScope pScope) throws VMExceptionOutOfMemory {
+	public void registerPackage(VMScope pScope) throws VMExceptionOutOfMemory, VMException {
 		pScope.addPackage(this);
 	}
 
@@ -62,7 +65,7 @@ public class VMPackage extends BasicObject{
 		return context.intern(name);
 	}
 
-	public PackageFunction getFunction(ObjectName methodName) throws VMExceptionOutOfMemory {
+	public RuntimeFunction getFunction(ObjectName methodName) throws VMExceptionOutOfMemory {
 		String n=methodName.toSymbolName();
 		return new PackageFunction(this,methodName.getContext(),n);
 	}

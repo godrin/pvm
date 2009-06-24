@@ -25,7 +25,7 @@ public class StdIO extends VMPackage {
     }
     
     public void puts(String i) {
-        System.out.println(i);
+        System.out.println("PUTS OUTPUT:"+i);
     }
     
     /**

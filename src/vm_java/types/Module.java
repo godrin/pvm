@@ -10,17 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.CodeResolveVar;
+import vm_java.code.FunctionProvider;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.runtime.MemberFunction;
+import vm_java.runtime.RuntimeFunction;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class Module extends BasicObject {
+public class Module extends BasicObject implements MemberContainer,
+		FunctionProvider {
 
 	private List<Module> mMixins = new ArrayList<Module>();
 	private Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();
@@ -47,8 +51,12 @@ public class Module extends BasicObject {
 	 * 
 	 * // return f.compute(getContext(),pArgs); } }
 	 */
-	public MemberFunction getFunction(ObjectName name) throws VMException {
+	public RuntimeFunction getFunction(ObjectName name) throws VMException {
 		BasicObject bo = get(name);
+		
+		if(bo instanceof RuntimeFunction)
+			return (RuntimeFunction)bo;
+		
 		if (bo instanceof Function) {
 			return new MemberFunction(this, (Function) bo);
 		}
@@ -61,6 +69,8 @@ public class Module extends BasicObject {
 	}
 
 	public BasicObject get(ObjectName name) {
+		System.out.println("TRYING "+name);
+		System.out.println(mObjects.keySet());
 		BasicObject o = getDirect(name);
 		if (o == null) {
 			for (Module m : mMixins) {
@@ -69,10 +79,20 @@ public class Module extends BasicObject {
 					break;
 			}
 		}
+		System.out.println("FOUND:"+o);
 		return o;
 	}
 
-	public void put(ObjectName name, BasicObject bo) {
+	public void put(ObjectName name, BasicObject bo) throws VMException {
+		if(bo instanceof CodeResolveVar) {
+			throw new VMException(null, "Tried to store codesolvevar!");
+		}
 		mObjects.put(name, bo);
+	}
+
+	@Override
+	public void set(ObjectName memberName, BasicObject r) throws VMException {
+		put(memberName, r);
+
 	}
 }

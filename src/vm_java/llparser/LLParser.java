@@ -1,33 +1,8 @@
 package vm_java.llparser;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import vm_java.VM;
-import vm_java.code.Assignment;
-import vm_java.code.CodeBlock;
-import vm_java.code.BlockIsFinalException;
-import vm_java.code.DoReturn;
-import vm_java.code.FunctionCall;
-import vm_java.code.MemberAssignment;
-import vm_java.code.Program;
-import vm_java.code.VMException;
-import vm_java.context.BasicObject;
-import vm_java.context.VMContext;
-import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.context.VMScope;
-import vm_java.llparser.LineLexer2.Result;
-import vm_java.llparser.LineLexer2.SYMBOLS;
-import vm_java.types.ObjectName;
-import vm_java.types.VMString;
 
 public class LLParser {
+	/*
 	class Rule {
 		String methodName;
 		List<SYMBOLS> symbols = new ArrayList<SYMBOLS>();
@@ -73,9 +48,13 @@ public class LLParser {
 
 		lastBlock()
 				.add(
-						new Assignment(mContext, mContext.intern(var.string),
+						new Assignment(mContext, source(), mContext.intern(var.string),
 								new FunctionCall(mContext, mContext
 										.intern(newp.string))));
+	}
+	
+	SourceInfo source() {
+		return new SourceInfo(lin)
 	}
 
 	public void setReturn(Result ret, Result var) throws BlockIsFinalException,
@@ -99,10 +78,7 @@ public class LLParser {
 	}
 
 	public void assignFromParameter(Result var, Result assign, Result parameter) {
-		/*
-		 * lastBlock().add(new AssignFromParameter(mContext,
-		 * var.string,parameter.string ))
-		 */
+
 	}
 
 	void init() {
@@ -235,5 +211,5 @@ public class LLParser {
 		String content = LineLexer2.loadFile(fn);
 		lp.parse(content);
 	}
-
+*/
 }

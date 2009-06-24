@@ -5,13 +5,18 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 
-public class VMInteger extends BasicObject {
+public class VMInteger extends BasicObject implements BuildInInterface {
 	Integer i=null;
 
 	public VMInteger(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
 	}
 	
+	public VMInteger(VMContext context, int i2) throws VMExceptionOutOfMemory {
+		super(context);
+		i=i2;
+	}
+
 	public void set(int x) {
 		i=x;
 	}
@@ -26,5 +31,6 @@ public class VMInteger extends BasicObject {
 		} 
 		return null;
 	}
+
 
 }

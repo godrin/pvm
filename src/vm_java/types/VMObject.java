@@ -3,13 +3,14 @@ package vm_java.types;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.FunctionProvider;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.runtime.MemberFunction;
 
-public class VMObject extends BasicObject {
+public class VMObject extends BasicObject implements FunctionProvider {
 	private Klass mKlass;
 	private Map<ObjectName, BasicObject> data = new TreeMap<ObjectName, BasicObject>();
 
@@ -22,13 +23,6 @@ public class VMObject extends BasicObject {
 		return mKlass;
 	}
 
-	/*
-	public IntermedResult send(VMScope scope,ObjectName funcName, List<ObjectName> args)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
-		return mKlass.send(scope,funcName, args);
-	}
-*/
-	
 	public BasicObject get(ObjectName name) {
 		BasicObject o=data.get(name);
 		if(o==null) {

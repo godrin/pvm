@@ -5,18 +5,9 @@
 
 package vm_java;
 
-import vm_java.code.Assignment;
-import vm_java.code.CodeBlock;
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.FunctionCall;
-import vm_java.code.IncludePackage;
-import vm_java.code.Program;
 import vm_java.code.VMException;
-import vm_java.code.lib.StdIO;
-import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.ObjectName;
-import vm_java.types.VMString;
 
 /**
  *
@@ -30,7 +21,7 @@ public class Main {
      * @throws InterruptedException 
      */
     public static void main(String[] args) throws VMExceptionOutOfMemory, VMException, BlockIsFinalException, InterruptedException {
-
+/*
       VM vm=new VM();
 
       VMContext context=vm.createContext();
@@ -59,7 +50,7 @@ public class Main {
       
       System.out.println("MEM:"+vm.getMemoryUsage());
 
-
+*/
     }
 
 }

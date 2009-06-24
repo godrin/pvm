@@ -1,5 +1,12 @@
 package vm_java.llparser.ast;
 
-public class AST {
+import vm_java.code.CodeStatement.SourceInfo;
 
+public class AST {
+	SourceInfo source;
+
+	public AST(SourceInfo pSource) {
+		source = pSource;
+
+	}
 }

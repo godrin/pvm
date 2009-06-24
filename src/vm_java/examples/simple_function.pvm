@@ -1,12 +1,20 @@
-block0=begin(p0)
-  v0=VMString.new(p0)
+b0=begin(p0)
+  v0=p0
+  StdIO.puts(v0)
   return v0
 end
-self.addFunction(:hello,block0)
-block1=begin(a,b)
-  v3=a.run(:plus,b)
+self.hello=b0
+b1=begin(a,b)
+  v3=a.plus(b)
   return v3
 end
-self.addFunction(:compute,block1)
-self.run(:hello)
-self.run(:compute,1,2)
+m="M…HRE"
+StdIO.puts(m)
+
+
+self.compute=b1
+self.hello(m)
+x=1
+y=2
+h=self.compute(x,y)
+StdIO.puts(h)

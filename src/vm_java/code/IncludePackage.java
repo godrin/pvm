@@ -20,8 +20,8 @@ import vm_java.context.VMScope;
  */
 public class IncludePackage extends CodeStatement {
 
-    public IncludePackage(VMContext pContext,Class<? extends VMPackage> pClass) throws VMExceptionOutOfMemory {
-        super(pContext);
+    public IncludePackage(VMContext pContext,SourceInfo source,Class<? extends VMPackage> pClass) throws VMExceptionOutOfMemory {
+        super(pContext,source);
         mClass=pClass;
     }
 
@@ -36,7 +36,9 @@ public class IncludePackage extends CodeStatement {
             Logger.getLogger(IncludePackage.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(IncludePackage.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (VMException e) {
+            Logger.getLogger(IncludePackage.class.getName()).log(Level.SEVERE, null, e);
+		}
         return new IntermedResult(BasicObject.nil,Result.NONE);
     }
 

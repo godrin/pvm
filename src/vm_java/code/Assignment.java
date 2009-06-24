@@ -20,9 +20,9 @@ public class Assignment extends CodeStatement {
 	private ObjectName objectName;
 	private BasicObject rValue;
 
-	public Assignment(VMContext context, ObjectName on, BasicObject bo)
-			throws VMExceptionOutOfMemory {
-		super(context);
+	public Assignment(VMContext context, SourceInfo source, ObjectName on,
+			BasicObject bo) throws VMExceptionOutOfMemory {
+		super(context, source);
 		objectName = on;
 		rValue = bo;
 	}
@@ -32,7 +32,9 @@ public class Assignment extends CodeStatement {
 	 * instantiate) throws VMExceptionOutOfMemory { super(context);
 	 * objectName=name; rValue=null; rExpression=instantiate; }
 	 */
-	public IntermedResult execute(VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
+	public IntermedResult execute(VMScope scope)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
+			VMException {
 		BasicObject bo;
 		if (rValue instanceof CodeExpression) {
 			CodeExpression rExpression = (CodeExpression) rValue;
@@ -45,6 +47,13 @@ public class Assignment extends CodeStatement {
 		} else {
 			bo = rValue;
 		}
+		if (bo instanceof CodeResolveVar) {
+			IntermedResult res = ((CodeResolveVar) bo).compute(scope);
+			if (res.exception())
+				return res;
+			bo = res.content();
+		}
+
 		scope.put(objectName, bo);
 		return new IntermedResult(bo, Result.NONE);
 	}

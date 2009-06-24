@@ -35,9 +35,13 @@ public class UserFunction extends Function {
 			throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope = new VMScope(scope, this);
 		int i=0;
+		System.out.println("ARGSSIZE:"+args.size());
+		if(args.size()!=mArgs.size())
+			throw new VMException(null,"Argsize is different!");
 		
 		for(;i<args.size();i++) {
 			subScope.put(mArgs.get(i), args.get(i));
+			System.out.println("Adding to subscope:"+mArgs.get(i)+":="+args.get(i));
 		}
 
 		IntermedResult res=mBlock.execute(subScope);

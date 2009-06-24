@@ -28,4 +28,8 @@ public class IntermedResult {
 		return result!=Result.NONE;
 	}
 
+	public boolean returned() {
+		return result==Result.QUIT_FUNCTION;
+	}
+
 }

@@ -11,15 +11,38 @@ import vm_java.context.VMContext;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
- *
+ * 
  * @author davidkamphausen
  */
 public abstract class CodeStatement extends BasicObject {
 
-    CodeStatement(VMContext pContext) throws VMExceptionOutOfMemory {
-        super(pContext);
-    }
+	public static class SourceInfo {
 
-    public abstract IntermedResult execute(VMScope scope)
-            throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
+		int lineNo;
+
+		public SourceInfo(int lineNo2) {
+
+			lineNo = lineNo2;
+		}
+		public int getLineNumber() {
+			return lineNo;
+		}
+
+	}
+	
+	SourceInfo sourceInfo;
+
+	CodeStatement(VMContext pContext, SourceInfo source)
+			throws VMExceptionOutOfMemory {
+		super(pContext);
+		sourceInfo=source;
+	}
+	
+	SourceInfo info() {
+		return sourceInfo;
+	}
+
+	public abstract IntermedResult execute(VMScope scope) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
+
 }

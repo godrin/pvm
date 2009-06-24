@@ -11,7 +11,7 @@ import vm_java.context.VMScope;
  * 
  * @author davidkamphausen
  */
-public class VMString extends Klass implements CodeExpression {
+public class VMString extends Klass implements CodeExpression,BuildInInterface {
 	private java.lang.String mContent = "";
 	private final int OVERHEAD = 8;
 

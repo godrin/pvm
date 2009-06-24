@@ -4,11 +4,11 @@ import java.util.List;
 
 import vm_java.code.IntermedResult;
 import vm_java.code.VMException;
+import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.Function;
 import vm_java.types.Module;
-import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMObject;
 
@@ -18,10 +18,10 @@ public class MemberFunction implements RuntimeFunction{
 	private VMObject object;
 
 	public MemberFunction(Module pmodule, Function pFunction) throws VMException {
-		if(function==null)
-			throw new VMException(null,"function is null");
 		module = pmodule;
 		function = pFunction;
+		if(function==null)
+			throw new VMException(null,"function is null");
 		assert(function!=null);
 	}
 
@@ -33,15 +33,17 @@ public class MemberFunction implements RuntimeFunction{
 		assert(function!=null);
 	}
 
-	public IntermedResult run(VMScope scope, List<ObjectName> parameters) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+	public IntermedResult run(VMScope scope, List<BasicObject> parameters) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope;
 
 		if (object != null) {
 			subScope = new VMScope(scope, object);
 		} else {
 			subScope = new VMScope(scope, module);
-
 		}
-		return function.runFunction(subScope, parameters);
+		List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope,parameters);
+		
+		System.out.println("Running function:"+function);
+		return function.runFunction(subScope, bos);
 	}
 }

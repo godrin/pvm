@@ -2,7 +2,7 @@ package vm_java.code;
 
 import java.util.List;
 
-import vm_java.code.lib.VMPackage;
+import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -10,16 +10,16 @@ import vm_java.context.VMScope;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.VMObject;
 
 public class CodeMethodCall extends CodeStatement implements CodeExpression {
 
 	ObjectName varName, methodName;
-	List<ObjectName> parameters;
+	List<BasicObject> parameters;
 
-	public CodeMethodCall(VMContext context, ObjectName name, ObjectName name2,
-			List<ObjectName> ps) throws VMExceptionOutOfMemory {
-		super(context);
+	public CodeMethodCall(VMContext context, SourceInfo source,
+			ObjectName name, ObjectName name2, List<BasicObject> ps)
+			throws VMExceptionOutOfMemory {
+		super(context, source);
 		varName = name;
 		methodName = name2;
 		parameters = ps;
@@ -36,23 +36,28 @@ public class CodeMethodCall extends CodeStatement implements CodeExpression {
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
 			VMException {
 		// FIXME: add exception /checking
-		RuntimeFunction f;
+		RuntimeFunction f = null;
 		if (varName == null) {
 			f = scope.getFunction(methodName);
 		} else {
 			BasicObject bo = scope.get(varName);
-			if (bo instanceof VMObject) {
-				VMObject vmo = (VMObject) bo;
+			if (bo instanceof FunctionProvider) {
+				FunctionProvider vmo = (FunctionProvider) bo;
 
 				f = vmo.getFunction(methodName);
-			} else if (bo instanceof VMPackage) {
-				VMPackage p = (VMPackage) bo;
-				f = p.getFunction(methodName);
 			}
-			else
-				//FIXME: return Quit_exception
-				throw new VMException(this,"Function not found!");
 		}
-		return f.run(scope, parameters);
+		if (f == null) {
+			// FIXME: return Quit_exception
+			throw new VMException(this, "Function not found!");
+		}
+		IntermedResult res=f.run(scope, parameters);
+		
+		if(res.returned())
+		{
+			return new IntermedResult(res.content(),Result.NONE);
+		}
+		else
+			return res;
 	}
 }
