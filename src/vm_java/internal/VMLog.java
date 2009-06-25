@@ -3,9 +3,18 @@ package vm_java.internal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class VMLog {
-	enum Level {DEBUG,WARN,ERROR};
+	public enum Level {DEBUG,WARN,ERROR};
+	private static Set<Level> mLevels=new TreeSet<Level>();
+	
+	public static void setLogLevels(Level[] pLevels) {
+		for(Level l:pLevels) {
+			mLevels.add(l);
+		}
+	}
 	
 	public static void debug(Object x) {
 		log(Level.DEBUG,x);
@@ -20,13 +29,16 @@ public class VMLog {
 	public static void log(Level l,Object x) {
 		String s = x.toString();
 		for (String p : s.split("\n")) {
-			logLine(p);
+			logLine(l,p);
 		}
 	}
 
-	private static void logLine(String line) {
+	private static void logLine(Level l, String line) {
+		if(!mLevels.contains(l))
+			return;
 		Date d = GregorianCalendar.getInstance().getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		System.out.println("[" + sdf.format(d) + "] " + line);
+		String level="["+l.toString().toLowerCase()+"] ";
+		System.out.println("[" + sdf.format(d) + "] " +level+ line);
 	}
 }

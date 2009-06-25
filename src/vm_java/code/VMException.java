@@ -35,7 +35,7 @@ public class VMException extends Exception {
 		if (mStatement == null)
 			return s;
 		else
-			return s + " Statment:" + mStatement + " line:"
+			return s + "\n"+what+"\n Statment:" + mStatement + " line:"
 					+ mStatement.info().getLineNumber();
 	}
 

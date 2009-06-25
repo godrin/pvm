@@ -38,13 +38,14 @@ public class CodeMethodCall extends CodeStatement implements CodeExpression {
 			VMException {
 		// FIXME: add exception /checking
 		RuntimeFunction f = null;
+		BasicObject bo = null;
 		if (varName == null) {
 			f = scope.getFunction(methodName);
 		} else {
-			BasicObject bo = scope.get(varName);
-			VMLog.debug("COMP:"+bo);
+			bo = scope.get(varName);
+			VMLog.debug("COMP:" + bo);
 			if (bo instanceof FunctionProvider) {
-				VMLog.debug("is funcprov:"+bo);
+				VMLog.debug("is funcprov:" + bo);
 				FunctionProvider vmo = (FunctionProvider) bo;
 
 				f = vmo.getFunction(methodName);
@@ -52,15 +53,14 @@ public class CodeMethodCall extends CodeStatement implements CodeExpression {
 		}
 		if (f == null) {
 			// FIXME: return Quit_exception
-			throw new VMException(this, "Function not found!");
+			throw new VMException(this, "Function " + methodName
+					+ " not found in " + varName + " (" + bo + "!");
 		}
-		IntermedResult res=f.run(scope, parameters);
-		
-		if(res.returned())
-		{
-			return new IntermedResult(res.content(),Result.NONE);
-		}
-		else
+		IntermedResult res = f.run(scope, parameters);
+
+		if (res.returned()) {
+			return new IntermedResult(res.content(), Result.NONE);
+		} else
 			return res;
 	}
 }

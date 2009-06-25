@@ -1,0 +1,9 @@
+t0=5
+t1=6
+t2=7
+a=[t0,t1,t2]
+t3=10
+a.add(t3)
+i=2
+x=a[i]
+StdIO.puts(x)

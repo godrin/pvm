@@ -11,7 +11,7 @@ import vm_java.context.VMScope;
  * 
  * @author davidkamphausen
  */
-public class VMString extends Klass implements CodeExpression,BuildInInterface {
+public class VMString extends BuildInKlass implements CodeExpression,BuildInInterface {
 	private java.lang.String mContent = "";
 	private final int OVERHEAD = 8;
 
@@ -36,6 +36,10 @@ public class VMString extends Klass implements CodeExpression,BuildInInterface {
 		if (mContent != null)
 			return mContent.length() + OVERHEAD;
 		return OVERHEAD;
+	}
+	
+	public VMString concat(VMString a) throws VMExceptionOutOfMemory {
+		return new VMString(getContext(),getContent()+a.getContent());
 	}
 
 	public Object convertToJava(Object pk) {

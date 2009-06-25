@@ -12,6 +12,8 @@ import vm_java.internal.VMLog;
 public class Buildin {
 	public static void createBuildins(VMScope scope) throws VMException, VMExceptionOutOfMemory {
 		expose(scope,VMInteger.class);
+		expose(scope,VMString.class);
+		expose(scope,VMArray.class);
 	}
 	
 	public static void expose(VMScope scope,Class<? extends BasicObject> c) throws VMExceptionOutOfMemory, VMException {

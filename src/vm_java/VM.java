@@ -13,6 +13,8 @@ import vm_java.code.Program;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
+import vm_java.internal.VMLog.Level;
 import vm_java.machine.Job;
 import vm_java.machine.Options;
 import vm_java.machine.Process;
@@ -27,7 +29,9 @@ public class VM {
 	private List<Process> mProcesses = new ArrayList<Process>();
 
 	public VM() {
-
+		VMLog.setLogLevels(new Level[]{VMLog.Level.DEBUG,
+				Level.ERROR,
+				Level.WARN});
 	}
 
 	public synchronized VMContext createContext() {

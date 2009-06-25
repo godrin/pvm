@@ -1,7 +1,9 @@
 b0=begin(p0)
   v0=p0
   StdIO.puts(v0)
-  return v0
+  sec="HUPE"
+  v1=v0.concat(sec)
+  return v1
 end
 self.hello=b0
 b1=begin(a,b)
@@ -13,7 +15,8 @@ StdIO.puts(m)
 
 
 self.compute=b1
-self.hello(m)
+xy=self.hello(m)
+StdIO.puts(xy)
 x=1
 y=2
 h=self.compute(x,y)

@@ -12,7 +12,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
-public class ASTMethodCall extends AST implements ASTStatementInterface {
+public class ASTMethodCall extends AST implements ASTStatementInterface, ASTRightValue {
 	String var;
 	String method;
 	List<ASTVar> parameters;
