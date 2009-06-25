@@ -154,7 +154,7 @@ public class LLParser {
 
 		List<SYMBOLS> toks = getSymbols(lineTokens);
 
-		// System.out.println("TRY PARSE LINE");
+		// Log.debug("TRY PARSE LINE");
 		for (Rule rule : rules) {
 			if (rule.symbols.equals(toks)) {
 				try {
@@ -183,7 +183,7 @@ public class LLParser {
 
 			}
 		}
-		System.out.println("Could not parse:");
+		Log.debug("Could not parse:");
 		LineLexer2.output(lineTokens);
 		// TODO Auto-generated method stub
 
@@ -204,7 +204,7 @@ public class LLParser {
 
 		LLParser lp = new LLParser(vm.createContext());
 		String curDir = System.getProperty("user.dir");
-		System.out.println(curDir);
+		Log.debug(curDir);
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				+ "simple_function.pvm";

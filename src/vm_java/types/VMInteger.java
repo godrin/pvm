@@ -1,11 +1,9 @@
 package vm_java.types;
 
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.context.VMScope;
 
-public class VMInteger extends BasicObject implements BuildInInterface {
+public class VMInteger extends BuildInKlass implements BuildInInterface {
 	Integer i=null;
 
 	public VMInteger(VMContext context) throws VMExceptionOutOfMemory {
@@ -25,12 +23,20 @@ public class VMInteger extends BasicObject implements BuildInInterface {
 		return i;
 	}
 	
-	public Object convertToJava(Object pk,VMScope scope) {
+	public Object convertToJava(Object pk) {
+		System.out.println("PK:"+pk);
 		if (pk.equals(java.lang.Integer.class)) {
 			return i;
-		} 
+		} else if(pk.equals(java.lang.String.class)) {
+			return Integer.toString(i);
+		}
 		return null;
 	}
+	
+	public VMInteger plus(VMInteger p) throws VMExceptionOutOfMemory {
+		return new VMInteger(getContext(),i+p.get());
+	}
+
 
 
 }

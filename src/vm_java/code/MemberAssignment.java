@@ -5,6 +5,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.Log;
 import vm_java.types.MemberContainer;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -44,8 +45,8 @@ public class MemberAssignment extends CodeStatement {
 				((MemberContainer) l).set(lMember, r);
 				return new IntermedResult(lMember, Result.NONE);
 			} else {
-				System.out.println(lObject);
-				System.out.println(l);
+				Log.debug(lObject);
+				Log.debug(l);
 				throw new VMException(this, "l is not member container");
 			}
 		} else {
@@ -58,11 +59,11 @@ public class MemberAssignment extends CodeStatement {
 	private BasicObject resolve(BasicObject o, VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
 		if(o instanceof CodeResolveVar) {
 			IntermedResult res=o.compute(scope);
-			System.out.println("Trying to resolve:"+o);
+			Log.debug("Trying to resolve:"+o);
 			if(res.result()!=Result.NONE)
 				return o;
 			o=res.content();
-			System.out.println("resolved:"+o);
+			Log.debug("resolved:"+o);
 		}
 		return o;
 	}

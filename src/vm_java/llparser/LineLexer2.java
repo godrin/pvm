@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import vm_java.internal.Log;
+
 public class LineLexer2 {
 	enum SYMBOLS {
 		BEGIN, END, TYPE, PARAMETER,
 		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
 		//BRACKETS_OPEN, BRACKETS_CLOSE, 
 		BRACES_OPEN, BRACES_CLOSE, COMMA,
-		EOF
+		EOF,COMMENT
 	};
 
 	public static class Lex {
@@ -66,6 +68,7 @@ public class LineLexer2 {
 		add("\t", SYMBOLS.WHITESPACE);
 		add(":[a-zA-Z_][a-zA-Z0-9_]*", SYMBOLS.SYMBOL);
 		add("\"[^\"]*\"", SYMBOLS.STRING);
+		add("#",SYMBOLS.COMMENT);
 		add("-?[0-9][0-9]*", SYMBOLS.INTEGER);
 		//add("\\[", SYMBOLS.BRACKETS_OPEN);
 		//add("\\]", SYMBOLS.BRACKETS_CLOSE);
@@ -131,7 +134,7 @@ public class LineLexer2 {
 		for (Result r : results) {
 			output(r);
 		}
-		System.out.println();
+		Log.debug();
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -139,12 +142,12 @@ public class LineLexer2 {
 		output(ll.lex("begin"));
 
 		String curDir = System.getProperty("user.dir");
-		System.out.println(curDir);
+		Log.debug(curDir);
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				+ "simple_function.pvm";
 		String content = loadFile(fn);
-		// System.out.println();
+		// Log.debug();
 		for (String line : content.split("\n")) {
 			output(ll.lex(line));
 		}

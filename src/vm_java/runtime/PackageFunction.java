@@ -2,7 +2,6 @@ package vm_java.runtime;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
 
 import vm_java.code.IntermedResult;
@@ -14,6 +13,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.Log;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class PackageFunction implements RuntimeFunction {
@@ -27,7 +27,7 @@ public class PackageFunction implements RuntimeFunction {
 	}
 
 	private Method getMethod() throws PackageMethodNotFoundException {
-		System.out.println("Searching:" + mName);
+		Log.debug("Searching:" + mName);
 
 		if (!mPackage.getFunctions().contains(mName))
 			throw new PackageMethodNotFoundException(mName, mPackage);
@@ -52,7 +52,7 @@ public class PackageFunction implements RuntimeFunction {
 			VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
 
-		System.out.println("PackageFunction");
+		Log.debug("PackageFunction");
 		Method method;
 		Object result = null;
 		boolean ok = false;
@@ -60,27 +60,17 @@ public class PackageFunction implements RuntimeFunction {
 		try {
 			method = getMethod();
 
-			System.out.println("Found method:"+method);
-			Collection<?> margs = parameters;
-			Object[] os = new Object[(margs.size())];
+			Log.debug("Found method:"+method);
+			Object[] os;
 			Class<?>[] signature = method.getParameterTypes();
-			int i = 0;
-			for (Object o : margs) {
-				Class<?> signaturKlass = signature[i];
-				if (!signaturKlass.isInstance(o)) {
-					// type mismatch
-					if (o instanceof BasicObject) {
-						// is a basicobject
-						BasicObject bo = (BasicObject) o;
-						bo=bo.compute(scope).content();
-						Object tmp;
-						tmp = bo.convertToJava(signaturKlass, scope);
-						if (tmp != null)
-							o = tmp;
-					}
-
-				}
-				os[i++] = o;
+			
+			parameters=RuntimeFunctionHelper.createArguments(scope, parameters);
+			
+			os=RuntimeFunctionHelper.toJavaArgs(parameters, signature);
+			Log.debug("OS:"
+					+os);
+			for(Object o:os) {
+				Log.debug(o);
 			}
 			try {
 				result = method.invoke(mPackage, os);

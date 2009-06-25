@@ -13,6 +13,7 @@ import vm_java.code.UserFunction;
 import vm_java.code.VMException;
 import vm_java.code.lib.VMPackage;
 import vm_java.runtime.MemberFunction;
+import vm_java.types.Buildin;
 import vm_java.types.Function;
 import vm_java.types.Module;
 import vm_java.types.ObjectName;
@@ -35,6 +36,14 @@ public class VMScope {
 	public VMScope(VMContext pContext) throws VMExceptionOutOfMemory {
 		mContext = pContext;
 		selfModule = new Module(mContext);
+		
+		
+		try {
+			Buildin.createBuildins(this);
+		} catch (VMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// FIXME: get new self

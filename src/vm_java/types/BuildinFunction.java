@@ -29,7 +29,6 @@ public class BuildinFunction extends Function {
 		BasicObject bo=scope.self();
 		
 		if(bo instanceof BuildInInterface) {
-			BuildInInterface i=(BuildInInterface)bo;
 			
 			List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope, args);
 			

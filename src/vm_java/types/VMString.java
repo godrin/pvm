@@ -38,9 +38,12 @@ public class VMString extends Klass implements CodeExpression,BuildInInterface {
 		return OVERHEAD;
 	}
 
-	public Object convertToJava(Object pk,VMScope scope) {
+	public Object convertToJava(Object pk) {
 		if (pk.equals(java.lang.String.class)) {
 			return mContent;
+		}
+		if (pk.equals(java.lang.Integer.class)) {
+			return Integer.parseInt(mContent);
 		}
 		return null;
 	}

@@ -1,6 +1,7 @@
 package vm_java.code;
 
 import vm_java.code.IntermedResult.Result;
+import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -18,7 +19,8 @@ public class DoReturn extends CodeStatement {
 	@Override
 	public IntermedResult execute(VMScope scope) throws VMException {
 		// TODO Auto-generated method stub
-		return new IntermedResult(scope.get(objectName), Result.QUIT_FUNCTION);
+		BasicObject o=scope.get(objectName);
+		return new IntermedResult(o, Result.QUIT_FUNCTION);
 	}
 
 }

@@ -16,6 +16,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.internal.Log;
 import vm_java.runtime.MemberFunction;
 import vm_java.runtime.RuntimeFunction;
 
@@ -69,8 +70,8 @@ public class Module extends BasicObject implements MemberContainer,
 	}
 
 	public BasicObject get(ObjectName name) {
-		System.out.println("TRYING "+name);
-		System.out.println(mObjects.keySet());
+		Log.debug("TRYING "+name);
+		Log.debug(mObjects.keySet());
 		BasicObject o = getDirect(name);
 		if (o == null) {
 			for (Module m : mMixins) {
@@ -79,7 +80,7 @@ public class Module extends BasicObject implements MemberContainer,
 					break;
 			}
 		}
-		System.out.println("FOUND:"+o);
+		Log.debug("FOUND:"+o);
 		return o;
 	}
 

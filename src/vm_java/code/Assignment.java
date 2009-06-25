@@ -9,6 +9,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.Log;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
@@ -40,10 +41,9 @@ public class Assignment extends CodeStatement {
 			CodeExpression rExpression = (CodeExpression) rValue;
 
 			IntermedResult res = rExpression.compute(scope);
-			if (!res.exception())
-				bo = res.content();
-			else
+			if (res.exception())
 				return res;
+			bo = res.content();
 		} else {
 			bo = rValue;
 		}
@@ -53,7 +53,7 @@ public class Assignment extends CodeStatement {
 				return res;
 			bo = res.content();
 		}
-
+		Log.debug("SETTING " + objectName + " to " + bo);
 		scope.put(objectName, bo);
 		return new IntermedResult(bo, Result.NONE);
 	}

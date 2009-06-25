@@ -43,12 +43,12 @@ public class Main {
 
       vm.run(program);
       vm.run();
-      System.out.println("running");
+      Log.debug("running");
       vm.join();
       
 //      program.execute(scope);
       
-      System.out.println("MEM:"+vm.getMemoryUsage());
+      Log.debug("MEM:"+vm.getMemoryUsage());
 
 */
     }

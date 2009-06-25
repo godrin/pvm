@@ -5,6 +5,7 @@ import vm_java.code.CodeStatement;
 import vm_java.code.VMException;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.Log;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class VMThread extends Thread {
@@ -61,7 +62,7 @@ public class VMThread extends Thread {
 				
 				endTime=System.currentTimeMillis();
 			}while((endTime-startTime)<Options.GRANULARITY_MS);
-			System.out.println("ONE RUN:"+(endTime-startTime));
+			Log.debug("ONE RUN:"+(endTime-startTime));
 			
 			putJob();
 		}

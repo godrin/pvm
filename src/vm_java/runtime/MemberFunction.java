@@ -44,6 +44,8 @@ public class MemberFunction implements RuntimeFunction{
 		List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope,parameters);
 		
 		System.out.println("Running function:"+function);
-		return function.runFunction(subScope, bos);
+		IntermedResult res=function.runFunction(subScope, bos);
+		
+		return res;
 	}
 }
