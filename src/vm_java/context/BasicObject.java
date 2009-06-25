@@ -8,7 +8,7 @@ import vm_java.code.CodeExpression;
 import vm_java.code.IntermedResult;
 import vm_java.code.VMException;
 import vm_java.code.IntermedResult.Result;
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMInteger;
 import vm_java.types.VMString;
@@ -57,8 +57,8 @@ public class BasicObject implements CodeExpression {
 
 
 	public Object convertToJava(Object pk) {
-		Log.debug("BASIC");
-		Log.debug(this);
+		VMLog.debug("BASIC");
+		VMLog.debug(this);
 		return null;
 	}
 

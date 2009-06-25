@@ -7,6 +7,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.internal.VMLog;
 import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.RuntimeFunction;
 
@@ -30,12 +31,8 @@ public class BuildInKlass extends BasicObject implements FunctionProvider{
 			if(m.getName().equals(name))
 				return m;
 		}
-		System.out.println("ERROR: Method "+name+" not found in "+getClass().getName()+"!");
+		VMLog.error("ERROR: Method "+name+" not found in "+getClass().getName()+"!");
 		return null;
-	}
-
-	private String className() {
-		return getClass().getName().replaceAll(".*\\.","");
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 
 public class LineLexer2 {
 	enum SYMBOLS {
@@ -126,7 +126,7 @@ public class LineLexer2 {
 	}
 	
 	public static void output(Result r) {
-		System.out.print(r.lex.symbol + "(" + r.string + ") ");
+		VMLog.debug(r.lex.symbol + "(" + r.string + ") ");
 		
 	}
 
@@ -134,7 +134,7 @@ public class LineLexer2 {
 		for (Result r : results) {
 			output(r);
 		}
-		Log.debug("");
+		VMLog.debug("");
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -142,7 +142,7 @@ public class LineLexer2 {
 		output(ll.lex("begin"));
 
 		String curDir = System.getProperty("user.dir");
-		Log.debug(curDir);
+		VMLog.debug(curDir);
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				+ "simple_function.pvm";

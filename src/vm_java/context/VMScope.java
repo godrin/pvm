@@ -12,6 +12,7 @@ import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
 import vm_java.code.lib.VMPackage;
+import vm_java.internal.VMLog;
 import vm_java.runtime.MemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
@@ -88,8 +89,6 @@ public class VMScope {
 			}
 
 		}
-		VMLog.debug("get:" + name + ":" + ret);
-
 		return ret;
 	}
 
@@ -123,14 +122,14 @@ public class VMScope {
 		if (SELF.equals(objectName.getName()))
 			throw new VMException(null, "Self accessed!");
 		
-		System.out.println("SETTING "+objectName+":="+value);
+		VMLog.debug("SETTING "+objectName+":="+value);
 		
 		mReferences.put(objectName, value);
 	}
 
 	public void addPackage(VMPackage pPackage) throws VMExceptionOutOfMemory, VMException {
 		ObjectName name = pPackage.getName(mContext);
-		System.out.println("adding package OName:" + name.getName());
+		VMLog.debug("adding package OName:" + name.getName());
 		selfModule.put(name, pPackage);
 	}
 

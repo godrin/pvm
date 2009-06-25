@@ -8,6 +8,7 @@ import vm_java.code.CodeBlock;
 import vm_java.code.VMException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.internal.VMLog;
 
 public class ASTBlock {
 	List<ASTStatementInterface> statements=new ArrayList<ASTStatementInterface>();
@@ -19,7 +20,7 @@ public class ASTBlock {
 	public CodeBlock instantiate(VMContext pContext) throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		CodeBlock cb=new CodeBlock(pContext);
 		for(ASTStatementInterface s:statements) {
-			System.out.println(s);
+			VMLog.debug(s);
 			cb.add(s.instantiate(pContext));
 		}
 		

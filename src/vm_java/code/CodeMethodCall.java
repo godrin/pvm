@@ -7,7 +7,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -42,9 +42,9 @@ public class CodeMethodCall extends CodeStatement implements CodeExpression {
 			f = scope.getFunction(methodName);
 		} else {
 			BasicObject bo = scope.get(varName);
-			Log.debug("COMP:"+bo);
+			VMLog.debug("COMP:"+bo);
 			if (bo instanceof FunctionProvider) {
-				Log.debug("is funcprov:"+bo);
+				VMLog.debug("is funcprov:"+bo);
 				FunctionProvider vmo = (FunctionProvider) bo;
 
 				f = vmo.getFunction(methodName);

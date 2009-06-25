@@ -8,6 +8,7 @@ package vm_java.types;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.internal.VMLog;
 
 /**
  * 
@@ -26,7 +27,7 @@ public class Klass extends Module {
 	
 	public BasicObject get(ObjectName name) {
 		
-		System.out.println("TRYING TO GET OUT OF CLASS:"+name);
+		VMLog.debug("TRYING TO GET OUT OF CLASS:"+name);
 		BasicObject o=super.get(name);
 		if(o==null) {
 			if(mParent!=null) {

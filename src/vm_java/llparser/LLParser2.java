@@ -14,7 +14,7 @@ import vm_java.code.lib.StdIO;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 import vm_java.llparser.LineLexer2.Lex;
 import vm_java.llparser.LineLexer2.Result;
 import vm_java.llparser.LineLexer2.SYMBOLS;
@@ -124,7 +124,7 @@ public class LLParser2 {
 			s = new ASTReturn(source(),v);
 		} else if(token()==SYMBOLS.NEWLINE) {
 			fetchToken();
-			Log.debug("IGNORE EMPTY LINE");
+			VMLog.debug("IGNORE EMPTY LINE");
 			return null;
 		} else if(token()==SYMBOLS.COMMENT) {
 			while(token()!=SYMBOLS.NEWLINE)
@@ -138,7 +138,7 @@ public class LLParser2 {
 		if (s == null)
 			parseError();
 		if (token() != SYMBOLS.NEWLINE) {
-			Log.debug("Statement:" + s);
+			VMLog.debug("Statement:" + s);
 			parseError(); //
 		} else if (token() == null)
 			return null;
@@ -176,7 +176,7 @@ public class LLParser2 {
 	}
 
 	private void parseError() throws ParseError {
-		Log.debug("Parse error in line " + lineNo);
+		VMLog.debug("Parse error in line " + lineNo);
 		System.out.print("Before: ");
 		LineLexer2.output(mResult);
 		LineLexer2.output(results);
@@ -284,7 +284,7 @@ public class LLParser2 {
 
 				parameters.add(v);
 				SYMBOLS t2 = fetchToken();
-				Log.debug("Next:"+t2);
+				VMLog.debug("Next:"+t2);
 				if (t2 == SYMBOLS.COMMA) {
 					t2 = fetchToken();
 				} else if (t2 == SYMBOLS.BRACES_CLOSE) {
@@ -329,7 +329,7 @@ public class LLParser2 {
 
 		LLParser2 lp = new LLParser2();
 		String curDir = System.getProperty("user.dir");
-		Log.debug(curDir);
+		VMLog.debug(curDir);
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				+ "simple_function.pvm";

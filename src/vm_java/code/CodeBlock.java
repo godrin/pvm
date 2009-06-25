@@ -12,7 +12,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
@@ -43,7 +43,7 @@ public class CodeBlock extends BasicObject{
         for(CodeStatement s:statements) {
         	if(s==null)
         		throw new VMException(s,"Statement is null");
-        	Log.debug("exec:"+s+" line."+s.info().lineNo);
+        	VMLog.debug("exec:"+s+" line."+s.info().lineNo);
             result=s.execute(pScope);
             if(result==null)
         		throw new VMException(s,"result is null");

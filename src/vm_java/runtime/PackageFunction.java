@@ -13,7 +13,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.Log;
+import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class PackageFunction implements RuntimeFunction {
@@ -27,7 +27,7 @@ public class PackageFunction implements RuntimeFunction {
 	}
 
 	private Method getMethod() throws PackageMethodNotFoundException {
-		Log.debug("Searching:" + mName);
+		VMLog.debug("Searching:" + mName);
 
 		if (!mPackage.getFunctions().contains(mName))
 			throw new PackageMethodNotFoundException(mName, mPackage);
@@ -52,7 +52,7 @@ public class PackageFunction implements RuntimeFunction {
 			VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
 
-		Log.debug("PackageFunction");
+		VMLog.debug("PackageFunction");
 		Method method;
 		Object result = null;
 		boolean ok = false;
@@ -60,17 +60,17 @@ public class PackageFunction implements RuntimeFunction {
 		try {
 			method = getMethod();
 
-			Log.debug("Found method:"+method);
+			VMLog.debug("Found method:"+method);
 			Object[] os;
 			Class<?>[] signature = method.getParameterTypes();
 			
 			parameters=RuntimeFunctionHelper.createArguments(scope, parameters);
 			
 			os=RuntimeFunctionHelper.toJavaArgs(parameters, signature);
-			Log.debug("OS:"
+			VMLog.debug("OS:"
 					+os);
 			for(Object o:os) {
-				Log.debug(o);
+				VMLog.debug(o);
 			}
 			try {
 				result = method.invoke(mPackage, os);

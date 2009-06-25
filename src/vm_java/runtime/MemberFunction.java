@@ -7,6 +7,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
 import vm_java.types.Function;
 import vm_java.types.Module;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -43,7 +44,7 @@ public class MemberFunction implements RuntimeFunction{
 		}
 		List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope,parameters);
 		
-		System.out.println("Running function:"+function);
+		VMLog.debug("Running function:"+function);
 		IntermedResult res=function.runFunction(subScope, bos);
 		
 		return res;

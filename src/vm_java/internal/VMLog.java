@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class Log {
+public class VMLog {
 	enum Level {DEBUG,WARN,ERROR};
 	
 	public static void debug(Object x) {

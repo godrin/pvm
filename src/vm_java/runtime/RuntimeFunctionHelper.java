@@ -11,6 +11,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class RuntimeFunctionHelper {
@@ -32,7 +33,7 @@ public class RuntimeFunctionHelper {
 		int i = 0;
 		for (Object o : margs) {
 			Class< ? > signaturKlass = signature[i];
-			System.out.println("Converting "+o+" to "+signaturKlass);
+			VMLog.debug("Converting "+o+" to "+signaturKlass);
 			if (!signaturKlass.isInstance(o)) {
 				// type mismatch
 				if (o instanceof BasicObject) {
