@@ -134,7 +134,7 @@ public class LineLexer2 {
 		for (Result r : results) {
 			output(r);
 		}
-		Log.debug();
+		Log.debug("");
 	}
 
 	public static void main(String[] args) throws IOException {
