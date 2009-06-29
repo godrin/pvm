@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 import vm_java.code.CodeResolveVar;
 import vm_java.code.CodeStatement;
+import vm_java.code.IntermedResult;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
 import vm_java.code.lib.VMPackage;
@@ -37,8 +38,7 @@ public class VMScope {
 	public VMScope(VMContext pContext) throws VMExceptionOutOfMemory {
 		mContext = pContext;
 		selfModule = new Module(mContext);
-		
-		
+
 		try {
 			Buildin.createBuildins(this);
 		} catch (VMException e) {
@@ -115,19 +115,20 @@ public class VMScope {
 	 */
 	public void put(ObjectName objectName, BasicObject value)
 			throws VMException {
-		if(value instanceof CodeResolveVar) {
+		if (value instanceof CodeResolveVar) {
 			throw new VMException(null, "Tried to store codesolvevar!");
 		}
-		
+
 		if (SELF.equals(objectName.getName()))
 			throw new VMException(null, "Self accessed!");
-		
-		VMLog.debug("SETTING "+objectName+":="+value);
-		
+
+		VMLog.debug("SETTING " + objectName + ":=" + value);
+
 		mReferences.put(objectName, value);
 	}
 
-	public void addPackage(VMPackage pPackage) throws VMExceptionOutOfMemory, VMException {
+	public void addPackage(VMPackage pPackage) throws VMExceptionOutOfMemory,
+			VMException {
 		ObjectName name = pPackage.getName(mContext);
 		VMLog.debug("adding package OName:" + name.getName());
 		selfModule.put(name, pPackage);
@@ -135,11 +136,15 @@ public class VMScope {
 
 	public MemberFunction getFunction(ObjectName methodName) throws VMException {
 		Function f = (Function) get(methodName);
+
 		if (selfObject == null)
 			return new MemberFunction(selfModule, f);
 		else
 			return new MemberFunction(selfObject, f);
 	}
 
+	public void clear(ObjectName name) {
+		mReferences.remove(name);
+	}
 
 }

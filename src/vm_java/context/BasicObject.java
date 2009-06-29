@@ -4,6 +4,7 @@
  */
 package vm_java.context;
 
+import vm_java.VM;
 import vm_java.code.CodeExpression;
 import vm_java.code.IntermedResult;
 import vm_java.code.VMException;
@@ -39,22 +40,20 @@ public class BasicObject implements CodeExpression {
 
 	public static BasicObject convert(VMContext context, Object o)
 			throws VMExceptionOutOfMemory {
-		if(o instanceof BasicObject) {
-			return (BasicObject)o;
-		}
-		else if (o instanceof java.lang.String) {
+		if (o instanceof BasicObject) {
+			return (BasicObject) o;
+		} else if (o instanceof java.lang.String) {
 			VMString s = new VMString(context);
 			s.setContent((String) o);
 			return s;
-		} else if(o instanceof java.lang.Integer) {
-			VMInteger i= new VMInteger(context);
-			i.set((Integer)o);
+		} else if (o instanceof java.lang.Integer) {
+			VMInteger i = new VMInteger(context);
+			i.set((Integer) o);
 			return i;
 		}
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	public Object convertToJava(Object pk) {
 		VMLog.debug("BASIC");
@@ -63,9 +62,14 @@ public class BasicObject implements CodeExpression {
 	}
 
 	@Override
-	public IntermedResult compute(VMScope scope) throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
-		return new IntermedResult(this,Result.NONE);
+	public IntermedResult compute(VMScope scope)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
+			VMException {
+		return new IntermedResult(this, Result.NONE);
 	}
 
-	
+	public VM getVM() {
+		return getContext().getVM();
+	}
+
 }

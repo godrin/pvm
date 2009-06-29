@@ -26,6 +26,7 @@ public class Buildin {
 			String mName=m.getName();
 			BuildinFunction b=new BuildinFunction(context,m);
 			k.put(context.intern(mName), b);
+			k.put(context.intern(shorten(mName)), b);
 			VMLog.debug("Exposing method "+mName);
 		}
 		
@@ -33,5 +34,9 @@ public class Buildin {
 		
 		scope.put(context.intern(name),k);
 		
+	}
+
+	private static String shorten(String name) {
+		return name.replace("plus","+");
 	}
 }

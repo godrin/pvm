@@ -22,8 +22,12 @@ public class Program extends BasicObject{
         super(pContext);
         mBlock=pBlock;
     }
+    
+    public void execute(VMScope pScope) {
+    	
+    }
 
-    public void execute(VMScope pScope) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+    public void run(VMScope pScope) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
         mBlock.execute(pScope);
     }
 

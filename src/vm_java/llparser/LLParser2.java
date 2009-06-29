@@ -22,6 +22,7 @@ import vm_java.llparser.ast.AST;
 import vm_java.llparser.ast.ASTArray;
 import vm_java.llparser.ast.ASTAssign;
 import vm_java.llparser.ast.ASTBlock;
+import vm_java.llparser.ast.ASTClearVar;
 import vm_java.llparser.ast.ASTFunction;
 import vm_java.llparser.ast.ASTInteger;
 import vm_java.llparser.ast.ASTMethodCall;
@@ -133,6 +134,12 @@ public class LLParser2 {
 
 				fetchToken();
 			return null;
+		} else if (token() == SYMBOLS.CLEAR) {
+			fetchToken();
+			ASTVar v = parseVar();
+			s = new ASTClearVar(source(), v);
+			fetchToken();
+
 		} else {
 
 			parseError();
@@ -192,7 +199,7 @@ public class LLParser2 {
 	}
 
 	private ASTVar parseVar() throws ParseError {
-		if(token()!=SYMBOLS.VAR)
+		if (token() != SYMBOLS.VAR)
 			parseError();
 		ASTVar v = new ASTVar(source(), mResult.string);
 		return v;
@@ -212,8 +219,8 @@ public class LLParser2 {
 		} else if (t == SYMBOLS.INTEGER) {
 			s = new ASTAssign(source(), lValue, new ASTInteger(mResult.string));
 			fetchToken();
-		} else if(t==SYMBOLS.BRACKETS_OPEN) {
-			s= new ASTAssign(source(),lValue,parseArray());
+		} else if (t == SYMBOLS.BRACKETS_OPEN) {
+			s = new ASTAssign(source(), lValue, parseArray());
 		} else {
 			parseError();
 		}
@@ -223,20 +230,19 @@ public class LLParser2 {
 	}
 
 	private ASTRightValue parseArray() throws ParseError {
-		if(token()!=SYMBOLS.BRACKETS_OPEN)
+		if (token() != SYMBOLS.BRACKETS_OPEN)
 			parseError();
 		fetchToken();
-		ASTArray array=new ASTArray();
-		while(token()!=SYMBOLS.BRACKETS_CLOSE) {
-			ASTVar v=parseVar();
+		ASTArray array = new ASTArray();
+		while (token() != SYMBOLS.BRACKETS_CLOSE) {
+			ASTVar v = parseVar();
 			array.add(v);
-			if(fetchToken()==SYMBOLS.COMMA)
+			if (fetchToken() == SYMBOLS.COMMA)
 				fetchToken();
-			
-			
+
 		}
 		fetchToken();
-		
+
 		return array;
 	}
 
@@ -264,15 +270,28 @@ public class LLParser2 {
 			}
 		} else if (t == SYMBOLS.NEWLINE) {
 			return v;
-		} else if(t==SYMBOLS.BRACKETS_OPEN) {
+		} else if (t == SYMBOLS.BRACKETS_OPEN) {
 			fetchToken();
-			ASTVar index=parseVar();
-			if(fetchToken()!=SYMBOLS.BRACKETS_CLOSE)
+			ASTVar index = parseVar();
+			if (fetchToken() != SYMBOLS.BRACKETS_CLOSE)
 				parseError();
 			fetchToken();
-			List<ASTVar> ps=new ArrayList<ASTVar>();
+			List<ASTVar> ps = new ArrayList<ASTVar>();
 			ps.add(index);
-			return new ASTMethodCall(source(),v,new ASTVar(source(),"__getitem"),ps);
+			return new ASTMethodCall(source(), v, new ASTVar(source(),
+					"__getitem"), ps);
+		} else if (t == SYMBOLS.PARENT_OPEN) {
+			// parseError();
+			List<ASTVar> parameters = null;
+			parameters = parseParameters();
+			t = fetchToken();
+
+			if (t == SYMBOLS.NEWLINE) {
+				ASTVar x = new ASTVar(source(), "self");
+				return new RValue(source(), x, v, parameters);
+			} else {
+				parseError();
+			}
 		} else {
 			parseError();
 		}
@@ -366,13 +385,14 @@ public class LLParser2 {
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				// + "simple_function.pvm";
-				+ "array.pvm";
+				+ "tes.pvm";
+		// + "array.pvm";
 		// + "very_simple.pvm";
 		String content = LineLexer2.loadFile(fn);
 		ASTProgram astP = lp.parse(content);
 		Program prg = astP.instantiate(vmc);
 		VMScope scope = vmc.createScope();
 		scope.addPackage(new StdIO(vmc));
-		prg.execute(scope);
+		prg.run(scope);
 	}
 }

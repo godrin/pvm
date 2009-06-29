@@ -27,6 +27,18 @@ public class BuildInKlass extends BasicObject implements FunctionProvider{
 	}
 
 	private Method getMethodByName(String name) {
+		Method m=getMethodByPrivName(name);
+		if(m!=null)
+			return m;
+		m=getMethodByName(checkName(name));
+		return m;
+	}
+	@Deprecated
+	private String checkName(String name) {
+		return name.replace("+","plus").replace("-","minus");
+	}
+	
+	private Method getMethodByPrivName(String name) {
 		for(Method m:getClass().getMethods()) {
 			if(m.getName().equals(name))
 				return m;

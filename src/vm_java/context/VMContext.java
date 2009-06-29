@@ -78,5 +78,8 @@ public class VMContext {
 		return on;
 	}
 	
+	public VM getVM() {
+		return mVM;
+	}
 
 }
