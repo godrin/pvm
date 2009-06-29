@@ -393,6 +393,13 @@ public class LLParser2 {
 		Program prg = astP.instantiate(vmc);
 		VMScope scope = vmc.createScope();
 		scope.addPackage(new StdIO(vmc));
-		prg.run(scope);
+		prg.enqueue(scope);
+		vm.run();
+		try {
+			vm.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

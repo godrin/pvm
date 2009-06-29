@@ -9,25 +9,21 @@ import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class VMThread extends Thread {
-	
+
 	private VM vm;
-	private Job job;
-	
+	private Task job;
+
 	public VMThread(VM pVM) {
-		vm=pVM;
+		vm = pVM;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Thread#run()
-	 */
 	@Override
 	public void run() {
 		super.run();
-		
-		while(vm.running()) {
+
+		while (vm.running()) {
 			getJob();
-			if(job==null)
-			{
+			if (job == null) {
 				try {
 					Thread.sleep(Options.GRANULARITY_MS);
 				} catch (InterruptedException e) {
@@ -36,50 +32,39 @@ public class VMThread extends Thread {
 				}
 				continue;
 			}
-			long startTime=System.currentTimeMillis();
-			long endTime=startTime;
-			VMScope scope=job.getScope();
-			
-			do {
-				CodeStatement statement=job.getNextStatement();
-				if(statement==null)
-					break;
-				
-				try {
-					statement.execute(scope);
-				} catch (VMException e) {
-					//FIXME: implement exceptions !!!
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (VMExceptionOutOfMemory e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (VMExceptionFunctionNotFound e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			long startTime = System.currentTimeMillis();
+			long endTime = startTime;
+			VMScope scope = job.getScope();
 
-				
-				endTime=System.currentTimeMillis();
-			}while((endTime-startTime)<Options.GRANULARITY_MS);
-			VMLog.debug("ONE RUN:"+(endTime-startTime));
-			
-			putJob();
+			try {
+				job.getStatement().go(scope);
+			} catch (VMException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (VMExceptionOutOfMemory e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (VMExceptionFunctionNotFound e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			endTime = System.currentTimeMillis();
+			long diff = endTime - startTime;
+
+			double time = (diff / 1000.0);
+
+			scope.getContext().addTime(time);
+			job = null;
+
 		}
 	}
-	
+
 	private synchronized void getJob() {
-		job=vm.popJob();
-	}
-	private synchronized void putJob() {
-		if(!job.finished()) {
-			vm.addJob(job);
-			job=null;
-		}
+		job = vm.popJob();
 	}
 
 	boolean todoLeft() {
-		return job!=null;
+		return job != null;
 	}
-
 }
