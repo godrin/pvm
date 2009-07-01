@@ -50,8 +50,7 @@ public class VM {
 
 	public void run(Program program) throws VMExceptionOutOfMemory {
 		VMScope scope = new VMScope(program.getContext());
-		addJob(new Task(program, scope));
-
+		addJob(program.execution(scope));
 	}
 
 	public void addJob(Task job) {

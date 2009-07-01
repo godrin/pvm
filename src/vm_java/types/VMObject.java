@@ -39,4 +39,9 @@ public class VMObject extends BasicObject implements FunctionProvider {
 		}
 		return null;
 	}
+
+	@Override
+	public String inspect() {
+		return "[VMObject]";
+	}
 }

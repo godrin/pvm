@@ -1,7 +1,5 @@
 package vm_java.code;
 
-import vm_java.code.IntermedResult.Result;
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -19,14 +17,13 @@ public class CodeClearVar extends CodeStatement {
 	}
 
 	@Override
-	public IntermedResult execute(VMScope scope) throws VMException,
+	public void execute(VMScope scope) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		IntermedResult res = varName.compute(scope);
-		BasicObject bo = res.content();
-		if (bo instanceof ObjectName) {
-			scope.clear((ObjectName) bo);
-		}
-		return new IntermedResult(null, Result.NONE);
+		scope.clear(varName);
 	}
 
+	@Override
+	public String inspect() {
+		return "[Clear:"+varName.inspect()+"]";
+	}
 }

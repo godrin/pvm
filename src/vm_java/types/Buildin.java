@@ -2,6 +2,7 @@ package vm_java.types;
 
 import java.lang.reflect.Method;
 
+import vm_java.VM;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
@@ -14,6 +15,7 @@ public class Buildin {
 		expose(scope,VMInteger.class);
 		expose(scope,VMString.class);
 		expose(scope,VMArray.class);
+		expose(scope,VMIO.class);
 	}
 	
 	public static void expose(VMScope scope,Class<? extends BasicObject> c) throws VMExceptionOutOfMemory, VMException {
@@ -21,6 +23,7 @@ public class Buildin {
 		VMContext context=scope.getContext();
 		
 		Klass k=new Klass(context);
+		
 		
 		for(Method m:c.getMethods()) {
 			String mName=m.getName();
@@ -38,5 +41,13 @@ public class Buildin {
 
 	private static String shorten(String name) {
 		return name.replace("plus","+");
+	}
+	
+	public static void main(String[] args) throws VMExceptionOutOfMemory, VMException {
+		VM vm=new VM();
+		VMContext ctx=vm.createContext();
+		VMScope scope=ctx.createScope();
+		Buildin.createBuildins(scope);
+		
 	}
 }

@@ -47,4 +47,9 @@ public class BuildInKlass extends BasicObject implements FunctionProvider{
 		return null;
 	}
 
+	@Override
+	public String inspect() {
+		return "[BuildInKlass]";
+	}
+
 }

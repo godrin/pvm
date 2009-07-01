@@ -1,12 +1,13 @@
 package vm_java.llparser.ast;
 
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.CodeResolveVar;
+import vm_java.code.CodeStatement;
+import vm_java.code.LocalAssignment;
 import vm_java.code.VMException;
 import vm_java.code.CodeStatement.SourceInfo;
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.ObjectName;
 
 public class ASTVar extends AST implements ASTRightValue {
 	public String name;
@@ -16,9 +17,15 @@ public class ASTVar extends AST implements ASTRightValue {
 		name = pname;
 	}
 
-	@Override
-	public BasicObject instantiate(VMContext context)
+	public ObjectName code(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		return new CodeResolveVar(context,context.intern(name));
+		return context.intern(name);
+	}
+
+	@Override
+	public CodeStatement instantiate(VMContext context, ASTVar left)
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+		return new LocalAssignment(context,source,
+				context.intern(left.name),context.intern(name));
 	}
 }

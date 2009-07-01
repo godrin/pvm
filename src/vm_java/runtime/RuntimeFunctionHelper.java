@@ -11,7 +11,6 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class RuntimeFunctionHelper {
@@ -21,7 +20,8 @@ public class RuntimeFunctionHelper {
 		List<BasicObject> n=new ArrayList<BasicObject>();
 		
 		for(BasicObject bo:args) {
-			n.add(bo.compute(scope).content());
+			
+			n.add(bo);
 		}
 		
 		return n;
@@ -33,7 +33,6 @@ public class RuntimeFunctionHelper {
 		int i = 0;
 		for (Object o : margs) {
 			Class< ? > signaturKlass = signature[i];
-			VMLog.debug("Converting "+o+" to "+signaturKlass);
 			if (!signaturKlass.isInstance(o)) {
 				// type mismatch
 				if (o instanceof BasicObject) {
@@ -52,8 +51,7 @@ public class RuntimeFunctionHelper {
 		return os;
 	}
 
-	public static IntermedResult fromJava(VMContext context,Object result) throws VMExceptionOutOfMemory {
-		BasicObject bo=BasicObject.convert(context, result);
-		return new IntermedResult(bo,Result.NONE);
+	public static BasicObject fromJava(VMContext context,Object result) throws VMExceptionOutOfMemory {
+		return BasicObject.convert(context, result);
 	}
 }

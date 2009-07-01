@@ -22,24 +22,8 @@ public class BuildinFunction extends Function {
 		method = m;
 	}
 
-	@Override
-	public IntermedResult runFunction(VMScope scope,
-			List<? extends BasicObject> args) throws VMException,
-			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		BasicObject bo=scope.self();
-		
-		if(bo instanceof BuildInInterface) {
-			
-			List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope, args);
-			
-			IntermedResult res=run(bo,method,bos);
-			return res;
-		} else {
-			return new IntermedResult(BasicObject.nil,Result.QUIT_EXCEPTION);
-		}
-	}
 	
-	public static IntermedResult run(BasicObject self,Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
+	public static BasicObject run(VMScope scope,BasicObject self,Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
 		Object[] os=new Object[bos.size()];
 		for(int i=0;i<bos.size();i+=1) {
 			os[i]=bos.get(i);
@@ -49,18 +33,31 @@ public class BuildinFunction extends Function {
 		try {
 			result=method.invoke(self, os);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			scope.setException(new VMCException(scope.getContext(), e));
+			return null;
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			scope.setException(new VMCException(scope.getContext(), e));
+			return null;
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			scope.setException(new VMCException(scope.getContext(), e));
+			return null;
 		}
-		BasicObject bo = BasicObject.convert(self.getContext(), result);
+		return BasicObject.convert(self.getContext(), result);
+	}
 
-		return new IntermedResult(bo,Result.NONE);
+	@Override
+	public void runFunction(VMScope scope, ObjectName returnName,
+			List<? extends BasicObject> args) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+		BasicObject bo=scope.self();
+		
+		if(bo instanceof BuildInInterface) {
+			
+			List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope, args);
+			
+			BasicObject r=run(scope,bo,method,bos);
+			scope.put(returnName, r);
+		}		
 	}
 
 

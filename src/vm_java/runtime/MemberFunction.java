@@ -10,31 +10,36 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.types.Function;
 import vm_java.types.Module;
+import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMObject;
 
-public class MemberFunction implements RuntimeFunction{
+public class MemberFunction implements RuntimeFunction {
 	private Function function;
 	private Module module;
 	private VMObject object;
 
-	public MemberFunction(Module pmodule, Function pFunction) throws VMException {
+	public MemberFunction(Module pmodule, Function pFunction)
+			throws VMException {
 		module = pmodule;
 		function = pFunction;
-		if(function==null)
-			throw new VMException(null,"function is null");
-		assert(function!=null);
+		if (function == null)
+			throw new VMException(null, "function is null");
+		assert (function != null);
 	}
 
-	public MemberFunction(VMObject pObject, Function pFunction) throws VMException {
-		if(function==null)
-			throw new VMException(null,"function is null");
+	public MemberFunction(VMObject pObject, Function pFunction)
+			throws VMException {
+		if (function == null)
+			throw new VMException(null, "function is null");
 		function = pFunction;
 		object = pObject;
-		assert(function!=null);
+		assert (function != null);
 	}
 
-	public IntermedResult run(VMScope scope, List<BasicObject> parameters) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+	public void run(VMScope scope, ObjectName returnName,
+			List<BasicObject> parameters) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope;
 
 		if (object != null) {
@@ -42,11 +47,10 @@ public class MemberFunction implements RuntimeFunction{
 		} else {
 			subScope = new VMScope(scope, module);
 		}
-		List<BasicObject> bos=RuntimeFunctionHelper.createArguments(scope,parameters);
-		
-		VMLog.debug("Running function:"+function);
-		IntermedResult res=function.runFunction(subScope, bos);
-		
-		return res;
+		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
+				parameters);
+
+		VMLog.debug("Running function:" + function);
+		function.runFunction(subScope, returnName, bos);
 	}
 }

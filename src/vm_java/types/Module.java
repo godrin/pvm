@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import vm_java.code.CodeResolveVar;
 import vm_java.code.FunctionProvider;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
@@ -70,7 +69,7 @@ public class Module extends BasicObject implements MemberContainer,
 	}
 
 	public BasicObject get(ObjectName name) {
-		VMLog.debug("TRYING "+name);
+		VMLog.debug("searching:"+name);
 		VMLog.debug(mObjects.keySet());
 		BasicObject o = getDirect(name);
 		if (o == null) {
@@ -80,14 +79,11 @@ public class Module extends BasicObject implements MemberContainer,
 					break;
 			}
 		}
-		VMLog.debug("FOUND:"+o);
+		VMLog.debug("found:"+o);
 		return o;
 	}
 
 	public void put(ObjectName name, BasicObject bo) throws VMException {
-		if(bo instanceof CodeResolveVar) {
-			throw new VMException(null, "Tried to store codesolvevar!");
-		}
 		mObjects.put(name, bo);
 	}
 
@@ -95,5 +91,10 @@ public class Module extends BasicObject implements MemberContainer,
 	public void set(ObjectName memberName, BasicObject r) throws VMException {
 		put(memberName, r);
 
+	}
+
+	@Override
+	public String inspect() {
+		return "[Module]";
 	}
 }

@@ -1,17 +1,13 @@
 package vm_java.types;
 
-import vm_java.code.CodeExpression;
-import vm_java.code.IntermedResult;
-import vm_java.code.IntermedResult.Result;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.context.VMScope;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class VMString extends BuildInKlass implements CodeExpression,BuildInInterface {
+public class VMString extends BuildInKlass implements BuildInInterface {
 	private java.lang.String mContent = "";
 	private final int OVERHEAD = 8;
 
@@ -51,10 +47,4 @@ public class VMString extends BuildInKlass implements CodeExpression,BuildInInte
 		}
 		return null;
 	}
-
-	@Override
-	public IntermedResult compute(VMScope scope) {
-		return new IntermedResult(this,Result.NONE);
-	}
-
 }

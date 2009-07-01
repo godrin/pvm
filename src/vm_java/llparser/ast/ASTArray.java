@@ -4,27 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.code.BlockIsFinalException;
+import vm_java.code.CodeStatement;
+import vm_java.code.LocalAssignment;
 import vm_java.code.VMException;
+import vm_java.code.CodeStatement.SourceInfo;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.VMArray;
 
-public class ASTArray implements ASTRightValue {
+public class ASTArray extends AST implements ASTRightValue {
 
-	List<ASTVar> mArray=new ArrayList<ASTVar>();
-	@Override
-	public BasicObject instantiate(VMContext context)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		VMArray ar=new VMArray(context);
-		
-		for(ASTVar v:mArray) {
-			ar.add(v.instantiate(context));
-		}
-		return ar;
+	public ASTArray(SourceInfo source) {
+		super(source);
 	}
+
+	List<ASTVar> mArray = new ArrayList<ASTVar>();
+
 	public void add(ASTVar v) {
 		mArray.add(v);
+	}
+
+	@Override
+	public CodeStatement instantiate(VMContext context, ASTVar left)
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+		VMArray ar = new VMArray(context);
+
+		for (ASTVar v : mArray) {
+			ar.add(v.code(context));
+		}
+		LocalAssignment la = new LocalAssignment(context, source, context
+				.intern(left.name), ar);
+		return la;
 	}
 
 }

@@ -16,10 +16,15 @@ public class VMException extends Exception {
 	private static final long serialVersionUID = 1L;
 	private CodeStatement mStatement;
 	private String what;
+	private Exception enclosed;
 
 	public VMException(CodeStatement aThis, String string) {
 		mStatement = aThis;
 		what = string;
+	}
+
+	public VMException(Exception e) {
+		enclosed=e;
 	}
 
 	public CodeStatement getStatement() {
@@ -36,7 +41,7 @@ public class VMException extends Exception {
 			return s;
 		else
 			return s + "\n"+what+"\n Statment:" + mStatement + " line:"
-					+ mStatement.info().getLineNumber();
+					+ mStatement.info();
 	}
 
 }

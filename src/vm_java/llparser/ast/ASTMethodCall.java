@@ -11,6 +11,7 @@ import vm_java.code.CodeStatement.SourceInfo;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.ObjectName;
 
 public class ASTMethodCall extends AST implements ASTStatementInterface, ASTRightValue {
 	String var;
@@ -27,14 +28,24 @@ public class ASTMethodCall extends AST implements ASTStatementInterface, ASTRigh
 	}
 
 	@Override
-	public CodeStatement instantiate(VMContext context)
+	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		List<BasicObject> ps = new ArrayList<BasicObject>();
 		for (ASTVar p : parameters) {
-			ps.add(p.instantiate(context));
+			ps.add(p.code(context));
 		}
-		return new CodeMethodCall(context, source, context.intern(var), context
+		ObjectName returnName=null;
+		if(left!=null)
+			returnName=left.code(context);
+		
+		return new CodeMethodCall(context, source, returnName,context.intern(var), context
 				.intern(method), ps);
+	}
+
+	@Override
+	public CodeStatement instantiate(VMContext context)
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+		return instantiate(context,null);
 	}
 
 }

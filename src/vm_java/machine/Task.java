@@ -1,24 +1,30 @@
 package vm_java.machine;
 
-import vm_java.code.Runnable;
+import vm_java.VM;
+import vm_java.code.VMException;
+import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.VMExceptionFunctionNotFound;
 
-public class Task {
+public abstract class Task {
+	private VMScope scope;
 
-	VMScope scope;
-	Runnable runnable;
-
-	public Task(Runnable r, VMScope pScope) {
-		runnable=r;
-		scope=pScope;
+	public Task(VMScope pScope) {
+		scope = pScope;
 	}
-	
-	Runnable getStatement() {
-		return runnable;
-	}
-
 	public VMScope getScope() {
 		return scope;
+	}
+	
+	public abstract void run() throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
+	
+	
+	public void setReturn(Object retValue) {
+		
+	}
+	
+	public VM getVM() {
+		return scope.getContext().getVM();
 	}
 
 }

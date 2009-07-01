@@ -34,10 +34,9 @@ public class VMThread extends Thread {
 			}
 			long startTime = System.currentTimeMillis();
 			long endTime = startTime;
-			VMScope scope = job.getScope();
 
 			try {
-				job.getStatement().go(scope);
+				job.run();
 			} catch (VMException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -54,7 +53,7 @@ public class VMThread extends Thread {
 
 			double time = (diff / 1000.0);
 
-			scope.getContext().addTime(time);
+			job.getScope().getContext().addTime(time);
 			job = null;
 
 		}

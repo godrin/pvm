@@ -50,4 +50,8 @@ public class ObjectName extends BasicObject implements Comparable<ObjectName> {
 		return super.toString()+" ["+mName+"]";
 	}
 
+	public String inspect() {
+		return "("+toString()+")";
+	}
+
 }

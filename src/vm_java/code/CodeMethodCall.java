@@ -12,55 +12,53 @@ import vm_java.runtime.RuntimeFunction;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
-public class CodeMethodCall extends CodeStatement implements CodeExpression {
+public class CodeMethodCall extends CodeStatement {
 
 	ObjectName varName, methodName;
+	ObjectName returnName;
 	List<BasicObject> parameters;
 
 	public CodeMethodCall(VMContext context, SourceInfo source,
-			ObjectName name, ObjectName name2, List<BasicObject> ps)
+			ObjectName pReturnName, ObjectName objectName,
+			ObjectName pMethodName, List<BasicObject> ps)
 			throws VMExceptionOutOfMemory {
 		super(context, source);
-		varName = name;
-		methodName = name2;
+		varName = objectName;
+		methodName = pMethodName;
 		parameters = ps;
+		returnName = pReturnName;
 	}
 
 	@Override
-	public IntermedResult execute(VMScope scope) throws VMException,
-			VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
-		return compute(scope);
-	}
+	public void execute(VMScope scope) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 
-	@Override
-	public IntermedResult compute(VMScope scope)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
-			VMException {
-		// FIXME: add exception /checking
 		RuntimeFunction f = null;
 		BasicObject bo = null;
 		if (varName == null) {
 			f = scope.getFunction(methodName);
 		} else {
 			bo = scope.get(varName);
-			VMLog.debug("COMP:" + bo);
 			if (bo instanceof FunctionProvider) {
-				VMLog.debug("is funcprov:" + bo);
 				FunctionProvider vmo = (FunctionProvider) bo;
 
 				f = vmo.getFunction(methodName);
 			}
 		}
 		if (f == null) {
+			VMLog.error(info());
+			VMLog.warn("Method not found:");
+			VMLog.warn(scope.inspect());
 			// FIXME: return Quit_exception
 			throw new VMException(this, "Function " + methodName
 					+ " not found in " + varName + " (" + bo + "!");
 		}
-		IntermedResult res = f.run(scope, parameters);
+		f.run(scope, returnName, parameters);
 
-		if (res.returned()) {
-			return new IntermedResult(res.content(), Result.NONE);
-		} else
-			return res;
+	}
+
+	@Override
+	public String inspect() {
+		return "[CodeMethodCall:FIXME]";
 	}
 }

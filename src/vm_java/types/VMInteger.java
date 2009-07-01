@@ -25,7 +25,6 @@ public class VMInteger extends BuildInKlass implements BuildInInterface {
 	}
 	
 	public Object convertToJava(Object pk) {
-		VMLog.debug("PK:"+pk);
 		if (pk.equals(java.lang.Integer.class)) {
 			return i;
 		} else if(pk.equals(java.lang.String.class)) {

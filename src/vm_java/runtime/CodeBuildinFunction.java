@@ -10,6 +10,7 @@ import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 @Deprecated
@@ -26,7 +27,7 @@ public class CodeBuildinFunction implements RuntimeFunction {
 	}
 
 	@Override
-	public IntermedResult run(VMScope scope, List<BasicObject> parameters)
+	public void run(VMScope scope, ObjectName returnName,List<BasicObject> parameters)
 			throws VMException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
@@ -39,7 +40,8 @@ public class CodeBuildinFunction implements RuntimeFunction {
 		Object result;
 		try {
 			result = mMethod.invoke(mObject, args);
-			return RuntimeFunctionHelper.fromJava(scope.getContext(), result);
+			BasicObject bo=RuntimeFunctionHelper.fromJava(scope.getContext(), result);
+			scope.put(returnName, bo);
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,6 +52,14 @@ public class CodeBuildinFunction implements RuntimeFunction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new IntermedResult(null, Result.QUIT_EXCEPTION);
+		//return new IntermedResult(null, Result.QUIT_EXCEPTION);
 	}
+/*
+	@Override
+	public void run(VMScope scope, ObjectName returnName,
+			List<BasicObject> parameters) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+		// TODO Auto-generated method stub
+		
+	}*/
 }

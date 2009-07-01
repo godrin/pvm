@@ -10,19 +10,20 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.VMLog;
 import vm_java.types.Function;
 import vm_java.types.ObjectName;
+import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
  * 
  * @author davidkamphausen
  */
-@Deprecated
 public class UserFunction extends Function {
 	CodeBlock mBlock;
 	List<ObjectName> mArgs;
+
+	public static final String RETVALUE = "__retValue";
 
 	public UserFunction(VMContext pContext, CodeBlock pBlock,
 			List<ObjectName> pArgs) throws VMExceptionOutOfMemory {
@@ -32,20 +33,32 @@ public class UserFunction extends Function {
 	}
 
 	@Override
-	public IntermedResult runFunction(VMScope scope, List<? extends BasicObject> args)
-			throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+	public void runFunction(VMScope scope, ObjectName returnName,
+			List<? extends BasicObject> args) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope = new VMScope(scope, this);
-		int i=0;
-		VMLog.debug("ARGSSIZE:"+args.size());
-		if(args.size()!=mArgs.size())
-			throw new VMException(null,"Argsize is different!");
-		
-		for(;i<args.size();i++) {
+		int i = 0;
+		if (args.size() != mArgs.size())
+			throw new VMException(null, "Argsize is different!");
+
+		for (; i < args.size(); i++) {
 			subScope.put(mArgs.get(i), args.get(i));
-			VMLog.debug("Adding to subscope:"+mArgs.get(i)+":="+args.get(i));
+		}
+		if (returnName != null) {
+			subScope.put(subScope.getContext().intern(RETVALUE), new Reference(
+					scope, returnName));
 		}
 
-		IntermedResult res=mBlock.execute(subScope);
-		return res;
+		getVM().addJob(mBlock.execution(subScope));
+	}
+
+	@Override
+	public String inspect() {
+		StringBuilder b = new StringBuilder();
+		b.append("[UserFunction:");
+		for (ObjectName a : mArgs)
+			b.append(a.inspect()).append(", ");
+		b.append("]");
+		return b.toString();
 	}
 }

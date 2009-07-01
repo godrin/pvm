@@ -17,7 +17,7 @@ hello()
 tmp_5=1
 tmp_6=2
 tmp_4=self.compute(tmp_5, tmp_6)
-StdIO.puts(tmp_4)
+VMIO.puts(tmp_4)
 clear tmp_5
 clear tmp_6
 clear tmp_4

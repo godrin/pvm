@@ -1,23 +1,26 @@
 package vm_java.llparser.ast;
 
 import vm_java.code.BlockIsFinalException;
+import vm_java.code.CodeStatement;
+import vm_java.code.LocalAssignment;
 import vm_java.code.VMException;
-import vm_java.context.BasicObject;
+import vm_java.code.CodeStatement.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.VMInteger;
 
-public class ASTInteger implements ASTRightValue {
+public class ASTInteger extends AST implements ASTRightValue {
 	int i;
 
-	public ASTInteger(String string) {
-		i=Integer.parseInt(string);
+	public ASTInteger(SourceInfo source, String input) {
+		super(source);
+		i = Integer.parseInt(input);
 	}
 
 	@Override
-	public BasicObject instantiate(VMContext context)
+	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		return new VMInteger(context,i);
+		return new LocalAssignment(context, source, context.intern(left.name),
+				new VMInteger(context, i));
 	}
-
 }

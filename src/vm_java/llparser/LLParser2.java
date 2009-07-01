@@ -10,7 +10,6 @@ import vm_java.code.BlockIsFinalException;
 import vm_java.code.Program;
 import vm_java.code.VMException;
 import vm_java.code.CodeStatement.SourceInfo;
-import vm_java.code.lib.StdIO;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -18,9 +17,9 @@ import vm_java.internal.VMLog;
 import vm_java.llparser.LineLexer2.Lex;
 import vm_java.llparser.LineLexer2.Result;
 import vm_java.llparser.LineLexer2.SYMBOLS;
-import vm_java.llparser.ast.AST;
 import vm_java.llparser.ast.ASTArray;
 import vm_java.llparser.ast.ASTAssign;
+import vm_java.llparser.ast.ASTAssignMember;
 import vm_java.llparser.ast.ASTBlock;
 import vm_java.llparser.ast.ASTClearVar;
 import vm_java.llparser.ast.ASTFunction;
@@ -32,7 +31,6 @@ import vm_java.llparser.ast.ASTRightValue;
 import vm_java.llparser.ast.ASTStatementInterface;
 import vm_java.llparser.ast.ASTString;
 import vm_java.llparser.ast.ASTVar;
-import vm_java.llparser.ast.RValue;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class LLParser2 {
@@ -51,6 +49,7 @@ public class LLParser2 {
 	private List<Result> results = new ArrayList<Result>();
 	private LineLexer2 lexer;
 	int lineNo = 0;
+	private String filename;
 
 	public LLParser2() {
 		lexer = new LineLexer2();
@@ -172,8 +171,9 @@ public class LLParser2 {
 			return new ASTMethodCall(source(), v, m, ps);
 		} else if (t == SYMBOLS.ASSIGN) {
 			fetchToken();
-			ASTRightValue rv = parseRValue();
-			return new ASTAssign(source(), v, m, rv);
+			ASTVar rv = parseVar();
+			fetchToken();
+			return new ASTAssignMember(source(), v, m, rv);
 		} else if (t == SYMBOLS.NEWLINE) {
 			List<ASTVar> ps = new ArrayList<ASTVar>();
 			return new ASTMethodCall(source(), v, m, ps);
@@ -205,19 +205,20 @@ public class LLParser2 {
 		return v;
 	}
 
-	private ASTAssign parseAssign(ASTVar lValue) throws ParseError {
+	private ASTStatementInterface parseAssign(ASTVar lValue) throws ParseError {
 		SYMBOLS t = fetchToken();
-		ASTAssign s = null;
+		ASTStatementInterface s = null;
 		if (t == SYMBOLS.BEGIN) {
 			s = new ASTAssign(source(), lValue, parseBegin());
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
 			s = new ASTAssign(source(), lValue, parseRValue());
 		} else if (t == SYMBOLS.STRING) {
-			s = new ASTAssign(source(), lValue, new ASTString(mResult.string
+			s = new ASTAssign(source(), lValue, new ASTString(source(), mResult.string
 					.substring(1, mResult.string.length() - 1)));
 			fetchToken();
 		} else if (t == SYMBOLS.INTEGER) {
-			s = new ASTAssign(source(), lValue, new ASTInteger(mResult.string));
+			s = new ASTAssign(source(), lValue, new ASTInteger(source(),
+					mResult.string));
 			fetchToken();
 		} else if (t == SYMBOLS.BRACKETS_OPEN) {
 			s = new ASTAssign(source(), lValue, parseArray());
@@ -233,7 +234,7 @@ public class LLParser2 {
 		if (token() != SYMBOLS.BRACKETS_OPEN)
 			parseError();
 		fetchToken();
-		ASTArray array = new ASTArray();
+		ASTArray array = new ASTArray(source());
 		while (token() != SYMBOLS.BRACKETS_CLOSE) {
 			ASTVar v = parseVar();
 			array.add(v);
@@ -247,7 +248,7 @@ public class LLParser2 {
 	}
 
 	SourceInfo source() {
-		return new SourceInfo(lineNo);
+		return new SourceInfo(filename, lineNo);
 	}
 
 	private ASTRightValue parseRValue() throws ParseError {
@@ -264,7 +265,7 @@ public class LLParser2 {
 
 			}
 			if (t == SYMBOLS.NEWLINE) {
-				return new RValue(source(), v, m, parameters);
+				return new ASTMethodCall(source(), v, m, parameters);
 			} else {
 				parseError();
 			}
@@ -288,7 +289,7 @@ public class LLParser2 {
 
 			if (t == SYMBOLS.NEWLINE) {
 				ASTVar x = new ASTVar(source(), "self");
-				return new RValue(source(), x, v, parameters);
+				return new ASTMethodCall(source(), x, v, parameters);
 			} else {
 				parseError();
 			}
@@ -310,7 +311,7 @@ public class LLParser2 {
 
 			t = fetchToken();
 			if (t == SYMBOLS.NEWLINE) {
-				return new ASTFunction(parameters, parseBlock());
+				return new ASTFunction(source(),parameters, parseBlock());
 			} else {
 				parseError();
 			}
@@ -386,14 +387,17 @@ public class LLParser2 {
 				+ "vm_java" + File.separator + "examples" + File.separator
 				// + "simple_function.pvm";
 				+ "tes.pvm";
+
 		// + "array.pvm";
 		// + "very_simple.pvm";
-		String content = LineLexer2.loadFile(fn);
-		ASTProgram astP = lp.parse(content);
+		// String content = LineLexer2.loadFile(fn);
+
+		ASTProgram astP = lp.parseFile(fn);
+
+		// lp.parse(content);
 		Program prg = astP.instantiate(vmc);
 		VMScope scope = vmc.createScope();
-		scope.addPackage(new StdIO(vmc));
-		prg.enqueue(scope);
+		vm.addJob(prg.execution(scope));
 		vm.run();
 		try {
 			vm.join();
@@ -401,5 +405,10 @@ public class LLParser2 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private ASTProgram parseFile(String fn) throws ParseError, IOException {
+		filename = fn;
+		return parse(LineLexer2.loadFile(fn));
 	}
 }
