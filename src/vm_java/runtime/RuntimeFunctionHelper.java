@@ -11,6 +11,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class RuntimeFunctionHelper {
@@ -20,7 +21,9 @@ public class RuntimeFunctionHelper {
 		List<BasicObject> n=new ArrayList<BasicObject>();
 		
 		for(BasicObject bo:args) {
-			
+			if(bo instanceof ObjectName) {
+				bo=scope.get((ObjectName)bo);
+			}
 			n.add(bo);
 		}
 		

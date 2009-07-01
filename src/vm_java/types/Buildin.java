@@ -1,6 +1,7 @@
 package vm_java.types;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import vm_java.VM;
 import vm_java.code.VMException;
@@ -24,6 +25,7 @@ public class Buildin {
 		
 		Klass k=new Klass(context);
 		
+		VMLog.debug("Exposing "+name);
 		
 		for(Method m:c.getMethods()) {
 			String mName=m.getName();
@@ -33,7 +35,6 @@ public class Buildin {
 			VMLog.debug("Exposing method "+mName);
 		}
 		
-		VMLog.debug("Exposing "+name);
 		
 		scope.put(context.intern(name),k);
 		
