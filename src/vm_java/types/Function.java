@@ -12,20 +12,25 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 
 /**
  * 
  * @author davidkamphausen
  */
-public abstract class Function extends BasicObject{
+public abstract class Function extends BasicObject {
 
 	public Function(VMContext pContext) throws VMExceptionOutOfMemory {
 		super(pContext);
 	}
-    public abstract void runFunction(VMScope pScope,ObjectName returnName,List<? extends BasicObject> args) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
 
-    public String inspect() {
-    	return "[FUNCTION:FIXME]";
-    }
-    
+	public abstract void runFunction(VMScope pScope, ObjectName returnName,
+			List<? extends BasicObject> args, Task parentTask)
+			throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound;
+
+	public String inspect() {
+		return "[FUNCTION:FIXME]";
+	}
+
 }

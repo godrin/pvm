@@ -27,8 +27,7 @@ public class VMThread extends Thread {
 				try {
 					Thread.sleep(Options.GRANULARITY_MS);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					VMLog.error(e);
 				}
 				continue;
 			}
@@ -36,16 +35,23 @@ public class VMThread extends Thread {
 			long endTime = startTime;
 
 			try {
-				job.run();
+				if (job.canResume()) {
+					VMLog.debug("Running Job:" + job.inspect() + " ##:"
+							+ vm.jobCount());
+					job.run();
+				} else {
+					VMLog.debug("Not Running Job:" + job.inspect() + " waiting for "+job.childJobsCount()+" all ##:"
+							+ vm.jobCount());
+					vm.addJob(job);
+					continue;
+
+				}
 			} catch (VMException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				VMLog.error(e);
 			} catch (VMExceptionOutOfMemory e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				VMLog.error(e);
 			} catch (VMExceptionFunctionNotFound e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				VMLog.error(e);
 			}
 
 			endTime = System.currentTimeMillis();

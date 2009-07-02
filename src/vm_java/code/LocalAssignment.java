@@ -8,6 +8,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
@@ -29,7 +30,7 @@ public class LocalAssignment extends CodeStatement {
 		rObject = right;
 	}
 
-	public void execute(VMScope scope) throws VMExceptionFunctionNotFound,
+	public void execute(VMScope scope,Task parentTask) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory, VMException {
 
 		BasicObject bo = rObject;

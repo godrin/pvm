@@ -24,4 +24,9 @@ public class RunTask extends Task {
 		runnable.go(getScope());
 	}
 
+	@Override
+	public String inspect() {
+		return "[RunTask:"+runnable+"]";
+	}
+
 }

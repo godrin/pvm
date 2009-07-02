@@ -1,3 +1,5 @@
+hi="HI"
+VMIO.puts(hi)
 tmp_1=begin()
   y= "hello"
   return y

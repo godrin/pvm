@@ -2,12 +2,12 @@ package vm_java.code;
 
 import java.util.List;
 
-import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -30,7 +30,7 @@ public class CodeMethodCall extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 
 		RuntimeFunction f = null;
@@ -53,7 +53,7 @@ public class CodeMethodCall extends CodeStatement {
 			throw new VMException(this, "Function " + methodName
 					+ " not found in " + varName + " (" + bo + "!");
 		}
-		f.run(scope, returnName, parameters);
+		f.run(scope, returnName, parameters, parentTask);
 
 	}
 

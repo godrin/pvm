@@ -2,12 +2,12 @@ package vm_java.runtime;
 
 import java.util.List;
 
-import vm_java.code.IntermedResult;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.machine.Task;
 import vm_java.types.Function;
 import vm_java.types.Module;
 import vm_java.types.ObjectName;
@@ -38,7 +38,7 @@ public class MemberFunction implements RuntimeFunction {
 	}
 
 	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters) throws VMException,
+			List<BasicObject> parameters,Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope;
 
@@ -51,6 +51,6 @@ public class MemberFunction implements RuntimeFunction {
 				parameters);
 
 		VMLog.debug("Running function:" + function);
-		function.runFunction(subScope, returnName, bos);
+		function.runFunction(subScope, returnName, bos,parentTask);
 	}
 }

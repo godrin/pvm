@@ -39,7 +39,7 @@ public class Program extends BasicObject implements Runnable {
 	public
 	void go(VMScope scope) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
-		getVM().enqueue(mBlock.execution(scope));
+		getVM().enqueue(mBlock.execution(scope,null));
 	}
 
 	public Task execution(VMScope scope) {

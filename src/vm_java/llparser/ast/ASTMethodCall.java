@@ -7,7 +7,7 @@ import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeMethodCall;
 import vm_java.code.CodeStatement;
 import vm_java.code.VMException;
-import vm_java.code.CodeStatement.SourceInfo;
+import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;

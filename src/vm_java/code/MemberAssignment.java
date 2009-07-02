@@ -1,11 +1,11 @@
 package vm_java.code;
 
-import vm_java.code.IntermedResult.Result;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.machine.Task;
 import vm_java.types.MemberContainer;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -30,7 +30,7 @@ public class MemberAssignment extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope) throws VMException,
+	public void execute(VMScope scope,Task parentTask) throws VMException,
 			VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 		BasicObject l = scope.get(lObject);
 		BasicObject r = scope.get(rObject);

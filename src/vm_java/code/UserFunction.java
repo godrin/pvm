@@ -10,6 +10,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.types.Function;
 import vm_java.types.ObjectName;
 import vm_java.types.Reference;
@@ -34,7 +35,7 @@ public class UserFunction extends Function {
 
 	@Override
 	public void runFunction(VMScope scope, ObjectName returnName,
-			List<? extends BasicObject> args) throws VMException,
+			List<? extends BasicObject> args, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMScope subScope = new VMScope(scope, this);
 		int i = 0;
@@ -49,7 +50,7 @@ public class UserFunction extends Function {
 					scope, returnName));
 		}
 
-		getVM().addJob(mBlock.execution(subScope));
+		getVM().addJob(mBlock.execution(subScope,parentTask));
 	}
 
 	@Override

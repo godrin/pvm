@@ -9,7 +9,7 @@ import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.Program;
 import vm_java.code.VMException;
-import vm_java.code.CodeStatement.SourceInfo;
+import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -60,7 +60,7 @@ public class LLParser2 {
 			lines.add(line);
 		}
 		ASTProgram program = new ASTProgram();
-		ASTBlock block = new ASTBlock();
+		ASTBlock block = new ASTBlock(source());
 		program.setBlock(block);
 		fetchToken();
 		while (mResult != null) {
@@ -359,7 +359,7 @@ public class LLParser2 {
 
 	private ASTBlock parseBlock() throws ParseError {
 		fetchToken();
-		ASTBlock block = new ASTBlock();
+		ASTBlock block = new ASTBlock(source());
 		while (token() != SYMBOLS.END) {
 			/*
 			 * } if (t == SYMBOLS.END) { parseError(); } else {

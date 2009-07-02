@@ -18,14 +18,14 @@ import vm_java.types.VMExceptionFunctionNotFound;
  * 
  * @author davidkamphausen
  */
-public class CodeBlock extends BasicObject implements LLTaskGenerator {
+public class CodeBlock extends SourceBased implements LLTaskGenerator {
 
 	static class Execution extends Task {
 		int line;
 		CodeBlock block;
 
-		public Execution(CodeBlock codeBlock, VMScope pScope) {
-			super(pScope);
+		public Execution(CodeBlock codeBlock, VMScope pScope, Task parentTask) {
+			super(pScope, parentTask);
 			line = 0;
 			block = codeBlock;
 		}
@@ -49,20 +49,32 @@ public class CodeBlock extends BasicObject implements LLTaskGenerator {
 			CodeStatement code = next();
 			if (code != null) {
 
-				code.execute(getScope());
+				code.execute(getScope(),this);
 
-				if(!getScope().finished())
+				if (!finished()) {
 					getVM().addJob(this);
+				} else {
+					finish();
+				}
 			}
 
+		}
+
+		private boolean finished() {
+			return getScope().finished() || !hasNext();
+		}
+
+		@Override
+		public String inspect() {
+			return "[CodeBlockTask:" + block.inspect() + " line:" + line + "]";
 		}
 	}
 
 	List<CodeStatement> statements;
 	private boolean isFinal = false;
 
-	public CodeBlock(VMContext pContext) throws VMExceptionOutOfMemory {
-		super(pContext);
+	public CodeBlock(VMContext pContext,SourceInfo source) throws VMExceptionOutOfMemory {
+		super(pContext,source);
 
 		statements = new ArrayList<CodeStatement>();
 	}
@@ -81,13 +93,13 @@ public class CodeBlock extends BasicObject implements LLTaskGenerator {
 		return statements.size();
 	}
 
-	public Task execution(VMScope scope) {
+	public Task execution(VMScope scope, Task parentTask) {
 		isFinal = true;
-		return new Execution(this, scope);
+		return new Execution(this, scope, parentTask);
 	}
 
 	@Override
 	public String inspect() {
-		return "[Block:"+statements.size()+" sts]";
+		return "[Block:" + statements.size() + " sts ="+super.inspect()+"]";
 	}
 }

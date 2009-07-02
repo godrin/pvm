@@ -6,11 +6,14 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public interface RuntimeFunction {
 
-	void run(VMScope scope, ObjectName returnName,List<BasicObject> parameters) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
+	void run(VMScope scope, ObjectName returnName,
+			List<BasicObject> parameters, Task parentTask) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
 
 }

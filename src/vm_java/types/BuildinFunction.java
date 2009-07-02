@@ -10,6 +10,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunctionHelper;
 
 public class BuildinFunction extends Function {
@@ -27,8 +28,9 @@ public class BuildinFunction extends Function {
 
 	public static BasicObject run(VMScope scope, BasicObject self,
 			Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
-		
-		Object[] args = RuntimeFunctionHelper.toJavaArgs(bos, method.getParameterTypes());
+
+		Object[] args = RuntimeFunctionHelper.toJavaArgs(bos, method
+				.getParameterTypes());
 
 		Object[] os = new Object[bos.size()];
 		for (int i = 0; i < bos.size(); i += 1) {
@@ -56,8 +58,9 @@ public class BuildinFunction extends Function {
 
 	@Override
 	public void runFunction(VMScope scope, ObjectName returnName,
-			List<? extends BasicObject> args) throws VMException,
-			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+			List<? extends BasicObject> args, Task parentTask)
+			throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound {
 		BasicObject bo = scope.self();
 
 		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,

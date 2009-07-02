@@ -56,6 +56,10 @@ public class VM {
 	public void addJob(Task job) {
 		mJobs.add(job);
 	}
+	
+	public int jobCount() {
+		return mJobs.size();
+	}
 
 	public Task popJob() {
 		return mJobs.poll();

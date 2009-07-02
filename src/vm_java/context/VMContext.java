@@ -10,6 +10,7 @@ import java.util.List;
 import vm_java.VM;
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;
+import vm_java.code.SourceBased.SourceInfo;
 import vm_java.types.ObjectName;
 
 /**
@@ -36,8 +37,8 @@ public class VMContext {
 		mCpuTime = 0;
 	}
 
-	public CodeBlock createBlock() throws VMExceptionOutOfMemory {
-		CodeBlock b = new CodeBlock(this);
+	public CodeBlock createBlock(SourceInfo source) throws VMExceptionOutOfMemory {
+		CodeBlock b = new CodeBlock(this,source);
 		add(b);
 		return b;
 	}

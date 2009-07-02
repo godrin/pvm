@@ -3,6 +3,7 @@ package vm_java.code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
@@ -17,7 +18,7 @@ public class CodeClearVar extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope) throws VMException,
+	public void execute(VMScope scope,Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		scope.clear(varName);
 	}
