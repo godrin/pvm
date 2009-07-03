@@ -13,7 +13,6 @@ import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.types.Function;
 import vm_java.types.ObjectName;
-import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
@@ -24,7 +23,6 @@ public class UserFunction extends Function {
 	CodeBlock mBlock;
 	List<ObjectName> mArgs;
 
-	public static final String RETVALUE = "__retValue";
 
 	public UserFunction(VMContext pContext, CodeBlock pBlock,
 			List<ObjectName> pArgs) throws VMExceptionOutOfMemory {
@@ -37,20 +35,15 @@ public class UserFunction extends Function {
 	public void runFunction(VMScope scope, ObjectName returnName,
 			List<? extends BasicObject> args, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		VMScope subScope = new VMScope(scope, this);
-		int i = 0;
 		if (args.size() != mArgs.size())
 			throw new VMException(null, "Argsize is different!");
-
-		for (; i < args.size(); i++) {
-			subScope.put(mArgs.get(i), args.get(i));
-		}
-		if (returnName != null) {
-			subScope.put(subScope.getContext().intern(RETVALUE), new Reference(
-					scope, returnName));
+		
+		// put arguments into scope
+		for(int i=0;i<mArgs.size();i++) {
+			scope.put(mArgs.get(i),args.get(i));
 		}
 
-		getVM().addJob(mBlock.execution(subScope,parentTask));
+		getVM().addJob(mBlock.execution(scope,parentTask));
 	}
 
 	@Override

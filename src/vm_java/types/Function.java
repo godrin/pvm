@@ -24,6 +24,8 @@ public abstract class Function extends BasicObject {
 		super(pContext);
 	}
 
+
+
 	public abstract void runFunction(VMScope pScope, ObjectName returnName,
 			List<? extends BasicObject> args, Task parentTask)
 			throws VMException, VMExceptionOutOfMemory,

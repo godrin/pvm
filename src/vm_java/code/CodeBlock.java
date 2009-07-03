@@ -49,7 +49,7 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 			CodeStatement code = next();
 			if (code != null) {
 
-				code.execute(getScope(),this);
+				code.execute(getScope(), this);
 
 				if (!finished()) {
 					getVM().addJob(this);
@@ -66,15 +66,16 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 
 		@Override
 		public String inspect() {
-			return "[CodeBlockTask:" + block.inspect() + " line:" + line + "]";
+			return "[CodeBlockTask:" + block.statements.get(line).info() + "]";
 		}
 	}
 
 	List<CodeStatement> statements;
 	private boolean isFinal = false;
 
-	public CodeBlock(VMContext pContext,SourceInfo source) throws VMExceptionOutOfMemory {
-		super(pContext,source);
+	public CodeBlock(VMContext pContext, SourceInfo source)
+			throws VMExceptionOutOfMemory {
+		super(pContext, source);
 
 		statements = new ArrayList<CodeStatement>();
 	}
@@ -100,6 +101,6 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 
 	@Override
 	public String inspect() {
-		return "[Block:" + statements.size() + " sts ="+super.inspect()+"]";
+		return "[Block:" + statements.size() + " sts =" + super.inspect() + "]";
 	}
 }

@@ -2,7 +2,6 @@ package vm_java.types;
 
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.internal.VMLog;
 
 public class VMInteger extends BuildInKlass implements BuildInInterface {
 	Integer i=null;

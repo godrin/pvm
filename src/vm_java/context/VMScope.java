@@ -45,15 +45,7 @@ public class VMScope {
 			e.printStackTrace();
 		}
 	}
-
-	public void setException(BasicObject bo) {
-		currentException = bo;
-	}
-
-	public BasicObject getException() {
-		return currentException;
-	}
-
+	
 	// FIXME: get new self
 	public VMScope(VMScope scope, VMObject object) {
 		mContext = scope.getContext();
@@ -75,6 +67,16 @@ public class VMScope {
 		selfObject = scope.selfObject;
 		selfModule = scope.selfModule;
 	}
+
+	public void setException(BasicObject bo) {
+		currentException = bo;
+	}
+
+	public BasicObject getException() {
+		return currentException;
+	}
+
+
 
 	public BasicObject get(ObjectName name) {
 		BasicObject ret = null;
@@ -131,6 +133,7 @@ public class VMScope {
 		BasicObject old = mReferences.get(objectName);
 		if (old instanceof Reference) {
 			((Reference) old).set(value);
+			setReturned();
 		} else {
 			mReferences.put(objectName, value);
 		}

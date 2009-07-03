@@ -8,6 +8,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -21,14 +22,14 @@ public class CodeBuildinFunction implements RuntimeFunction {
 			throws VMExceptionOutOfMemory, VMException {
 		mMethod = method;
 		mObject = pObject;
-		if(mMethod==null)
-			throw new VMException(null,"Method is not defined!");
+		if (mMethod == null)
+			throw new VMException(null, "Method is not defined!");
 	}
 
 	@Override
-	public void run(VMScope scope, ObjectName returnName,List<BasicObject> parameters,Task parentTask)
-			throws VMException, VMExceptionOutOfMemory,
-			VMExceptionFunctionNotFound {
+	public void run(VMScope scope, ObjectName returnName,
+			List<BasicObject> parameters, Task parentTask) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
 				parameters);
 
@@ -39,26 +40,18 @@ public class CodeBuildinFunction implements RuntimeFunction {
 		Object result;
 		try {
 			result = mMethod.invoke(mObject, args);
-			BasicObject bo=RuntimeFunctionHelper.fromJava(scope.getContext(), result);
-			scope.put(returnName, bo);
+			BasicObject bo = RuntimeFunctionHelper.fromJava(scope.getContext(),
+					result);
+			if (returnName != null) {
+				scope.put(returnName, bo);
+			}
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VMLog.error(e);
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VMLog.error(e);
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VMLog.error(e);
 		}
-		//return new IntermedResult(null, Result.QUIT_EXCEPTION);
 	}
-/*
-	@Override
-	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters) throws VMException,
-			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		// TODO Auto-generated method stub
-		
-	}*/
+
 }

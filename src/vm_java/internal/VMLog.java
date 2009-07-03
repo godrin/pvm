@@ -2,6 +2,7 @@ package vm_java.internal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.GregorianCalendar;
 import java.util.Set;
 import java.util.TreeSet;
@@ -30,6 +31,10 @@ public class VMLog {
 	public static void error(Object x) {
 		log(Level.ERROR, x);
 	}
+	public static void error(Exception x) {
+		x.printStackTrace();
+		log(Level.ERROR, x);
+	}
 
 	public static void log(Level l, Object x) {
 		String s = x.toString();
@@ -44,13 +49,19 @@ public class VMLog {
 		Date d = GregorianCalendar.getInstance().getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String level = "[" + l.toString().toLowerCase() + "] ";
-		
-		StackTraceElement[] stes=Thread.currentThread().getStackTrace();
-		StackTraceElement ste=stes[4];
-		String pos=ste.getFileName().replaceAll(".java","").replaceAll(".*\\.","")+".java:"+ste.getLineNumber();
-		
-		pos="("+pos+") ";
-		
-		System.out.println("[" + sdf.format(d) + "] " + level + pos + line);
+
+		StackTraceElement[] stes = Thread.currentThread().getStackTrace();
+		StackTraceElement ste = stes[4];
+		String pos = ste.getFileName().replaceAll(".java", "").replaceAll(
+				".*\\.", "")
+				+ ".java:" + ste.getLineNumber();
+
+		pos = "(" + pos + ") ";
+
+		long millis = System.currentTimeMillis() % 1000;
+		Formatter fmt = new Formatter();
+
+		System.out.println("[" + sdf.format(d) + "."
+				+ fmt.format("%3d", millis) + "] " + level + pos + line);
 	}
 }

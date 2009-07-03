@@ -213,8 +213,8 @@ public class LLParser2 {
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
 			s = new ASTAssign(source(), lValue, parseRValue());
 		} else if (t == SYMBOLS.STRING) {
-			s = new ASTAssign(source(), lValue, new ASTString(source(), mResult.string
-					.substring(1, mResult.string.length() - 1)));
+			s = new ASTAssign(source(), lValue, new ASTString(source(),
+					mResult.string.substring(1, mResult.string.length() - 1)));
 			fetchToken();
 		} else if (t == SYMBOLS.INTEGER) {
 			s = new ASTAssign(source(), lValue, new ASTInteger(source(),
@@ -311,7 +311,7 @@ public class LLParser2 {
 
 			t = fetchToken();
 			if (t == SYMBOLS.NEWLINE) {
-				return new ASTFunction(source(),parameters, parseBlock());
+				return new ASTFunction(source(), parameters, parseBlock());
 			} else {
 				parseError();
 			}
@@ -364,7 +364,10 @@ public class LLParser2 {
 			/*
 			 * } if (t == SYMBOLS.END) { parseError(); } else {
 			 */
-			block.add(parseLine());
+			ASTStatementInterface statement = parseLine();
+			if (statement != null) {
+				block.add(statement);
+			}
 		}
 		if (fetchToken() != SYMBOLS.NEWLINE)
 			parseError();

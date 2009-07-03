@@ -9,8 +9,8 @@ public class VMIO extends BuildInKlass implements BuildInInterface {
 		super(context);
 	}
 	
-	public static void puts(VMString s) {
-		System.out.println(s.getContent());
+	public static void puts(String s) {
+		System.out.println(s);
 	}
 
 }

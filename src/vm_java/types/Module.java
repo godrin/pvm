@@ -16,6 +16,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.internal.VMLog;
+import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.MemberFunction;
 import vm_java.runtime.RuntimeFunction;
 
@@ -51,11 +52,15 @@ public class Module extends BasicObject implements MemberContainer,
 	 * 
 	 * // return f.compute(getContext(),pArgs); } }
 	 */
-	public RuntimeFunction getFunction(ObjectName name) throws VMException {
+	public RuntimeFunction getFunction(ObjectName name) throws VMException, VMExceptionOutOfMemory {
 		BasicObject bo = get(name);
 		
 		if(bo instanceof RuntimeFunction)
 			return (RuntimeFunction)bo;
+		if (bo instanceof BuildinFunction) {
+			BuildinFunction bf=(BuildinFunction)bo;
+			return new CodeBuildinFunction(this, bf.method);
+		}
 		
 		if (bo instanceof Function) {
 			return new MemberFunction(this, (Function) bo);

@@ -11,7 +11,7 @@ import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public interface RuntimeFunction {
-
+	
 	void run(VMScope scope, ObjectName returnName,
 			List<BasicObject> parameters, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;

@@ -11,10 +11,13 @@ import vm_java.machine.Task;
 import vm_java.types.Function;
 import vm_java.types.Module;
 import vm_java.types.ObjectName;
+import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMObject;
 
 public class MemberFunction implements RuntimeFunction {
+	public static final String RETVALUE = "__retValue";
+
 	private Function function;
 	private Module module;
 	private VMObject object;
@@ -37,20 +40,32 @@ public class MemberFunction implements RuntimeFunction {
 		assert (function != null);
 	}
 
-	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters,Task parentTask) throws VMException,
+	public void run(VMScope parentScope, ObjectName returnName,
+			List<BasicObject> parameters, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		VMScope subScope;
 
+		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(parentScope,
+				parameters);
+
+		VMScope subScope = createSubScope(parentScope);
+
+		if (returnName != null) {
+			subScope.put(subScope.getContext().intern(RETVALUE), new Reference(
+					parentScope, returnName));
+		}
+
+		VMLog.debug("Running function:" + function);
+		function.runFunction(subScope, returnName, bos, parentTask);
+	}
+
+	protected VMScope createSubScope(VMScope scope) {
+		VMScope subScope = null;
 		if (object != null) {
 			subScope = new VMScope(scope, object);
 		} else {
 			subScope = new VMScope(scope, module);
 		}
-		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
-				parameters);
-
-		VMLog.debug("Running function:" + function);
-		function.runFunction(subScope, returnName, bos,parentTask);
+		return subScope;
 	}
+
 }

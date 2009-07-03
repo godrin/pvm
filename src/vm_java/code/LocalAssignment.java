@@ -38,6 +38,7 @@ public class LocalAssignment extends CodeStatement {
 			bo = scope.get((ObjectName) bo);
 
 		scope.put(lObjectName, bo);
+		
 	}
 	@Override
 	public String inspect() {
