@@ -24,7 +24,7 @@ public class Options {
 	}
 
 	private Options() {
-		threadCount = 1;
+		threadCount = 4;
 		maxTotalMemory = 512 * MB;
 		maxMemoryPerProgram = 128 * MB;
 		maxPrograms = 16;

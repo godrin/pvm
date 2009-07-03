@@ -7,7 +7,6 @@ package vm_java.code;
 import java.util.ArrayList;
 import java.util.List;
 
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;

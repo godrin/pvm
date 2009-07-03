@@ -1,10 +1,8 @@
 package vm_java.machine;
 
 import vm_java.VM;
-import vm_java.code.CodeStatement;
 import vm_java.code.VMException;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 

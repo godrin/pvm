@@ -10,12 +10,20 @@ public class VMCException extends BasicObject {
 	
 	public VMCException(VMContext context,Exception e) throws VMExceptionOutOfMemory {
 		super(context);
-		enclosed=e;
+		setEnclosed(e);
 	}
 
 	@Override
 	public String inspect() {
 		return "[VMCException]";
+	}
+
+	private void setEnclosed(Exception enclosed) {
+		this.enclosed = enclosed;
+	}
+
+	public Exception getEnclosed() {
+		return enclosed;
 	}
 
 }

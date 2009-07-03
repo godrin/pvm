@@ -13,6 +13,12 @@ import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunctionHelper;
 
+/**
+ * 
+ * @author davidkamphausen
+ *
+ * This one is used for "normal" member functions (not the class functions)
+ */
 public class BuildinFunction extends Function {
 	Method method;
 
@@ -31,26 +37,19 @@ public class BuildinFunction extends Function {
 
 		Object[] args = RuntimeFunctionHelper.toJavaArgs(bos, method
 				.getParameterTypes());
-
-		Object[] os = new Object[bos.size()];
-		for (int i = 0; i < bos.size(); i += 1) {
-			os[i] = bos.get(i);
-		}
 		Object result = null;
 
 		try {
-			result = method.invoke(self, os);
+			result = method.invoke(self, args);
 		} catch (IllegalArgumentException e) {
 
 			scope.setException(new VMCException(scope.getContext(), e));
 			return null;
 		} catch (IllegalAccessException e) {
 			scope.setException(new VMCException(scope.getContext(), e));
-			System.exit(1);
 			return null;
 		} catch (InvocationTargetException e) {
 			scope.setException(new VMCException(scope.getContext(), e));
-			System.exit(1);
 			return null;
 		}
 		return BasicObject.convert(self.getContext(), result);

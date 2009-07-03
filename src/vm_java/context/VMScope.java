@@ -6,7 +6,6 @@ package vm_java.context;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;

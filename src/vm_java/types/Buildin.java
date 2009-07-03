@@ -1,7 +1,6 @@
 package vm_java.types;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import vm_java.VM;
 import vm_java.code.VMException;

@@ -24,7 +24,7 @@ public class VMException extends Exception {
 	}
 
 	public VMException(Exception e) {
-		enclosed=e;
+		enclosed = e;
 	}
 
 	public CodeStatement getStatement() {
@@ -40,8 +40,12 @@ public class VMException extends Exception {
 		if (mStatement == null)
 			return s;
 		else
-			return s + "\n"+what+"\n Statment:" + mStatement + " line:"
+			return s + "\n" + what + "\n Statment:" + mStatement + " line:"
 					+ mStatement.info();
+	}
+
+	public Exception getEnclosed() {
+		return enclosed;
 	}
 
 }

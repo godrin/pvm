@@ -13,7 +13,6 @@ import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
-@Deprecated
 public class CodeBuildinFunction implements RuntimeFunction {
 	Method mMethod;
 	Object mObject;
