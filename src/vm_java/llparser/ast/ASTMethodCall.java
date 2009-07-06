@@ -11,6 +11,7 @@ import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.llparser.LLParser2.ParseError;
 import vm_java.types.ObjectName;
 
 public class ASTMethodCall extends AST implements ASTStatementInterface, ASTRightValue {
@@ -18,13 +19,15 @@ public class ASTMethodCall extends AST implements ASTStatementInterface, ASTRigh
 	String method;
 	List<ASTVar> parameters;
 
-	public ASTMethodCall(SourceInfo source,ASTVar v, ASTVar m, List<ASTVar> ps) {
+	public ASTMethodCall(SourceInfo source,ASTVar v, ASTVar m, List<ASTVar> ps) throws ParseError {
 		super(source);
 		if (v != null)
 			var = v.name;
 
 		method = m.name;
 		parameters = ps;
+		if(parameters==null)
+			throw new ParseError();
 	}
 
 	@Override

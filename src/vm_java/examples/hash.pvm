@@ -1,0 +1,7 @@
+a=VMHash.new
+x="KEY"
+y="VALUE"
+v=a.set(x,y)
+z=a.get(x)
+VMIO.puts(v)
+VMIO.puts(z)

@@ -1,6 +1,6 @@
 hi="hello"
-StdIO.puts(hi)
+VMIO.puts(hi)
 time=1234
-StdIO.sleep(time)
+sleep(time)
 asd="Schmuhl"
-StdIO.puts(asd)
+VMIO.puts(asd)

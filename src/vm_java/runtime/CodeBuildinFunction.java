@@ -34,7 +34,7 @@ public class CodeBuildinFunction implements RuntimeFunction {
 
 		Class<?>[] signature = mMethod.getParameterTypes();
 
-		Object[] args = RuntimeFunctionHelper.toJavaArgs(bos, signature);
+		Object[] args = RuntimeFunctionHelper.toJavaArgs(scope.getContext(),bos, signature);
 
 		Object result;
 		try {

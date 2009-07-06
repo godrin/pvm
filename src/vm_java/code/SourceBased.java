@@ -3,6 +3,7 @@ package vm_java.code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.llparser.LLParser2.ParseError;
 
 public class SourceBased extends BasicObject {
 	public static class SourceInfo {
@@ -10,10 +11,12 @@ public class SourceBased extends BasicObject {
 		int lineNo;
 		String filename;
 
-		public SourceInfo(String pFilename, int lineNo2) {
-
+		public SourceInfo(String pFilename, int lineNo2) throws ParseError {
 			filename = pFilename;
 			lineNo = lineNo2;
+			if(filename==null) {
+				throw new ParseError();
+			}
 		}
 
 		public String toString() {

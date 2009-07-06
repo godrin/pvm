@@ -6,4 +6,4 @@ t3=10
 a.add(t3)
 i=2
 x=a[i]
-StdIO.puts(x)
+VMIO.puts(x)

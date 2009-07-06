@@ -28,6 +28,7 @@ public class VMContext {
 	private long mMaxMemory;
 	private long mLastCheckedMemorySize;
 	private float mCpuTime;
+	long lastId=0;
 
 	public VMContext(VM pVM) {
 		mVM = pVM;
@@ -88,6 +89,10 @@ public class VMContext {
 
 	public void addTime(double time) {
 		this.mCpuTime+=time;		
+	}
+
+	public long getNewID() {
+		return ++lastId;
 	}
 
 }

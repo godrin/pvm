@@ -17,7 +17,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.internal.VMLog;
 import vm_java.runtime.CodeBuildinFunction;
-import vm_java.runtime.MemberFunction;
+import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.runtime.RuntimeFunction;
 
 /**
@@ -34,24 +34,7 @@ public class Module extends BasicObject implements MemberContainer,
 		super(context);
 	}
 
-	/*
-	 * // FIXME: maybe check "send"-function first IntermedResult send(VMScope
-	 * scope, ObjectName pName, List<ObjectName> pArgs) throws
-	 * VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
-	 * Function f = mFunctions.get(pName); if (f == null) {
-	 * 
-	 * for (Module mixin : mMixins) { try { IntermedResult ret =
-	 * mixin.send(scope, pName, pArgs); return ret; } catch
-	 * (VMExceptionFunctionNotFound e) { // just try next mixin } }
-	 * 
-	 * ObjectName on = getContext().intern("method_missing"); if
-	 * (!pName.equals(on)) { List<ObjectName> args = new
-	 * ArrayList<ObjectName>(); args.add(pName); args.addAll(pArgs); return
-	 * send(scope, on, pArgs); } else { throw new VMExceptionFunctionNotFound();
-	 * } } else { return f.runFunction(scope, pArgs);
-	 * 
-	 * // return f.compute(getContext(),pArgs); } }
-	 */
+
 	public RuntimeFunction getFunction(ObjectName name) throws VMException, VMExceptionOutOfMemory {
 		BasicObject bo = get(name);
 		
@@ -63,7 +46,7 @@ public class Module extends BasicObject implements MemberContainer,
 		}
 		
 		if (bo instanceof Function) {
-			return new MemberFunction(this, (Function) bo);
+			return new RuntimeMemberFunction(this, (Function) bo);
 		}
 		return null;
 	}
@@ -102,4 +85,6 @@ public class Module extends BasicObject implements MemberContainer,
 	public String inspect() {
 		return "[Module]";
 	}
+
+
 }

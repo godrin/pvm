@@ -13,11 +13,9 @@ import vm_java.code.Program;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.VMLog;
-import vm_java.internal.VMLog.Level;
-import vm_java.machine.Task;
 import vm_java.machine.Options;
 import vm_java.machine.Process;
+import vm_java.machine.Task;
 
 /**
  * 
@@ -30,8 +28,6 @@ public class VM {
 	private boolean running = false;
 
 	public VM() {
-		VMLog.setLogLevels(new Level[] { VMLog.Level.DEBUG, Level.ERROR,
-				Level.WARN });
 	}
 
 	public synchronized VMContext createContext() {
@@ -56,7 +52,7 @@ public class VM {
 	public void addJob(Task job) {
 		mJobs.add(job);
 	}
-	
+
 	public int jobCount() {
 		return mJobs.size();
 	}
@@ -70,7 +66,7 @@ public class VM {
 			return;
 		running = true;
 		for (int i = 0; i < Options.getInstance().getThreadCount(); i++) {
-			mProcesses.add(new Process(this));
+			mProcesses.add(new Process(this, i));
 		}
 		for (Process p : mProcesses) {
 			p.run();

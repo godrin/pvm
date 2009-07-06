@@ -17,7 +17,7 @@ public class LineLexer2 {
 		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
 		BRACKETS_OPEN, BRACKETS_CLOSE, 
 		PARENT_OPEN, PARENT_CLOSE, COMMA,
-		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR
+		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP
 	};
 
 	public static class Lex {
@@ -56,6 +56,7 @@ public class LineLexer2 {
 		add("clear",SYMBOLS.CLEAR);
 		add("begin", SYMBOLS.BEGIN);
 		add("end", SYMBOLS.END);
+		add("sleep", SYMBOLS.SLEEP);
 		add("return", SYMBOLS.RETURN);
 		add("parameter\\[[0-9]*\\]",SYMBOLS.PARAMETER);
 		add("[a-zA-Z+-][a-zA-Z0-9_]*", SYMBOLS.VAR);
@@ -108,11 +109,11 @@ public class LineLexer2 {
 		}
 		return result;
 	}
-
-	static String loadFile(String path) throws IOException {
+	
+	public static String loadFile(File f) throws IOException {
 		String content = "";
 
-		FileInputStream fis = new FileInputStream(path);
+		FileInputStream fis = new FileInputStream(f);
 		BufferedInputStream bis = new BufferedInputStream(fis);
 
 		int buflen = 1024;
@@ -126,6 +127,11 @@ public class LineLexer2 {
 		fis.close();
 
 		return content;
+	}
+
+
+	static String loadFile(String path) throws IOException {
+		return loadFile(new File(path));
 	}
 	
 	public static void output(Result r) {
@@ -156,5 +162,6 @@ public class LineLexer2 {
 		}
 		// output(ll.lex(content));
 	}
+
 
 }

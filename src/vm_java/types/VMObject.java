@@ -8,7 +8,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.runtime.MemberFunction;
+import vm_java.runtime.RuntimeMemberFunction;
 
 public class VMObject extends BasicObject implements FunctionProvider {
 	private Klass mKlass;
@@ -31,11 +31,11 @@ public class VMObject extends BasicObject implements FunctionProvider {
 		return o;
 	}
 	
-	public MemberFunction getFunction(ObjectName name) throws VMException {
+	public RuntimeMemberFunction getFunction(ObjectName name) throws VMException {
 		
 		BasicObject bo=get(name);
 		if(bo instanceof Function) {
-			return new MemberFunction(this,(Function)bo);
+			return new RuntimeMemberFunction(this,(Function)bo);
 		}
 		return null;
 	}

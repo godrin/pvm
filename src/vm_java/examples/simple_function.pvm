@@ -1,6 +1,6 @@
 b0=begin(p0)
   v0=p0
-  StdIO.puts(v0)
+  VMIO.puts(v0)
   sec="HUPE"
   v1=v0.concat(sec)
   return v1
@@ -11,13 +11,13 @@ b1=begin(a,b)
   return v3
 end
 m="M…HRE"
-StdIO.puts(m)
+VMIO.puts(m)
 
 
 self.compute=b1
 xy=self.hello(m)
-StdIO.puts(xy)
+VMIO.puts(xy)
 x=1
 y=2
 h=self.compute(x,y)
-StdIO.puts(h)
+VMIO.puts(h)

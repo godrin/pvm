@@ -10,9 +10,11 @@ public class VMThread extends Thread {
 
 	private VM vm;
 	private Task job;
+	private int id;
 
-	public VMThread(VM pVM) {
+	public VMThread(VM pVM,int pID) {
 		vm = pVM;
+		id=pID;
 	}
 
 	@Override
@@ -34,7 +36,7 @@ public class VMThread extends Thread {
 
 			try {
 				if (job.canResume()) {
-					VMLog.debug("Running Job:" + job.inspect() + " ##:"
+					VMLog.debug("Running Job on thread "+id+":" + job.inspect() + " ##:"
 							+ vm.jobCount());
 					job.run();
 				} else {

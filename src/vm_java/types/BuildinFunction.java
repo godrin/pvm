@@ -16,8 +16,9 @@ import vm_java.runtime.RuntimeFunctionHelper;
 /**
  * 
  * @author davidkamphausen
- *
- * This one is used for "normal" member functions (not the class functions)
+ * 
+ *         This one is used for "normal" member functions (not the class
+ *         functions)
  */
 public class BuildinFunction extends Function {
 	Method method;
@@ -35,8 +36,8 @@ public class BuildinFunction extends Function {
 	public static BasicObject run(VMScope scope, BasicObject self,
 			Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
 
-		Object[] args = RuntimeFunctionHelper.toJavaArgs(bos, method
-				.getParameterTypes());
+		Object[] args = RuntimeFunctionHelper.toJavaArgs(scope.getContext(),
+				bos, method.getParameterTypes());
 		Object result = null;
 
 		try {

@@ -6,11 +6,12 @@ package vm_java.context;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
-import vm_java.runtime.MemberFunction;
+import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
 import vm_java.types.Module;
@@ -44,27 +45,41 @@ public class VMScope {
 			e.printStackTrace();
 		}
 	}
-	
-	// FIXME: get new self
-	public VMScope(VMScope scope, VMObject object) {
+
+	public VMScope(VMScope scope, VMObject object) throws VMException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = object;
 		selfModule = object.getKlass();
+
+		deriveCapitals();
 	}
 
-	public VMScope(VMScope scope, Module module) {
+	public VMScope(VMScope scope, Module module) throws VMException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = null;
 		selfModule = module;
+
+		deriveCapitals();
 	}
 
-	public VMScope(VMScope scope, UserFunction userFunction) {
+	public VMScope(VMScope scope, UserFunction userFunction) throws VMException {
 		mContext = scope.getContext();
 		mParentScope = scope;
-		selfObject = scope.selfObject;
-		selfModule = scope.selfModule;
+		selfObject = null; // scope.selfObject;
+		selfModule = null; // scope.selfModule;
+
+		deriveCapitals();
+	}
+
+	private void deriveCapitals() throws VMException {
+		for (Entry<ObjectName, BasicObject> entry : mParentScope.mReferences
+				.entrySet()) {
+			if (entry.getKey().isCapital()) {
+				put(entry.getKey(), entry.getValue());
+			}
+		}
 	}
 
 	public void setException(BasicObject bo) {
@@ -74,8 +89,6 @@ public class VMScope {
 	public BasicObject getException() {
 		return currentException;
 	}
-
-
 
 	public BasicObject get(ObjectName name) {
 		BasicObject ret = null;
@@ -122,9 +135,9 @@ public class VMScope {
 	 */
 	public void put(ObjectName objectName, BasicObject value)
 			throws VMException {
-		
-		if(objectName==null)
-			throw new VMException(null,"ojectName is null");
+
+		if (objectName == null)
+			throw new VMException(null, "ojectName is null");
 
 		if (SELF.equals(objectName.getName()))
 			throw new VMException(null, "Self accessed!");
@@ -138,13 +151,14 @@ public class VMScope {
 		}
 	}
 
-	public MemberFunction getFunction(ObjectName methodName) throws VMException {
+	public RuntimeMemberFunction getFunction(ObjectName methodName)
+			throws VMException {
 		Function f = (Function) get(methodName);
 
 		if (selfObject == null)
-			return new MemberFunction(selfModule, f);
+			return new RuntimeMemberFunction(selfModule, f);
 		else
-			return new MemberFunction(selfObject, f);
+			return new RuntimeMemberFunction(selfObject, f);
 	}
 
 	public void clear(ObjectName name) {
@@ -160,18 +174,19 @@ public class VMScope {
 	}
 
 	public String inspect() {
-		StringBuilder sb=new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		sb.append("[Scope:\n");
-		for(Map.Entry<ObjectName, BasicObject> entry:mReferences.entrySet()) {
-			sb.append("  "+entry.getKey().inspect()+" => "+entry.getValue().inspect());
+		for (Map.Entry<ObjectName, BasicObject> entry : mReferences.entrySet()) {
+			sb.append("  " + entry.getKey().inspect() + " => "
+					+ entry.getValue().inspect());
 		}
-		sb.append("  returned:"+returned+"\n");
-		sb.append("  exception:"+currentException.inspect()+"\n");
+		sb.append("  returned:" + returned + "\n");
+		if (currentException != null)
+			sb.append("  exception:" + currentException.inspect() + "\n");
 		sb.append("]\n");
-		
+
 		// TODO Auto-generated method stub
 		return sb.toString();
 	}
-
 
 }

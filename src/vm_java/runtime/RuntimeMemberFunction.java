@@ -15,14 +15,14 @@ import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.VMObject;
 
-public class MemberFunction implements RuntimeFunction {
+public class RuntimeMemberFunction implements RuntimeFunction {
 	public static final String RETVALUE = "__retValue";
 
 	private Function function;
 	private Module module;
 	private VMObject object;
 
-	public MemberFunction(Module pmodule, Function pFunction)
+	public RuntimeMemberFunction(Module pmodule, Function pFunction)
 			throws VMException {
 		module = pmodule;
 		function = pFunction;
@@ -31,7 +31,7 @@ public class MemberFunction implements RuntimeFunction {
 		assert (function != null);
 	}
 
-	public MemberFunction(VMObject pObject, Function pFunction)
+	public RuntimeMemberFunction(VMObject pObject, Function pFunction)
 			throws VMException {
 		if (function == null)
 			throw new VMException(null, "function is null");
@@ -58,7 +58,7 @@ public class MemberFunction implements RuntimeFunction {
 		function.runFunction(subScope, returnName, bos, parentTask);
 	}
 
-	protected VMScope createSubScope(VMScope scope) {
+	protected VMScope createSubScope(VMScope scope) throws VMException {
 		VMScope subScope = null;
 		if (object != null) {
 			subScope = new VMScope(scope, object);

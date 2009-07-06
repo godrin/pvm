@@ -11,8 +11,10 @@ import vm_java.types.VMExceptionFunctionNotFound;
 
 public abstract class Task {
 	private VMScope scope;
-	private List<Task> children = new ArrayList<Task>();;
+	private List<Task> children = new ArrayList<Task>();
 	private Task parent;
+	private long lastExecution;
+	private long waitAtleastTil;
 
 	public Task(VMScope pScope) {
 		scope = pScope;
@@ -32,9 +34,9 @@ public abstract class Task {
 	}
 
 	public boolean canResume() {
-		return children.size() == 0;
+		return children.size() == 0 && okToRun();
 	}
-	
+
 	public int childJobsCount() {
 		return children.size();
 	}
@@ -59,6 +61,22 @@ public abstract class Task {
 			parent.removeChild(this);
 			parent = null;
 		}
+	}
+
+	public void sleep(long millis) {
+		if (waitAtleastTil > lastExecution) {
+			waitAtleastTil += millis;
+		} else {
+			waitAtleastTil = lastExecution + millis;
+		}
+	}
+
+	public boolean okToRun() {
+		return (waitAtleastTil < System.currentTimeMillis());
+	}
+
+	public void setLastExecutionTime() {
+		lastExecution = System.currentTimeMillis();
 	}
 
 	public VM getVM() {

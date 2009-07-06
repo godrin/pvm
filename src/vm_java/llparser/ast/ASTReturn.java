@@ -7,7 +7,7 @@ import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.runtime.MemberFunction;
+import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.ObjectName;
 
 public class ASTReturn extends AST implements ASTStatementInterface {
@@ -23,7 +23,7 @@ public class ASTReturn extends AST implements ASTStatementInterface {
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		ObjectName varName = context.intern(mVar.name);
 		return new LocalAssignment(context, source, context
-				.intern(MemberFunction.RETVALUE), varName);
+				.intern(RuntimeMemberFunction.RETVALUE), varName);
 	}
 
 }

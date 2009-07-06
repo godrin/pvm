@@ -13,27 +13,37 @@ import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class RuntimeFunctionHelper {
-	
-	public static List<BasicObject> createArguments(VMScope scope, List<? extends BasicObject> args)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory, VMException {
-		List<BasicObject> n=new ArrayList<BasicObject>();
-		
-		for(BasicObject bo:args) {
-			if(bo instanceof ObjectName) {
-				bo=scope.get((ObjectName)bo);
+
+	public static List<BasicObject> createArguments(VMScope scope,
+			List<? extends BasicObject> args)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
+			VMException {
+		List<BasicObject> n = new ArrayList<BasicObject>();
+
+		for (BasicObject bo : args) {
+			if (bo instanceof ObjectName) {
+				bo = scope.get((ObjectName) bo);
 			}
 			n.add(bo);
 		}
-		
+
 		return n;
 	}
 
-	public static Object[] toJavaArgs(List<BasicObject> bos,Class<?>[] signature) {
+	public static Object[] toJavaArgs(VMContext pContext,
+			List<BasicObject> bos, Class<?>[] signature) {
 		Collection<?> margs = bos;
-		Object[] os = new Object[(margs.size())];
+		Object[] os;
 		int i = 0;
+		if (signature[i] == VMContext.class) {
+			os = new Object[(margs.size()) + 1];
+			os[i] = pContext;
+			i += 1;
+		} else
+			os = new Object[(margs.size())];
+
 		for (Object o : margs) {
-			Class< ? > signaturKlass = signature[i];
+			Class<?> signaturKlass = signature[i];
 			if (!signaturKlass.isInstance(o)) {
 				// type mismatch
 				if (o instanceof BasicObject) {
@@ -52,7 +62,8 @@ public class RuntimeFunctionHelper {
 		return os;
 	}
 
-	public static BasicObject fromJava(VMContext context,Object result) throws VMExceptionOutOfMemory {
+	public static BasicObject fromJava(VMContext context, Object result)
+			throws VMExceptionOutOfMemory {
 		return BasicObject.convert(context, result);
 	}
 }

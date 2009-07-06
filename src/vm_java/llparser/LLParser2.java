@@ -247,7 +247,7 @@ public class LLParser2 {
 		return array;
 	}
 
-	SourceInfo source() {
+	SourceInfo source() throws ParseError {
 		return new SourceInfo(filename, lineNo);
 	}
 
@@ -262,7 +262,8 @@ public class LLParser2 {
 			if (t == SYMBOLS.PARENT_OPEN) {
 				parameters = parseParameters();
 				t = fetchToken();
-
+			} else {
+				parameters = new ArrayList<ASTVar>();
 			}
 			if (t == SYMBOLS.NEWLINE) {
 				return new ASTMethodCall(source(), v, m, parameters);
@@ -389,7 +390,7 @@ public class LLParser2 {
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				// + "simple_function.pvm";
-				+ "tes.pvm";
+				+ "hash.pvm";
 
 		// + "array.pvm";
 		// + "very_simple.pvm";
@@ -413,5 +414,10 @@ public class LLParser2 {
 	private ASTProgram parseFile(String fn) throws ParseError, IOException {
 		filename = fn;
 		return parse(LineLexer2.loadFile(fn));
+	}
+
+	public ASTProgram parseFile(File f) throws ParseError, IOException {
+		filename=f.toString();
+		return parse(LineLexer2.loadFile(f));
 	}
 }

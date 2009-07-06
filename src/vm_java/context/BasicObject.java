@@ -13,13 +13,15 @@ import vm_java.types.VMString;
  * 
  * @author davidkamphausen
  */
-public abstract class BasicObject{
+public abstract class BasicObject implements Comparable<BasicObject> {
 
-	private final long BASICOBJECT_OVERHEAD = 8;
+	private final long BASICOBJECT_OVERHEAD = 16;
+	private Long mid = new Long(0);
 
 	public BasicObject(VMContext pContext) throws VMExceptionOutOfMemory {
 		mContext = pContext;
 		mContext.add(this);
+		mid = mContext.getNewID();
 	}
 
 	public VMContext getContext() {
@@ -59,7 +61,12 @@ public abstract class BasicObject{
 	public VM getVM() {
 		return getContext().getVM();
 	}
-	
+
 	public abstract String inspect();
+
+	@Override
+	public int compareTo(BasicObject o) {
+		return mid.compareTo(o.mid);
+	}
 
 }
