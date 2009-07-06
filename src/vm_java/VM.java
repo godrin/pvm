@@ -4,8 +4,8 @@
  */
 package vm_java;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -23,7 +23,7 @@ import vm_java.machine.Task;
  */
 public class VM {
 	private List<VMContext> mContexts = new ArrayList<VMContext>();
-	private Queue<Task> mJobs = new ArrayDeque<Task>();
+	private Queue<Task> mJobs = new LinkedList<Task>();
 	private List<Process> mProcesses = new ArrayList<Process>();
 	private boolean running = false;
 
@@ -49,7 +49,7 @@ public class VM {
 		addJob(program.execution(scope));
 	}
 
-	public void addJob(Task job) {
+	public synchronized void addJob(Task job) {
 		mJobs.add(job);
 	}
 
@@ -57,8 +57,12 @@ public class VM {
 		return mJobs.size();
 	}
 
-	public Task popJob() {
-		return mJobs.poll();
+	public synchronized Task popJob() {
+		if (mJobs.size() > 0) {
+			return mJobs.poll();
+		} else {
+			return null;
+		}
 	}
 
 	public synchronized void run() {

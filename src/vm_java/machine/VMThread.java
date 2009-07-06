@@ -38,7 +38,7 @@ public class VMThread extends Thread {
 				if (job.canResume()) {
 					VMLog.debug("Running Job on thread "+id+":" + job.inspect() + " ##:"
 							+ vm.jobCount());
-					job.run();
+					job.go();
 				} else {
 					/*
 					 * VMLog.debug("Not Running Job:" + job.inspect() +

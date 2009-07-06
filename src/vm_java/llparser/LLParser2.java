@@ -128,7 +128,7 @@ public class LLParser2 {
 			s = new ASTReturn(source(), v);
 		} else if (token() == SYMBOLS.NEWLINE) {
 			fetchToken();
-			VMLog.debug("IGNORE EMPTY LINE");
+			//VMLog.debug("IGNORE EMPTY LINE");
 			return null;
 		} else if (token() == SYMBOLS.COMMENT) {
 			while (token() != SYMBOLS.NEWLINE)

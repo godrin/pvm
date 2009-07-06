@@ -41,7 +41,13 @@ public abstract class Task {
 		return children.size();
 	}
 
-	public abstract void run() throws VMException, VMExceptionOutOfMemory,
+	public void go() throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound {
+		run();
+		lastExecution = System.currentTimeMillis();
+	}
+
+	protected abstract void run() throws VMException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound;
 
 	private void addChild(Task pChild) {
