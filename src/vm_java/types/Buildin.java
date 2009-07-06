@@ -9,7 +9,6 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.VMLog;
 
 public class Buildin {
 	public static void createBuildins(VMScope scope) throws VMException,
@@ -28,8 +27,6 @@ public class Buildin {
 
 		Klass k = new Klass(context);
 
-		VMLog.debug("Exposing " + name);
-
 		for (Method m : c.getMethods()) {
 			String mName = m.getName();
 			BuildinFunction b = new BuildinFunction(context, m);
@@ -40,7 +37,6 @@ public class Buildin {
 				k.put(context.intern(mName), b);
 				k.put(context.intern(shorten(mName)), b);
 			}
-			VMLog.debug("Exposing method " + mName);
 		}
 
 		scope.put(context.intern(name), k);

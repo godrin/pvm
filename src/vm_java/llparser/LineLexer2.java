@@ -148,7 +148,7 @@ public class LineLexer2 {
 
 	public static void main(String[] args) throws IOException {
 		LineLexer2 ll = new LineLexer2();
-		output(ll.lex("begin"));
+		//output(ll.lex("begin"));
 
 		String curDir = System.getProperty("user.dir");
 		VMLog.debug(curDir);

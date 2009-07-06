@@ -1,6 +1,6 @@
 hi="hello"
 VMIO.puts(hi)
 time=1234
-sleep(time)
+sleep time
 asd="Schmuhl"
 VMIO.puts(asd)

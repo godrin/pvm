@@ -9,7 +9,6 @@ import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.internal.VMLog;
 import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
 
@@ -31,7 +30,6 @@ public class ASTBlock extends AST {
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		CodeBlock cb = new CodeBlock(pContext, source);
 		for (ASTStatementInterface s : statements) {
-			VMLog.debug(s);
 			cb.add(s.instantiate(pContext));
 		}
 

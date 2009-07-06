@@ -1,7 +1,7 @@
 hi="HI"
 VMIO.puts(hi)
 tmp_1=begin()
-  y= "hello"
+  y="hello"
   return y
 end
 hello=tmp_1

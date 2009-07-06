@@ -28,6 +28,7 @@ import vm_java.llparser.ast.ASTMethodCall;
 import vm_java.llparser.ast.ASTProgram;
 import vm_java.llparser.ast.ASTReturn;
 import vm_java.llparser.ast.ASTRightValue;
+import vm_java.llparser.ast.ASTSleep;
 import vm_java.llparser.ast.ASTStatementInterface;
 import vm_java.llparser.ast.ASTString;
 import vm_java.llparser.ast.ASTVar;
@@ -56,6 +57,7 @@ public class LLParser2 {
 	}
 
 	ASTProgram parse(String content) throws ParseError {
+		VMLog.debug(source());
 		for (String line : content.split("\n")) {
 			lines.add(line);
 		}
@@ -103,8 +105,8 @@ public class LLParser2 {
 	}
 
 	private ASTStatementInterface parseLine() throws ParseError {
-		LineLexer2.output(mResult);
-		LineLexer2.output(this.results);
+		//LineLexer2.output(mResult);
+		//LineLexer2.output(this.results);
 		ASTStatementInterface s = null;
 		if (mResult.lex.symbol == SYMBOLS.VAR) {
 			ASTVar v = parseVar();
@@ -137,6 +139,11 @@ public class LLParser2 {
 			fetchToken();
 			ASTVar v = parseVar();
 			s = new ASTClearVar(source(), v);
+			fetchToken();
+		} else if (token() == SYMBOLS.SLEEP) {
+			fetchToken();
+			ASTVar v = parseVar();
+			s = new ASTSleep(source(), v);
 			fetchToken();
 
 		} else {
