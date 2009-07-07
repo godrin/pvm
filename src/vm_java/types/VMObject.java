@@ -10,7 +10,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.runtime.RuntimeMemberFunction;
 
-public class VMObject extends BasicObject implements FunctionProvider {
+public class VMObject extends BasicObject implements FunctionProvider,MemberProvider {
 	private Klass mKlass;
 	private Map<ObjectName, BasicObject> data = new TreeMap<ObjectName, BasicObject>();
 

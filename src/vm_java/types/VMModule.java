@@ -24,27 +24,27 @@ import vm_java.runtime.RuntimeFunction;
  * 
  * @author davidkamphausen
  */
-public class Module extends BasicObject implements MemberContainer,
-		FunctionProvider {
+public class VMModule extends BasicObject implements MemberContainer,
+		FunctionProvider, MemberProvider {
 
-	private List<Module> mMixins = new ArrayList<Module>();
+	private List<VMModule> mMixins = new ArrayList<VMModule>();
 	private Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();
 
-	public Module(VMContext context) throws VMExceptionOutOfMemory {
+	public VMModule(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
 	}
 
-
-	public RuntimeFunction getFunction(ObjectName name) throws VMException, VMExceptionOutOfMemory {
+	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+			VMExceptionOutOfMemory {
 		BasicObject bo = get(name);
-		
-		if(bo instanceof RuntimeFunction)
-			return (RuntimeFunction)bo;
+
+		if (bo instanceof RuntimeFunction)
+			return (RuntimeFunction) bo;
 		if (bo instanceof BuildinFunction) {
-			BuildinFunction bf=(BuildinFunction)bo;
+			BuildinFunction bf = (BuildinFunction) bo;
 			return new CodeBuildinFunction(this, bf.method);
 		}
-		
+
 		if (bo instanceof Function) {
 			return new RuntimeMemberFunction(this, (Function) bo);
 		}
@@ -57,17 +57,17 @@ public class Module extends BasicObject implements MemberContainer,
 	}
 
 	public BasicObject get(ObjectName name) {
-		VMLog.debug("searching:"+name);
+		VMLog.debug("searching:" + name);
 		VMLog.debug(mObjects.keySet());
 		BasicObject o = getDirect(name);
 		if (o == null) {
-			for (Module m : mMixins) {
+			for (VMModule m : mMixins) {
 				o = m.get(name);
 				if (o != null)
 					break;
 			}
 		}
-		VMLog.debug("found:"+o);
+		VMLog.debug("found:" + o);
 		return o;
 	}
 
@@ -86,5 +86,9 @@ public class Module extends BasicObject implements MemberContainer,
 		return "[Module]";
 	}
 
+	public static VMModule _new(VMContext pContext)
+			throws VMExceptionOutOfMemory {
+		return new VMModule(pContext);
+	}
 
 }

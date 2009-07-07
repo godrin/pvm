@@ -9,7 +9,7 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.types.Function;
-import vm_java.types.Module;
+import vm_java.types.VMModule;
 import vm_java.types.ObjectName;
 import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -19,10 +19,10 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 	public static final String RETVALUE = "__retValue";
 
 	private Function function;
-	private Module module;
+	private VMModule module;
 	private VMObject object;
 
-	public RuntimeMemberFunction(Module pmodule, Function pFunction)
+	public RuntimeMemberFunction(VMModule pmodule, Function pFunction)
 			throws VMException {
 		module = pmodule;
 		function = pFunction;

@@ -19,6 +19,7 @@ import vm_java.llparser.LineLexer2.Result;
 import vm_java.llparser.LineLexer2.SYMBOLS;
 import vm_java.llparser.ast.ASTArray;
 import vm_java.llparser.ast.ASTAssign;
+import vm_java.llparser.ast.ASTAssignFromMember;
 import vm_java.llparser.ast.ASTAssignMember;
 import vm_java.llparser.ast.ASTBlock;
 import vm_java.llparser.ast.ASTClearVar;
@@ -105,8 +106,8 @@ public class LLParser2 {
 	}
 
 	private ASTStatementInterface parseLine() throws ParseError {
-		//LineLexer2.output(mResult);
-		//LineLexer2.output(this.results);
+		// LineLexer2.output(mResult);
+		// LineLexer2.output(this.results);
 		ASTStatementInterface s = null;
 		if (mResult.lex.symbol == SYMBOLS.VAR) {
 			ASTVar v = parseVar();
@@ -128,7 +129,7 @@ public class LLParser2 {
 			s = new ASTReturn(source(), v);
 		} else if (token() == SYMBOLS.NEWLINE) {
 			fetchToken();
-			//VMLog.debug("IGNORE EMPTY LINE");
+			// VMLog.debug("IGNORE EMPTY LINE");
 			return null;
 		} else if (token() == SYMBOLS.COMMENT) {
 			while (token() != SYMBOLS.NEWLINE)
@@ -269,11 +270,16 @@ public class LLParser2 {
 			if (t == SYMBOLS.PARENT_OPEN) {
 				parameters = parseParameters();
 				t = fetchToken();
-			} else {
-				parameters = new ArrayList<ASTVar>();
-			}
+			} /*
+			 * else { parameters = new ArrayList<ASTVar>(); }
+			 */
+
 			if (t == SYMBOLS.NEWLINE) {
-				return new ASTMethodCall(source(), v, m, parameters);
+				if (parameters == null) {
+					return new ASTAssignFromMember(source(), v, m);
+				} else {
+					return new ASTMethodCall(source(), v, m, parameters);
+				}
 			} else {
 				parseError();
 			}
@@ -397,7 +403,7 @@ public class LLParser2 {
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				// + "simple_function.pvm";
-				+ "hash.pvm";
+				+ "klass.pvm";
 
 		// + "array.pvm";
 		// + "very_simple.pvm";
@@ -424,7 +430,7 @@ public class LLParser2 {
 	}
 
 	public ASTProgram parseFile(File f) throws ParseError, IOException {
-		filename=f.toString();
+		filename = f.toString();
 		return parse(LineLexer2.loadFile(f));
 	}
 }

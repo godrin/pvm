@@ -25,8 +25,13 @@ public class ExampleTests extends TestCase {
 		VMLog.setLogLevels(new Level[] { VMLog.Level.DEBUG, Level.ERROR,
 				Level.WARN });
 	}
+	
+	
+	public void testKlass() throws VMExceptionOutOfMemory, BlockIsFinalException, VMException, ParseError, IOException {
+		runExample(new File(getExamplePath()+"/klass.pvm"));
+	}
 
-	public void testExamples() throws VMExceptionOutOfMemory,
+	public void donttestExamples() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException {
 
 		for (File example : getExamples()) {
@@ -61,7 +66,7 @@ public class ExampleTests extends TestCase {
 
 	private List<File> getExamples() {
 		List<File> list = new ArrayList<File>();
-		for (File f : getExamplePath().listFiles()) {
+		for (File f : new File(getExamplePath()).listFiles()) {
 			if (f.toString().matches(".*\\.pvm")) {
 				list.add(f);
 			}
@@ -69,8 +74,7 @@ public class ExampleTests extends TestCase {
 		return list;
 	}
 
-	private File getExamplePath() {
-		return new File(
-				"/Users/davidkamphausen/Documents/workspaceJava/vm_java/src/vm_java/examples");
+	private String getExamplePath() {
+		return "/Users/davidkamphausen/Documents/workspaceJava/vm_java/src/vm_java/examples";
 	}
 }

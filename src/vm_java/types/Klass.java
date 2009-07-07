@@ -21,7 +21,7 @@ import vm_java.runtime.RuntimeMemberFunction;
  * 
  * @author davidkamphausen
  */
-public class Klass extends Module {
+public class Klass extends VMModule {
 	private Klass mParent;
 	// these are klass-methods and klass-members
 	private Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();

@@ -14,7 +14,7 @@ import vm_java.code.VMException;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
-import vm_java.types.Module;
+import vm_java.types.VMModule;
 import vm_java.types.ObjectName;
 import vm_java.types.Reference;
 import vm_java.types.VMObject;
@@ -27,7 +27,7 @@ public class VMScope {
 	Map<ObjectName, BasicObject> mReferences = new TreeMap<ObjectName, BasicObject>();
 	VMScope mParentScope;
 	VMContext mContext;
-	Module selfModule = null;
+	VMModule selfModule = null;
 	VMObject selfObject = null;
 	BasicObject currentException = null;
 	boolean returned = false;
@@ -36,7 +36,7 @@ public class VMScope {
 
 	public VMScope(VMContext pContext) throws VMExceptionOutOfMemory {
 		mContext = pContext;
-		selfModule = new Module(mContext);
+		selfModule = new VMModule(mContext);
 
 		try {
 			Buildin.createBuildins(this);
@@ -55,7 +55,7 @@ public class VMScope {
 		deriveCapitals();
 	}
 
-	public VMScope(VMScope scope, Module module) throws VMException {
+	public VMScope(VMScope scope, VMModule module) throws VMException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = null;

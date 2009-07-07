@@ -18,6 +18,7 @@ public class Buildin {
 		expose(scope, VMArray.class);
 		expose(scope, VMHash.class);
 		expose(scope, VMIO.class);
+		expose(scope, VMModule.class);
 	}
 
 	public static void expose(VMScope scope, Class<? extends BasicObject> c)

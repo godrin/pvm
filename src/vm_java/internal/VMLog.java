@@ -31,13 +31,18 @@ public class VMLog {
 	public static void error(Object x) {
 		log(Level.ERROR, x);
 	}
+
 	public static void error(Exception x) {
 		x.printStackTrace();
 		log(Level.ERROR, x);
 	}
 
 	public static void log(Level l, Object x) {
-		String s = x.toString();
+
+		String s = "null";
+		if (x != null) {
+			s=x.toString();
+		}
 		for (String p : s.split("\n")) {
 			logLine(l, p);
 		}
