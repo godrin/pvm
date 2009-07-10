@@ -68,5 +68,6 @@ public class VMLog {
 
 		System.out.println("[" + sdf.format(d) + "."
 				+ fmt.format("%3d", millis) + "] " + level + pos + line);
+		System.out.flush();
 	}
 }

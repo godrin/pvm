@@ -15,7 +15,7 @@ import vm_java.context.BasicObject;
  */
 public class CustomObject implements MemberContainer {
 	Map<ObjectName, BasicObject> mObjects;
-	Klass mClass;
+	VMKlass mClass;
 
 	public CustomObject assign(CustomObject pObject) {
 

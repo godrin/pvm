@@ -8,34 +8,41 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeMemberFunction;
 
-public class VMObject extends BasicObject implements FunctionProvider,MemberProvider {
-	private Klass mKlass;
+@DontExpose
+public class VMObject extends BasicObject implements FunctionProvider,
+		MemberProvider, MemberContainer {
+	private VMKlass mKlass;
 	private Map<ObjectName, BasicObject> data = new TreeMap<ObjectName, BasicObject>();
 
-	public VMObject(VMContext context, Klass klass)
+	public VMObject(VMContext context, VMKlass klass)
 			throws VMExceptionOutOfMemory {
 		super(context);
+		mKlass = klass;
 	}
 
-	public Klass getKlass() {
+	public VMKlass getKlass() {
 		return mKlass;
 	}
 
 	public BasicObject get(ObjectName name) {
-		BasicObject o=data.get(name);
-		if(o==null) {
-			o=mKlass.get(name);
+		BasicObject o = data.get(name);
+		if (o == null) {
+			o = mKlass.get(name);
 		}
 		return o;
 	}
-	
-	public RuntimeMemberFunction getFunction(ObjectName name) throws VMException {
-		
-		BasicObject bo=get(name);
-		if(bo instanceof Function) {
-			return new RuntimeMemberFunction(this,(Function)bo);
+
+	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+			VMExceptionOutOfMemory {
+
+		BasicObject bo = get(name);
+		if (bo == null && mKlass != null)
+			return mKlass.getFunction(name);
+		if (bo instanceof Function) {
+			return new RuntimeMemberFunction(this, (Function) bo);
 		}
 		return null;
 	}
@@ -43,5 +50,10 @@ public class VMObject extends BasicObject implements FunctionProvider,MemberProv
 	@Override
 	public String inspect() {
 		return "[VMObject]";
+	}
+
+	@Override
+	public void set(ObjectName memberName, BasicObject r) throws VMException {
+		data.put(memberName,r);
 	}
 }

@@ -33,11 +33,11 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 
 	public RuntimeMemberFunction(VMObject pObject, Function pFunction)
 			throws VMException {
-		if (function == null)
-			throw new VMException(null, "function is null");
 		function = pFunction;
 		object = pObject;
 		assert (function != null);
+		if (function == null)
+			throw new VMException(null, "function is null");
 	}
 
 	public void run(VMScope parentScope, ObjectName returnName,

@@ -351,7 +351,6 @@ public class LLParser2 {
 
 				parameters.add(v);
 				SYMBOLS t2 = fetchToken();
-				VMLog.debug("Next:" + t2);
 				if (t2 == SYMBOLS.COMMA) {
 					t2 = fetchToken();
 				} else if (t2 == SYMBOLS.PARENT_CLOSE) {
@@ -403,7 +402,7 @@ public class LLParser2 {
 		String fn = curDir + File.separator + "src" + File.separator
 				+ "vm_java" + File.separator + "examples" + File.separator
 				// + "simple_function.pvm";
-				+ "klass.pvm";
+				+ "module.pvm";
 
 		// + "array.pvm";
 		// + "very_simple.pvm";

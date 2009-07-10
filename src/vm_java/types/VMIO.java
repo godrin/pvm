@@ -10,6 +10,7 @@ public class VMIO extends BuildInKlass implements BuildInInterface {
 	}
 	
 	public static void puts(String s) {
+//		if()
 		System.out.println(s);
 	}
 

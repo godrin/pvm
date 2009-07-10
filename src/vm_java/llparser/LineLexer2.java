@@ -59,7 +59,7 @@ public class LineLexer2 {
 		add("sleep", SYMBOLS.SLEEP);
 		add("return", SYMBOLS.RETURN);
 		add("parameter\\[[0-9]*\\]",SYMBOLS.PARAMETER);
-		add("[a-zA-Z+-][a-zA-Z0-9_]*", SYMBOLS.VAR);
+		add("[a-zA-Z+-_][a-zA-Z0-9_]*", SYMBOLS.VAR);
 		//add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
 		add("==", SYMBOLS.EQUAL);
 		add("=", SYMBOLS.ASSIGN);

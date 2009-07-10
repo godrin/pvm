@@ -1,16 +1,42 @@
-module0=VMModule.new()
-a=begin()
-  h="123"
-  self.abc=h
+# checks:
+# * creating of a class
+# * setting parent clas
+# * setting of member variable
+# * getting this var 
+A=VMKlass.newKlass()
+b=VMKlass.newKlass()
+b.setParent(A)
+f=begin()
+  m="MUH"
+  return m
 end
-module0.save123=a
-clear a
-a=begin()
-  r=self.abc
-  return r
+A.func=f
+f=begin()
+  m="MUH2"
+  return m
 end
-module0.load123=a
-clear a
-module0.save123
-v=module0.load123()
-VMIO.puts(v)
+b.func=f
+
+f=begin(xy)
+  self.var=xy
+  VMIO.puts(xy)
+end
+A.vset=f
+f=begin()
+  var=self.var
+  return var
+end
+b.vget=f
+
+c=b.new()
+x=c.func()
+VMIO.puts(x)
+aa=A.new()
+x=A.func()
+VMIO.puts(x)
+
+i=1234
+c.vset(i)
+j=c.vget()
+VMIO.puts(i)
+VMIO.puts(j)

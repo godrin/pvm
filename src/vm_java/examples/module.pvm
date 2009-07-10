@@ -1,0 +1,16 @@
+module0=VMModule.new()
+a=begin()
+  h="123"
+  self.abc=h
+end
+module0.save123=a
+clear a
+a=begin()
+  r=self.abc
+  return r
+end
+module0.load123=a
+clear a
+module0.save123
+v=module0.load123()
+VMIO.puts(v)

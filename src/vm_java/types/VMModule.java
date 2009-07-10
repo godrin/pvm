@@ -28,7 +28,7 @@ public class VMModule extends BasicObject implements MemberContainer,
 		FunctionProvider, MemberProvider {
 
 	private List<VMModule> mMixins = new ArrayList<VMModule>();
-	private Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();
+	protected Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();
 
 	public VMModule(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
@@ -86,9 +86,16 @@ public class VMModule extends BasicObject implements MemberContainer,
 		return "[Module]";
 	}
 
-	public static VMModule _new(VMContext pContext)
-			throws VMExceptionOutOfMemory {
-		return new VMModule(pContext);
+	public VMModule _newModule(VMContext pContext) throws VMExceptionOutOfMemory, VMException {
+		VMModule mod=new VMModule(pContext);
+		mod.addFunctionsTo(this);
+		return mod;
+	}
+	
+	protected void addFunctionsTo(VMModule mod) throws VMException {
+		for (Map.Entry<ObjectName, BasicObject> entry : mObjects.entrySet()) {
+			mod.put(entry.getKey(), entry.getValue());
+		}
 	}
 
 }
