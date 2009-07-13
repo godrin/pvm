@@ -7,7 +7,6 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.internal.VMLog;
 import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.CreateFunction;
 import vm_java.runtime.RuntimeFunction;
@@ -18,8 +17,9 @@ public class BuildInKlass extends BasicObject implements FunctionProvider {
 		super(context);
 	}
 
-	public static RuntimeFunction getStaticFunction(ObjectName name,Class<? extends BuildInKlass> klass)
-			throws VMException, VMExceptionOutOfMemory {
+	public static RuntimeFunction getStaticFunction(ObjectName name,
+			Class<? extends BuildInKlass> klass) throws VMException,
+			VMExceptionOutOfMemory {
 
 		if (name.getName().equals("new")) {
 			return new CreateFunction(klass);
@@ -45,13 +45,16 @@ public class BuildInKlass extends BasicObject implements FunctionProvider {
 		Method m = getMethodByPrivName(name);
 		if (m != null)
 			return m;
-		m = getMethodByName(checkName(name));
+		String checked = checkName(name);
+		if (!checked.equals(name))
+			m = getMethodByName(checked);
 		return m;
 	}
 
 	@Deprecated
 	private String checkName(String name) {
-		return name.replace("+", "plus").replace("-", "minus");
+		return name.replace("+", "plus").replace("-", "minus").replace("<",
+				"lessThan");
 	}
 
 	private Method getMethodByPrivName(String name) {
@@ -59,8 +62,6 @@ public class BuildInKlass extends BasicObject implements FunctionProvider {
 			if (m.getName().equals(name))
 				return m;
 		}
-		VMLog.error("ERROR: Method " + name + " not found in "
-				+ getClass().getName() + "!");
 		return null;
 	}
 

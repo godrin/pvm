@@ -1,0 +1,22 @@
+b=begin
+  VMIO.puts(max)
+  VMIO.puts(i)
+  s=1
+  i=i.plus(s)
+  VMIO.puts(i)
+  cond=i.<(max)
+  return cond
+end
+max=20
+i=10
+cond=i.<(max)
+str="Cond should be true:"
+VMIO.puts(str)
+if cond then b
+VMIO.puts(str)
+
+unless cond then b
+cond=i.<(max)
+while cond do b
+
+# OUTPUT

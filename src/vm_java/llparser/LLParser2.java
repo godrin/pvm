@@ -5,14 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import vm_java.VM;
-import vm_java.code.BlockIsFinalException;
-import vm_java.code.Program;
-import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
-import vm_java.context.VMContext;
-import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.llparser.LineLexer2.Lex;
 import vm_java.llparser.LineLexer2.Result;
@@ -24,6 +17,7 @@ import vm_java.llparser.ast.ASTAssignMember;
 import vm_java.llparser.ast.ASTBlock;
 import vm_java.llparser.ast.ASTClearVar;
 import vm_java.llparser.ast.ASTFunction;
+import vm_java.llparser.ast.ASTIf;
 import vm_java.llparser.ast.ASTInteger;
 import vm_java.llparser.ast.ASTMethodCall;
 import vm_java.llparser.ast.ASTProgram;
@@ -33,7 +27,7 @@ import vm_java.llparser.ast.ASTSleep;
 import vm_java.llparser.ast.ASTStatementInterface;
 import vm_java.llparser.ast.ASTString;
 import vm_java.llparser.ast.ASTVar;
-import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.llparser.ast.ASTWhile;
 
 public class LLParser2 {
 
@@ -146,7 +140,10 @@ public class LLParser2 {
 			ASTVar v = parseVar();
 			s = new ASTSleep(source(), v);
 			fetchToken();
-
+		} else if (token() == SYMBOLS.IF || token() == SYMBOLS.UNLESS) {
+			s = parseIf();
+		} else if (token() == SYMBOLS.WHILE) {
+			s = parseWhile();
 		} else {
 
 			parseError();
@@ -161,6 +158,29 @@ public class LLParser2 {
 		else
 			fetchToken();
 		return s;
+	}
+
+	private ASTStatementInterface parseWhile() throws ParseError {
+		fetchToken();
+		ASTVar cond = parseVar();
+		if (fetchToken() != SYMBOLS.DO)
+			parseError();
+		fetchToken();
+		ASTVar blockName = parseVar();
+		fetchToken();
+		return new ASTWhile(source(), cond, blockName);
+	}
+
+	private ASTStatementInterface parseIf() throws ParseError {
+		boolean wantedValue = (token() == SYMBOLS.IF);
+		fetchToken();
+		ASTVar cond = parseVar();
+		if (fetchToken() != SYMBOLS.THEN)
+			parseError();
+		fetchToken();
+		ASTVar blockName = parseVar();
+		fetchToken();
+		return new ASTIf(source(), cond, blockName, wantedValue);
 	}
 
 	private ASTStatementInterface parseFunctionCall(ASTVar v) throws ParseError {
@@ -316,7 +336,7 @@ public class LLParser2 {
 
 	}
 
-	private ASTFunction parseBegin() throws ParseError {
+	private ASTRightValue parseBegin() throws ParseError {
 		assertTrue(token() == SYMBOLS.BEGIN);
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.PARENT_OPEN) {
@@ -329,6 +349,8 @@ public class LLParser2 {
 			} else {
 				parseError();
 			}
+		} else if(t==SYMBOLS.NEWLINE) {
+			return parseBlock();
 		} else {
 			parseError();
 		}
@@ -389,45 +411,12 @@ public class LLParser2 {
 		// TODO Auto-generated method stub
 
 	}
-
-	public static void main(String[] args) throws IOException,
-			VMExceptionOutOfMemory, ParseError, BlockIsFinalException,
-			VMException, VMExceptionFunctionNotFound {
-		VM vm = new VM();
-		VMContext vmc = vm.createContext();
-
-		LLParser2 lp = new LLParser2();
-		String curDir = System.getProperty("user.dir");
-		VMLog.debug(curDir);
-		String fn = curDir + File.separator + "src" + File.separator
-				+ "vm_java" + File.separator + "examples" + File.separator
-				// + "simple_function.pvm";
-				+ "module.pvm";
-
-		// + "array.pvm";
-		// + "very_simple.pvm";
-		// String content = LineLexer2.loadFile(fn);
-
-		ASTProgram astP = lp.parseFile(fn);
-
-		// lp.parse(content);
-		Program prg = astP.instantiate(vmc);
-		VMScope scope = vmc.createScope();
-		vm.addJob(prg.execution(scope));
-		vm.run();
-		try {
-			vm.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+/*
 	private ASTProgram parseFile(String fn) throws ParseError, IOException {
 		filename = fn;
 		return parse(LineLexer2.loadFile(fn));
 	}
-
+*/
 	public ASTProgram parseFile(File f) throws ParseError, IOException {
 		filename = f.toString();
 		return parse(LineLexer2.loadFile(f));

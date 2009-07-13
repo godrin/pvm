@@ -1,9 +1,13 @@
 package vm_java.testing;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
 
 import junit.framework.TestCase;
 import vm_java.VM;
@@ -28,7 +32,7 @@ public class ExampleTests extends TestCase {
 	
 	
 	public void testKlass() throws VMExceptionOutOfMemory, BlockIsFinalException, VMException, ParseError, IOException {
-		runExample(new File(getExamplePath()+"/klass.pvm"));
+		runExample(new File(getExamplePath()+"/if.pvm"));
 	}
 
 	public void donttestExamples() throws VMExceptionOutOfMemory,
@@ -48,10 +52,11 @@ public class ExampleTests extends TestCase {
 		LLParser2 lp = new LLParser2();
 		String curDir = System.getProperty("user.dir");
 		VMLog.debug(curDir);
+		
+		String wantedOutput=getWantedOutput(f);
 
 		ASTProgram astP = lp.parseFile(f);
 
-		// lp.parse(content);
 		Program prg = astP.instantiate(vmc);
 		VMScope scope = vmc.createScope();
 		vm.addJob(prg.execution(scope));
@@ -63,6 +68,17 @@ public class ExampleTests extends TestCase {
 			e.printStackTrace();
 		}
 	}
+
+	private String getWantedOutput(File f) throws IOException {
+		LineInputStream lis=new LineInputStream(new FileInputStream(f));
+		String line;
+		while((line=lis.readLine())!=null) {
+			System.out.println(line);
+		}
+		
+		return null;
+	}
+
 
 	private List<File> getExamples() {
 		List<File> list = new ArrayList<File>();

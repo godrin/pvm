@@ -1,0 +1,6 @@
+a=123
+b=234
+c=a.<(b)
+VMIO.puts(c)
+c=b.<(a)
+VMIO.puts(c)
