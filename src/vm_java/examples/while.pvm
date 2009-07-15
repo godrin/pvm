@@ -1,0 +1,21 @@
+b=begin
+  VMIO.puts(i)
+  s=1
+  i=i.plus(s)
+  cond=i.<(max)
+  return cond
+end
+max=10
+i=1
+cond=i.<(max)
+while cond do b
+# OUTPUT
+# 1
+# 2
+# 3
+# 4
+# 5
+# 6
+# 7
+# 8
+# 9

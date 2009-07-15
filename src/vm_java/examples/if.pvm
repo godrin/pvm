@@ -7,6 +7,10 @@ b=begin
   cond=i.<(max)
   return cond
 end
+c=begin
+  s="C"
+  VMIO.puts(s)
+end
 max=20
 i=10
 cond=i.<(max)
@@ -16,7 +20,13 @@ if cond then b
 VMIO.puts(str)
 
 unless cond then b
-cond=i.<(max)
-while cond do b
+cond=false
+unless cond then c
 
 # OUTPUT
+# Cond should be true:
+# 20
+# 10
+# 11
+# Cond should be true:
+# C

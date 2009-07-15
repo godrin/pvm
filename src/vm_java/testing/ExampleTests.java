@@ -2,12 +2,9 @@ package vm_java.testing;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
 
 import junit.framework.TestCase;
 import vm_java.VM;
@@ -22,6 +19,9 @@ import vm_java.internal.VMLog.Level;
 import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
+import vm_java.types.VMIO;
+
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
 
 public class ExampleTests extends TestCase {
 	public void setUp() {
@@ -29,14 +29,16 @@ public class ExampleTests extends TestCase {
 		VMLog.setLogLevels(new Level[] { VMLog.Level.DEBUG, Level.ERROR,
 				Level.WARN });
 	}
-	
-	
-	public void testKlass() throws VMExceptionOutOfMemory, BlockIsFinalException, VMException, ParseError, IOException {
-		runExample(new File(getExamplePath()+"/if.pvm"));
+
+	public void testKlass() throws VMExceptionOutOfMemory,
+			BlockIsFinalException, VMException, ParseError, IOException,
+			TestFailedException {
+		runExample(new File(getExamplePath() + "/if.pvm"));
 	}
 
 	public void donttestExamples() throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException {
+			BlockIsFinalException, VMException, ParseError, IOException,
+			TestFailedException {
 
 		for (File example : getExamples()) {
 			runExample(example);
@@ -45,15 +47,16 @@ public class ExampleTests extends TestCase {
 	}
 
 	private void runExample(File f) throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException {
+			BlockIsFinalException, VMException, ParseError, IOException,
+			TestFailedException {
 		VM vm = new VM();
 		VMContext vmc = vm.createContext();
 
 		LLParser2 lp = new LLParser2();
 		String curDir = System.getProperty("user.dir");
 		VMLog.debug(curDir);
-		
-		String wantedOutput=getWantedOutput(f);
+
+		String wantedOutput = getWantedOutput(f);
 
 		ASTProgram astP = lp.parseFile(f);
 
@@ -67,18 +70,30 @@ public class ExampleTests extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String buf = VMIO.content();
+		if (!buf.equals(wantedOutput)) {
+			System.out.println("WANTED:" + wantedOutput + ":");
+			System.out.println("GOT:" + buf + ":");
+			throw new TestFailedException();
+		}
 	}
 
 	private String getWantedOutput(File f) throws IOException {
-		LineInputStream lis=new LineInputStream(new FileInputStream(f));
+		LineInputStream lis = new LineInputStream(new FileInputStream(f));
 		String line;
-		while((line=lis.readLine())!=null) {
-			System.out.println(line);
-		}
-		
-		return null;
-	}
+		boolean outputFollowing = false;
+		StringBuilder b = new StringBuilder();
 
+		while ((line = lis.readLine()) != null) {
+			if (outputFollowing) {
+				b.append(line.replaceFirst("^. *", "") + "\n");
+			} else if (line.matches(".*#.*OUTPUT.*")) {
+				outputFollowing = true;
+			}
+		}
+
+		return b.toString();
+	}
 
 	private List<File> getExamples() {
 		List<File> list = new ArrayList<File>();

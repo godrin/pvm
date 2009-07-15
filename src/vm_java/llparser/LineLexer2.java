@@ -17,7 +17,7 @@ public class LineLexer2 {
 		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
 		BRACKETS_OPEN, BRACKETS_CLOSE, 
 		PARENT_OPEN, PARENT_CLOSE, COMMA,
-		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS
+		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN
 	};
 
 	public static class Lex {
@@ -34,11 +34,19 @@ public class LineLexer2 {
 
 	public static class Result {
 		Lex lex;
-		String string;
+		private String string;
 
 		Result(Lex l, String s) {
 			lex = l;
-			string = s;
+			setString(s);
+		}
+
+		public void setString(String string) {
+			this.string = string;
+		}
+
+		public String getString() {
+			return string;
 		}
 	}
 
@@ -53,6 +61,7 @@ public class LineLexer2 {
 	}
 
 	private void init() {
+		add("(true|false)",SYMBOLS.BOOLEAN);
 		add("if",SYMBOLS.IF);
 		add("then",SYMBOLS.THEN);
 		add("while",SYMBOLS.WHILE);
@@ -100,7 +109,7 @@ public class LineLexer2 {
 					if (match.length() > 0) {
 						Result r = new Result(l, match);
 						result.add(r);
-						p += r.string.length();
+						p += r.getString().length();
 						continue;
 					}
 				}
@@ -140,7 +149,7 @@ public class LineLexer2 {
 	}
 	
 	public static void output(Result r) {
-		VMLog.debug(r.lex.symbol + "(" + r.string + ") ");
+		VMLog.debug(r.lex.symbol + "(" + r.getString() + ") ");
 		
 	}
 

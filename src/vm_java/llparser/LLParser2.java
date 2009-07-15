@@ -15,6 +15,7 @@ import vm_java.llparser.ast.ASTAssign;
 import vm_java.llparser.ast.ASTAssignFromMember;
 import vm_java.llparser.ast.ASTAssignMember;
 import vm_java.llparser.ast.ASTBlock;
+import vm_java.llparser.ast.ASTBoolean;
 import vm_java.llparser.ast.ASTClearVar;
 import vm_java.llparser.ast.ASTFunction;
 import vm_java.llparser.ast.ASTIf;
@@ -229,7 +230,7 @@ public class LLParser2 {
 	private ASTVar parseVar() throws ParseError {
 		if (token() != SYMBOLS.VAR)
 			parseError();
-		ASTVar v = new ASTVar(source(), mResult.string);
+		ASTVar v = new ASTVar(source(), mResult.getString());
 		return v;
 	}
 
@@ -241,15 +242,20 @@ public class LLParser2 {
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
 			s = new ASTAssign(source(), lValue, parseRValue());
 		} else if (t == SYMBOLS.STRING) {
-			s = new ASTAssign(source(), lValue, new ASTString(source(),
-					mResult.string.substring(1, mResult.string.length() - 1)));
+			s = new ASTAssign(source(), lValue,
+					new ASTString(source(), mResult.getString().substring(1,
+							mResult.getString().length() - 1)));
 			fetchToken();
 		} else if (t == SYMBOLS.INTEGER) {
 			s = new ASTAssign(source(), lValue, new ASTInteger(source(),
-					mResult.string));
+					mResult.getString()));
 			fetchToken();
 		} else if (t == SYMBOLS.BRACKETS_OPEN) {
 			s = new ASTAssign(source(), lValue, parseArray());
+		} else if (t == SYMBOLS.BOOLEAN) {
+			s = new ASTAssign(source(), lValue, new ASTBoolean(source(),
+					mResult));
+			fetchToken();
 		} else {
 			parseError();
 		}
@@ -349,7 +355,7 @@ public class LLParser2 {
 			} else {
 				parseError();
 			}
-		} else if(t==SYMBOLS.NEWLINE) {
+		} else if (t == SYMBOLS.NEWLINE) {
 			return parseBlock();
 		} else {
 			parseError();
@@ -411,12 +417,11 @@ public class LLParser2 {
 		// TODO Auto-generated method stub
 
 	}
-/*
-	private ASTProgram parseFile(String fn) throws ParseError, IOException {
-		filename = fn;
-		return parse(LineLexer2.loadFile(fn));
-	}
-*/
+
+	/*
+	 * private ASTProgram parseFile(String fn) throws ParseError, IOException {
+	 * filename = fn; return parse(LineLexer2.loadFile(fn)); }
+	 */
 	public ASTProgram parseFile(File f) throws ParseError, IOException {
 		filename = f.toString();
 		return parse(LineLexer2.loadFile(f));
