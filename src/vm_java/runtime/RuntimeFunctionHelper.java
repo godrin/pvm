@@ -9,6 +9,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.machine.Task;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
@@ -30,14 +31,24 @@ public class RuntimeFunctionHelper {
 		return n;
 	}
 
-	public static Object[] toJavaArgs(VMContext pContext,
-			List<BasicObject> bos, Class<?>[] signature) {
+	public static Object[] toJavaArgs(Task pTask, List<BasicObject> bos,
+			Class<?>[] signature) {
 		Collection<?> margs = bos;
 		Object[] os;
+		
+		VMScope pScope=pTask.getScope();
 		int i = 0;
 		if (signature[i] == VMContext.class) {
 			os = new Object[(margs.size()) + 1];
-			os[i] = pContext;
+			os[i] = pScope.getContext();
+			i += 1;
+		} else if (signature[i] == VMScope.class) {
+			os = new Object[(margs.size()) + 1];
+			os[i] = pScope;
+			i += 1;
+		} else if (signature[i] == Task.class) {
+			os = new Object[(margs.size()) + 1];
+			os[i] = pTask;
 			i += 1;
 		} else
 			os = new Object[(margs.size())];

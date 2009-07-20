@@ -7,3 +7,5 @@ a.add(t3)
 i=2
 x=a[i]
 VMIO.puts(x)
+# OUTPUT
+# 7

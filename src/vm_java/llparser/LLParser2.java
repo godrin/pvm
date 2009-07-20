@@ -426,4 +426,11 @@ public class LLParser2 {
 		filename = f.toString();
 		return parse(LineLexer2.loadFile(f));
 	}
+
+	public ASTProgram parseData(String data, String pFilename)
+			throws ParseError, IOException {
+		filename = pFilename;
+		return parse(data);
+	}
+
 }

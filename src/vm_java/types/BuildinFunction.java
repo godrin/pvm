@@ -33,11 +33,12 @@ public class BuildinFunction extends Function {
 		return (method.getModifiers() & Modifier.STATIC) != 0;
 	}
 
-	public static BasicObject run(VMScope scope, BasicObject self,
+	public static BasicObject run(Task pTask, BasicObject self,
 			Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
 
-		Object[] args = RuntimeFunctionHelper.toJavaArgs(scope.getContext(),
-				bos, method.getParameterTypes());
+		VMScope scope=pTask.getScope();
+		Object[] args = RuntimeFunctionHelper.toJavaArgs(pTask, bos, method
+				.getParameterTypes());
 		Object result = null;
 
 		try {
@@ -66,7 +67,7 @@ public class BuildinFunction extends Function {
 		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
 				args);
 
-		BasicObject r = run(scope, bo, method, bos);
+		BasicObject r = run(parentTask, bo, method, bos);
 		if (returnName != null) {
 			scope.put(returnName, r);
 		}

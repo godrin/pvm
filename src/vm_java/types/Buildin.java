@@ -18,7 +18,9 @@ public class Buildin {
 		expose(scope, VMArray.class);
 		expose(scope, VMHash.class);
 		expose(scope, VMIO.class);
-		expose(scope, VMModule.class);
+		expose(scope, VMRuntime.class);
+		
+		expose(scope, VMModule.class); // These must stand at the end !!!
 		expose(scope, VMKlass.class);
 	}
 

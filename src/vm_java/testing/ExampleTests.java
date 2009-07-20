@@ -11,6 +11,7 @@ import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.Program;
 import vm_java.code.VMException;
+import vm_java.context.SourcePath;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -33,7 +34,7 @@ public class ExampleTests extends TestCase {
 	public void testKlass() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
-		runExample(new File(getExamplePath() + "/if.pvm"));
+		runExample(new File(getExamplePath() + "/require.pvm"));
 	}
 
 	public void donttestExamples() throws VMExceptionOutOfMemory,
@@ -49,16 +50,18 @@ public class ExampleTests extends TestCase {
 	private void runExample(File f) throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
-		VM vm = new VM();
+		LLParser2 lp = new LLParser2();
+		VM vm = new VM(lp);
 		VMContext vmc = vm.createContext();
 
-		LLParser2 lp = new LLParser2();
 		String curDir = System.getProperty("user.dir");
 		VMLog.debug(curDir);
 
 		String wantedOutput = getWantedOutput(f);
 
 		ASTProgram astP = lp.parseFile(f);
+
+		vmc.addPath(new SourcePath(f.getParent()));
 
 		Program prg = astP.instantiate(vmc);
 		VMScope scope = vmc.createScope();

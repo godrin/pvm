@@ -17,7 +17,7 @@ import vm_java.types.VMExceptionFunctionNotFound;
  * @author davidkamphausen
  */
 public class Program extends BasicObject implements Runnable {
-	
+
 	private CodeBlock mBlock;
 
 	public Program(VMContext pContext, CodeBlock pBlock)
@@ -26,24 +26,27 @@ public class Program extends BasicObject implements Runnable {
 		mBlock = pBlock;
 	}
 
-	protected void run(VMScope pScope) throws VMException, VMExceptionOutOfMemory,
-			VMExceptionFunctionNotFound {
+	protected void run(VMScope pScope) throws VMException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 	}
 
 	public CodeBlock getBlock() {
 		return mBlock;
 	}
 
-
 	@Override
-	public
-	void go(VMScope scope) throws VMException, VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+	public void go(VMScope scope,Task pParentTask) throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
-		getVM().enqueue(mBlock.execution(scope,null));
+		getVM().enqueue(mBlock.execution(scope, pParentTask));
 	}
 
 	public Task execution(VMScope scope) {
-		return new RunTask(scope,this);
+		return new RunTask(scope, this);
+	}
+
+	public Task execution(VMScope scope, Task pParent) {
+		return new RunTask(scope, pParent, this);
 	}
 
 	@Override

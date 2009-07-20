@@ -7,6 +7,7 @@ import vm_java.VM;
 import vm_java.code.VMException;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public abstract class Task {
@@ -90,4 +91,11 @@ public abstract class Task {
 	}
 
 	public abstract String inspect();
+
+	public void debugChildren() {
+		VMLog.debug("ME:" + this);
+		for (Task t : children) {
+			VMLog.debug(t);
+		}
+	}
 }

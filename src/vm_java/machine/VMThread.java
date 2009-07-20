@@ -12,9 +12,9 @@ public class VMThread extends Thread {
 	private Task job;
 	private int id;
 
-	public VMThread(VM pVM,int pID) {
+	public VMThread(VM pVM, int pID) {
 		vm = pVM;
-		id=pID;
+		id = pID;
 	}
 
 	@Override
@@ -36,15 +36,20 @@ public class VMThread extends Thread {
 
 			try {
 				if (job.canResume()) {
-					VMLog.debug("Running Job on thread "+id+":" + job.inspect() + " ##:"
-							+ vm.jobCount());
+					VMLog.debug("Running Job on thread " + id + ":"
+							+ job.inspect() + " ##:" + vm.jobCount());
 					job.go();
 				} else {
-					/*
-					 * VMLog.debug("Not Running Job:" + job.inspect() +
-					 * " waiting for "+job.childJobsCount()+" all ##:" +
-					 * vm.jobCount());
-					 */
+
+					VMLog.debug("Not Running Job:" + job.inspect()
+							+ " waiting for " + job.childJobsCount()
+							+ " all ##:" + vm.jobCount());
+
+					if(job.childJobsCount()>0)
+					{
+						job.debugChildren();
+					}
+					
 					vm.addJob(job);
 					continue;
 

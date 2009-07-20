@@ -14,8 +14,6 @@ class String
   end
 end
 
-
-
 class Compiler
 
   Result=Struct.new(:before,:within,:after)
@@ -104,7 +102,7 @@ class Compiler
 end
 
 @processor = RubyParser.new
-a=@processor.parse(File.load("simple_function.prb"))
+a=@processor.parse(File.load(File.expand_path("../simple_function.prb",__FILE__)))
 pp a
 
 puts "---"

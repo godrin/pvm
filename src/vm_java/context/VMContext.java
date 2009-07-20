@@ -4,6 +4,7 @@
  */
 package vm_java.context;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import vm_java.VM;
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;
 import vm_java.code.SourceBased.SourceInfo;
+import vm_java.internal.VMLog;
 import vm_java.types.ObjectName;
 
 /**
@@ -18,6 +20,7 @@ import vm_java.types.ObjectName;
  * @author davidkamphausen
  */
 public class VMContext {
+	// FIXME : organize VMContext in hierarchy
 
 	private final long MAX_MEMORY = 1024 * 1024;
 
@@ -28,7 +31,8 @@ public class VMContext {
 	private long mMaxMemory;
 	private long mLastCheckedMemorySize;
 	private float mCpuTime;
-	long lastId=0;
+	long lastId = 0;
+	private List<SourcePath> sourcePaths = new ArrayList<SourcePath>();
 
 	public VMContext(VM pVM) {
 		mVM = pVM;
@@ -38,8 +42,9 @@ public class VMContext {
 		mCpuTime = 0;
 	}
 
-	public CodeBlock createBlock(SourceInfo source) throws VMExceptionOutOfMemory {
-		CodeBlock b = new CodeBlock(this,source);
+	public CodeBlock createBlock(SourceInfo source)
+			throws VMExceptionOutOfMemory {
+		CodeBlock b = new CodeBlock(this, source);
 		add(b);
 		return b;
 	}
@@ -88,11 +93,29 @@ public class VMContext {
 	}
 
 	public void addTime(double time) {
-		this.mCpuTime+=time;		
+		this.mCpuTime += time;
 	}
 
 	public long getNewID() {
 		return ++lastId;
+	}
+
+	public void addPath(SourcePath sourcePath) {
+		sourcePaths.add(sourcePath);
+	}
+
+	public String loadSource(String filename) {
+		for (SourcePath p : sourcePaths) {
+			String c;
+			try {
+				c = p.getContent(filename);
+				if (c != null)
+					return c;
+			} catch (IOException e) {
+				VMLog.error(e);
+			}
+		}
+		return null;
 	}
 
 }

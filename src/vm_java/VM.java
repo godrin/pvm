@@ -13,6 +13,7 @@ import vm_java.code.Program;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.llparser.LLParser2;
 import vm_java.machine.Options;
 import vm_java.machine.Process;
 import vm_java.machine.Task;
@@ -26,8 +27,10 @@ public class VM {
 	private Queue<Task> mJobs = new LinkedList<Task>();
 	private List<Process> mProcesses = new ArrayList<Process>();
 	private boolean running = false;
+	private LLParser2 mParser;
 
-	public VM() {
+	public VM(LLParser2 pParser) {
+		mParser = pParser;
 	}
 
 	public synchronized VMContext createContext() {
@@ -102,5 +105,9 @@ public class VM {
 
 	public void enqueue(Task task) {
 		mJobs.add(task);
+	}
+
+	public LLParser2 getParser() {
+		return mParser;
 	}
 }

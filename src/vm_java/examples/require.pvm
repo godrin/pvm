@@ -1,0 +1,6 @@
+filename="array.pvm"
+VMRuntime.require(filename)
+VMIO.puts(filename)
+# OUTPUT
+# 7
+# array.pvm
