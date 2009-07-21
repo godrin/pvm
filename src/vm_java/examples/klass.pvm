@@ -40,3 +40,9 @@ c.vset(i)
 j=c.vget()
 VMIO.puts(i)
 VMIO.puts(j)
+# OUTPUT
+# MUH2
+# MUH
+# 1234
+# 1234
+# 1234

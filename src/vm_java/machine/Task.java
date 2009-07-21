@@ -34,12 +34,26 @@ public abstract class Task {
 		return scope;
 	}
 
-	public boolean canResume() {
+	public boolean canResume() throws VMFatalError {
+		checkChildren();
 		return children.size() == 0 && okToRun();
+	}
+
+	private void checkChildren() throws VMFatalError {
+		for (Task child : children) {
+			if (!getVM().hasJob(child)) {
+				throw new VMFatalError("" + this + " has child " + child
+						+ ", but it's not in job-list of vm!");
+			}
+		}
 	}
 
 	public int childJobsCount() {
 		return children.size();
+	}
+
+	public Task getParent() {
+		return parent;
 	}
 
 	public void go() throws VMException, VMExceptionOutOfMemory,

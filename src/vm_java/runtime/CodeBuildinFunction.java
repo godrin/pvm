@@ -18,11 +18,11 @@ public class CodeBuildinFunction implements RuntimeFunction {
 	Object mObject;
 
 	public CodeBuildinFunction(Object pObject, Method method)
-			throws VMExceptionOutOfMemory, VMException {
+			throws VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		mMethod = method;
 		mObject = pObject;
 		if (mMethod == null)
-			throw new VMException(null, "Method is not defined!");
+			throw new VMExceptionFunctionNotFound();
 	}
 
 	@Override

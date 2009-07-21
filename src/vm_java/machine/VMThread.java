@@ -21,55 +21,60 @@ public class VMThread extends Thread {
 	public void run() {
 		super.run();
 
-		while (vm.running()) {
-			getJob();
-			if (job == null) {
+		try {
+
+			while (vm.running()) {
+				getJob();
+				if (job == null) {
+					try {
+						Thread.sleep(Options.GRANULARITY_MS);
+					} catch (InterruptedException e) {
+						VMLog.error(e);
+					}
+					continue;
+				}
+				long startTime = System.currentTimeMillis();
+				long endTime = startTime;
+
 				try {
-					Thread.sleep(Options.GRANULARITY_MS);
-				} catch (InterruptedException e) {
+					if (job.canResume()) {
+						VMLog.debug("Running Job on thread " + id + ":"
+								+ job.inspect() + " ##:" + vm.jobCount());
+						job.go();
+					} else {
+
+						VMLog.debug("Not Running Job:" + job.inspect()
+								+ " waiting for " + job.childJobsCount()
+								+ " all ##:" + vm.jobCount());
+
+						if (job.childJobsCount() > 0) {
+							job.debugChildren();
+						}
+
+						vm.addJob(job);
+						continue;
+
+					}
+				} catch (VMException e) {
+					VMLog.error(e);
+				} catch (VMExceptionOutOfMemory e) {
+					VMLog.error(e);
+				} catch (VMExceptionFunctionNotFound e) {
 					VMLog.error(e);
 				}
-				continue;
-			}
-			long startTime = System.currentTimeMillis();
-			long endTime = startTime;
 
-			try {
-				if (job.canResume()) {
-					VMLog.debug("Running Job on thread " + id + ":"
-							+ job.inspect() + " ##:" + vm.jobCount());
-					job.go();
-				} else {
+				endTime = System.currentTimeMillis();
+				long diff = endTime - startTime;
 
-					VMLog.debug("Not Running Job:" + job.inspect()
-							+ " waiting for " + job.childJobsCount()
-							+ " all ##:" + vm.jobCount());
+				double time = (diff / 1000.0);
 
-					if(job.childJobsCount()>0)
-					{
-						job.debugChildren();
-					}
-					
-					vm.addJob(job);
-					continue;
+				job.getScope().getContext().addTime(time);
+				job = null;
 
-				}
-			} catch (VMException e) {
-				VMLog.error(e);
-			} catch (VMExceptionOutOfMemory e) {
-				VMLog.error(e);
-			} catch (VMExceptionFunctionNotFound e) {
-				VMLog.error(e);
 			}
 
-			endTime = System.currentTimeMillis();
-			long diff = endTime - startTime;
-
-			double time = (diff / 1000.0);
-
-			job.getScope().getContext().addTime(time);
-			job = null;
-
+		} catch (VMFatalError fatal) {
+			vm.setFatalError(fatal);
 		}
 	}
 

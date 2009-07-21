@@ -1,0 +1,21 @@
+a=begin()
+  e=self.except
+  rescue e
+  self.arg()
+end
+test=a
+
+except=begin
+  e="Exception"
+  VMIO.puts(e)
+end
+self.except=except
+
+check=begin()
+  rescue except
+  test()
+end 
+
+check()
+# OUTPUT
+# Exception

@@ -34,7 +34,7 @@ public class VMModule extends BasicObject implements MemberContainer,
 		super(context);
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory {
 		BasicObject bo = get(name);
 

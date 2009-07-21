@@ -4,3 +4,6 @@ time=1234
 sleep time
 asd="Schmuhl"
 VMIO.puts(asd)
+# OUTPUT
+# hello
+# Schmuhl

@@ -10,7 +10,7 @@ b1=begin(a,b)
   v3=a.plus(b)
   return v3
 end
-m="M…HRE"
+m="MOEHRE"
 VMIO.puts(m)
 
 
@@ -21,3 +21,8 @@ x=1
 y=2
 h=self.compute(x,y)
 VMIO.puts(h)
+# OUTPUT
+# MOEHRE
+# MOEHRE
+# MOEHREHUPE
+# 3

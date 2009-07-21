@@ -23,21 +23,21 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 	private VMObject object;
 
 	public RuntimeMemberFunction(VMModule pmodule, Function pFunction)
-			throws VMException {
+			throws VMExceptionFunctionNotFound {
 		module = pmodule;
 		function = pFunction;
 		if (function == null)
-			throw new VMException(null, "function is null");
+			throw new VMExceptionFunctionNotFound();
 		assert (function != null);
 	}
 
 	public RuntimeMemberFunction(VMObject pObject, Function pFunction)
-			throws VMException {
+			throws VMExceptionFunctionNotFound {
 		function = pFunction;
 		object = pObject;
 		assert (function != null);
 		if (function == null)
-			throw new VMException(null, "function is null");
+			throw new VMExceptionFunctionNotFound();
 	}
 
 	public void run(VMScope parentScope, ObjectName returnName,

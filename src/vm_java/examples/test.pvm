@@ -23,3 +23,6 @@ VMIO.puts(tmp_4)
 clear tmp_5
 clear tmp_6
 clear tmp_4
+# OUTPUT
+# HI
+# 3

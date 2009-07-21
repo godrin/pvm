@@ -17,7 +17,7 @@ public class LineLexer2 {
 		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
 		BRACKETS_OPEN, BRACKETS_CLOSE, 
 		PARENT_OPEN, PARENT_CLOSE, COMMA,
-		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN
+		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE
 	};
 
 	public static class Lex {
@@ -63,6 +63,7 @@ public class LineLexer2 {
 	private void init() {
 		add("(true|false)",SYMBOLS.BOOLEAN);
 		add("if",SYMBOLS.IF);
+		add("rescue",SYMBOLS.RESCUE);
 		add("then",SYMBOLS.THEN);
 		add("while",SYMBOLS.WHILE);
 		add("do",SYMBOLS.DO);

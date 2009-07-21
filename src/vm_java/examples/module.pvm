@@ -1,4 +1,4 @@
-module0=VMModule.new()
+module0=VMModule.newModule()
 a=begin()
   h="123"
   self.abc=h
@@ -14,3 +14,5 @@ clear a
 module0.save123
 v=module0.load123()
 VMIO.puts(v)
+# OUTPUT
+# 123

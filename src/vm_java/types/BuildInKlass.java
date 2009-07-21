@@ -28,7 +28,7 @@ public class BuildInKlass extends BasicObject implements FunctionProvider {
 	}
 
 	@Override
-	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory {
 
 		if (name.getName().equals("new")) {

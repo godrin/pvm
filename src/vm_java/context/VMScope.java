@@ -14,9 +14,10 @@ import vm_java.code.VMException;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
-import vm_java.types.VMModule;
 import vm_java.types.ObjectName;
 import vm_java.types.Reference;
+import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.VMModule;
 import vm_java.types.VMObject;
 
 /**
@@ -152,7 +153,7 @@ public class VMScope {
 	}
 
 	public RuntimeMemberFunction getFunction(ObjectName methodName)
-			throws VMException {
+			throws VMExceptionFunctionNotFound {
 		Function f = (Function) get(methodName);
 
 		if (selfObject == null)
@@ -163,6 +164,10 @@ public class VMScope {
 
 	public void clear(ObjectName name) {
 		mReferences.remove(name);
+	}
+
+	public boolean exception() {
+		return currentException != null;
 	}
 
 	public boolean finished() {

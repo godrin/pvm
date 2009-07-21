@@ -22,6 +22,7 @@ import vm_java.llparser.ast.ASTIf;
 import vm_java.llparser.ast.ASTInteger;
 import vm_java.llparser.ast.ASTMethodCall;
 import vm_java.llparser.ast.ASTProgram;
+import vm_java.llparser.ast.ASTRescue;
 import vm_java.llparser.ast.ASTReturn;
 import vm_java.llparser.ast.ASTRightValue;
 import vm_java.llparser.ast.ASTSleep;
@@ -145,6 +146,11 @@ public class LLParser2 {
 			s = parseIf();
 		} else if (token() == SYMBOLS.WHILE) {
 			s = parseWhile();
+		} else if (token() == SYMBOLS.RESCUE) {
+			fetchToken();
+			ASTVar rescueFunction = parseVar();
+			s = new ASTRescue(source(), rescueFunction);
+			fetchToken();
 		} else {
 
 			parseError();

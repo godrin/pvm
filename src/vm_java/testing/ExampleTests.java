@@ -34,10 +34,10 @@ public class ExampleTests extends TestCase {
 	public void testKlass() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
-		runExample(new File(getExamplePath() + "/require.pvm"));
+		runExample(new File(getExamplePath() + "/exception.pvm"));
 	}
 
-	public void donttestExamples() throws VMExceptionOutOfMemory,
+	public void testExamples() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
 
@@ -75,9 +75,15 @@ public class ExampleTests extends TestCase {
 		}
 		String buf = VMIO.content();
 		if (!buf.equals(wantedOutput)) {
-			System.out.println("WANTED:" + wantedOutput + ":");
-			System.out.println("GOT:" + buf + ":");
+			System.out.println("Test:"+f);
+			System.out.println("WANTED:" + wantedOutput.replace("\n", ":\n") + ":");
+			System.out.println("GOT:" + buf.replace("\n", ":\n") + ":");
 			throw new TestFailedException();
+		}
+		VMIO.clear();
+		
+		if(vm.getFatalError()!=null) {
+			assertNull(vm.getFatalError());
 		}
 	}
 

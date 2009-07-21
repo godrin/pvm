@@ -35,7 +35,7 @@ public class VMObject extends BasicObject implements FunctionProvider,
 		return o;
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory {
 
 		BasicObject bo = get(name);

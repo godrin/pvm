@@ -47,7 +47,7 @@ public class VMKlass extends VMModule {
 		return o;
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMException,
+	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory {
 
 		BasicObject bo = getStatic(name);

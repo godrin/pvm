@@ -4,3 +4,6 @@ c=a.<(b)
 VMIO.puts(c)
 c=b.<(a)
 VMIO.puts(c)
+# OUTPUT
+# true
+# false

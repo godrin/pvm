@@ -13,10 +13,12 @@ import vm_java.code.Program;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.internal.VMLog;
 import vm_java.llparser.LLParser2;
 import vm_java.machine.Options;
 import vm_java.machine.Process;
 import vm_java.machine.Task;
+import vm_java.machine.VMFatalError;
 
 /**
  * 
@@ -28,6 +30,7 @@ public class VM {
 	private List<Process> mProcesses = new ArrayList<Process>();
 	private boolean running = false;
 	private LLParser2 mParser;
+	private VMFatalError mFatal;
 
 	public VM(LLParser2 pParser) {
 		mParser = pParser;
@@ -109,5 +112,19 @@ public class VM {
 
 	public LLParser2 getParser() {
 		return mParser;
+	}
+
+	public boolean hasJob(Task child) {
+		return mJobs.contains(child);
+	}
+
+	public void setFatalError(VMFatalError fatal) {
+		VMLog.error(fatal);
+		mJobs.clear();
+		mFatal = fatal;
+	}
+
+	public VMFatalError getFatalError() {
+		return mFatal;
 	}
 }

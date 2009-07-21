@@ -31,29 +31,33 @@ public class CodeMethodCall extends CodeStatement {
 
 	@Override
 	public void execute(VMScope scope, Task parentTask) throws VMException,
-			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
+			VMExceptionOutOfMemory {
+		try {
 
-		RuntimeFunction f = null;
-		BasicObject bo = null;
-		if (varName == null) {
-			f = scope.getFunction(methodName);
-		} else {
-			bo = scope.get(varName);
-			if (bo instanceof FunctionProvider) {
-				FunctionProvider vmo = (FunctionProvider) bo;
+			RuntimeFunction f = null;
+			BasicObject bo = null;
+			if (varName == null) {
+				f = scope.getFunction(methodName);
+			} else {
+				bo = scope.get(varName);
+				if (bo instanceof FunctionProvider) {
+					FunctionProvider vmo = (FunctionProvider) bo;
 
-				f = vmo.getFunction(methodName);
+					f = vmo.getFunction(methodName);
+				}
 			}
+			if (f == null) {
+				VMLog.error(info());
+				VMLog.warn("Method not found:");
+				VMLog.warn(scope.inspect());
+				// FIXME: return Quit_exception
+				throw new VMException(this, "Function " + methodName
+						+ " not found in " + varName + " (" + bo + "!");
+			}
+			f.run(scope, returnName, parameters, parentTask);
+		} catch (VMExceptionFunctionNotFound e) {
+			scope.setException(e.vm(getContext()));
 		}
-		if (f == null) {
-			VMLog.error(info());
-			VMLog.warn("Method not found:");
-			VMLog.warn(scope.inspect());
-			// FIXME: return Quit_exception
-			throw new VMException(this, "Function " + methodName
-					+ " not found in " + varName + " (" + bo + "!");
-		}
-		f.run(scope, returnName, parameters, parentTask);
 
 	}
 
