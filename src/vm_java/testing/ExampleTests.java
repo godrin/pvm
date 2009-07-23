@@ -31,7 +31,7 @@ public class ExampleTests extends TestCase {
 				Level.WARN });
 	}
 
-	public void testKlass() throws VMExceptionOutOfMemory,
+	public void testSingle() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
 		runExample(new File(getExamplePath() + "/exception.pvm"));
