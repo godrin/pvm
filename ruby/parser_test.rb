@@ -2,7 +2,7 @@ require 'ubygems'
 require 'ruby_parser.rb'
 require 'pp'
 
-class File
+class IO
   def self.load(filename)
     File.open(filename) {|f|f.read}
   end
@@ -40,8 +40,13 @@ class Compiler
     }.join("\n")
   end
   
+  def _const(argss)
+    Result.new("",argss.to_s,"")
+  end
+  
   def _str(argss)
-    Result.new("","\"#{argss}\"","")
+  v=tmpVar
+    Result.new("#{v}=\"#{argss}\"\n",v,"")
   end
   
   def _scope(argss)
@@ -102,9 +107,12 @@ class Compiler
 end
 
 @processor = RubyParser.new
-a=@processor.parse(File.load(File.expand_path("../simple_function.prb",__FILE__)))
-pp a
+#pp STDIN
+c=STDIN.read
+#pp c
+#c||=File.load(File.expand_path("../simple_function.prb",__FILE__))
 
-puts "---"
+a=@processor.parse(c)
+STDERR.puts a.inspect
 c=Compiler.new
 puts c.compile(a)

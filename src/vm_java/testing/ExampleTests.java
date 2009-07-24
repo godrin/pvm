@@ -70,8 +70,7 @@ public class ExampleTests extends TestCase {
 		try {
 			vm.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			VMLog.error(e);
 		}
 		String buf = VMIO.content();
 		if (!buf.equals(wantedOutput)) {

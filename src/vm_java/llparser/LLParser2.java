@@ -17,6 +17,7 @@ import vm_java.llparser.ast.ASTAssignMember;
 import vm_java.llparser.ast.ASTBlock;
 import vm_java.llparser.ast.ASTBoolean;
 import vm_java.llparser.ast.ASTClearVar;
+import vm_java.llparser.ast.ASTDouble;
 import vm_java.llparser.ast.ASTFunction;
 import vm_java.llparser.ast.ASTIf;
 import vm_java.llparser.ast.ASTInteger;
@@ -221,7 +222,7 @@ public class LLParser2 {
 
 	private void parseError() throws ParseError {
 		VMLog.debug("Parse error in line " + lineNo);
-		System.out.print("Before: ");
+		VMLog.debug("Before: ");
 		LineLexer2.output(mResult);
 		LineLexer2.output(results);
 		throw new ParseError();
@@ -260,6 +261,10 @@ public class LLParser2 {
 			s = new ASTAssign(source(), lValue, parseArray());
 		} else if (t == SYMBOLS.BOOLEAN) {
 			s = new ASTAssign(source(), lValue, new ASTBoolean(source(),
+					mResult));
+			fetchToken();
+		} else if(t == SYMBOLS.DOUBLE) {
+			s = new ASTAssign(source(), lValue, new ASTDouble(source(),
 					mResult));
 			fetchToken();
 		} else {

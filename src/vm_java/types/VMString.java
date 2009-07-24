@@ -34,9 +34,14 @@ public class VMString extends BuildInKlass implements BuildInInterface {
 		return OVERHEAD;
 	}
 	
-	public VMString concat(VMString a) throws VMExceptionOutOfMemory {
+	
+	public VMString plus(VMString a) throws VMExceptionOutOfMemory {
 		return new VMString(getContext(),getContent()+a.getContent());
 	}
+	/*
+	public VMString concat(VMString a) throws VMExceptionOutOfMemory {
+		return new VMString(getContext(),getContent()+a.getContent());
+	}*/
 
 	public Object convertToJava(Object pk) {
 		if (pk.equals(java.lang.String.class)) {

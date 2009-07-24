@@ -2,7 +2,7 @@ b0=begin(p0)
   v0=p0
   VMIO.puts(v0)
   sec="HUPE"
-  v1=v0.concat(sec)
+  v1=v0.+(sec)
   return v1
 end
 self.hello=b0

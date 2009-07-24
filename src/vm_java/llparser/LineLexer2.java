@@ -13,11 +13,7 @@ import vm_java.internal.VMLog;
 
 public class LineLexer2 {
 	enum SYMBOLS {
-		BEGIN, END, TYPE, PARAMETER,
-		RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, 
-		BRACKETS_OPEN, BRACKETS_CLOSE, 
-		PARENT_OPEN, PARENT_CLOSE, COMMA,
-		EOF,COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE
+		BEGIN, END, TYPE, PARAMETER, RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, BRACKETS_OPEN, BRACKETS_CLOSE, PARENT_OPEN, PARENT_CLOSE, COMMA, EOF, COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE, DOUBLE
 	};
 
 	public static class Lex {
@@ -61,21 +57,21 @@ public class LineLexer2 {
 	}
 
 	private void init() {
-		add("(true|false)",SYMBOLS.BOOLEAN);
-		add("if",SYMBOLS.IF);
-		add("rescue",SYMBOLS.RESCUE);
-		add("then",SYMBOLS.THEN);
-		add("while",SYMBOLS.WHILE);
-		add("do",SYMBOLS.DO);
-		add("unless",SYMBOLS.UNLESS);
-		add("clear",SYMBOLS.CLEAR);
+		add("(true|false)", SYMBOLS.BOOLEAN);
+		add("if", SYMBOLS.IF);
+		add("rescue", SYMBOLS.RESCUE);
+		add("then", SYMBOLS.THEN);
+		add("while", SYMBOLS.WHILE);
+		add("do", SYMBOLS.DO);
+		add("unless", SYMBOLS.UNLESS);
+		add("clear", SYMBOLS.CLEAR);
 		add("begin", SYMBOLS.BEGIN);
 		add("end", SYMBOLS.END);
 		add("sleep", SYMBOLS.SLEEP);
 		add("return", SYMBOLS.RETURN);
-		add("parameter\\[[0-9]*\\]",SYMBOLS.PARAMETER);
+		add("parameter\\[[0-9]*\\]", SYMBOLS.PARAMETER);
 		add("[a-zA-Z+-_][a-zA-Z0-9_]*", SYMBOLS.VAR);
-		//add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
+		// add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
 		add("==", SYMBOLS.EQUAL);
 		add("=", SYMBOLS.ASSIGN);
 		add("\\.", SYMBOLS.DOT);
@@ -85,7 +81,8 @@ public class LineLexer2 {
 		add("\t", SYMBOLS.WHITESPACE);
 		add(":[a-zA-Z_][a-zA-Z0-9_]*", SYMBOLS.SYMBOL);
 		add("\"[^\"]*\"", SYMBOLS.STRING);
-		add("#",SYMBOLS.COMMENT);
+		add("#", SYMBOLS.COMMENT);
+		add("-?[0-9][0-9]*\\.[0-9][0-9]*", SYMBOLS.DOUBLE);
 		add("-?[0-9][0-9]*", SYMBOLS.INTEGER);
 		add("\\[", SYMBOLS.BRACKETS_OPEN);
 		add("\\]", SYMBOLS.BRACKETS_CLOSE);
@@ -124,7 +121,7 @@ public class LineLexer2 {
 		}
 		return result;
 	}
-	
+
 	public static String loadFile(File f) throws IOException {
 		String content = "";
 
@@ -144,14 +141,13 @@ public class LineLexer2 {
 		return content;
 	}
 
-
 	static String loadFile(String path) throws IOException {
 		return loadFile(new File(path));
 	}
-	
+
 	public static void output(Result r) {
 		VMLog.debug(r.lex.symbol + "(" + r.getString() + ") ");
-		
+
 	}
 
 	public static void output(List<Result> results) {
@@ -163,7 +159,7 @@ public class LineLexer2 {
 
 	public static void main(String[] args) throws IOException {
 		LineLexer2 ll = new LineLexer2();
-		//output(ll.lex("begin"));
+		// output(ll.lex("begin"));
 
 		String curDir = System.getProperty("user.dir");
 		VMLog.debug(curDir);
@@ -177,6 +173,5 @@ public class LineLexer2 {
 		}
 		// output(ll.lex(content));
 	}
-
 
 }

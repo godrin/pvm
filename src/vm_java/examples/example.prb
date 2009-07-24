@@ -1,6 +1,9 @@
+#require 'pp'
 def a(myvar)
-  sleep 0.2
-  puts myvar
+  #sleep 0.2 
+  VMIO.puts myvar
 end
-~a("ARGH")
-puts "HELLO"
+a("ARGH")
+VMIO.puts "HELLO"
+
+VMIO.puts "hi"+"hsdfjk"
