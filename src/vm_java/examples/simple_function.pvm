@@ -1,4 +1,4 @@
-b0=begin(p0)
+b0 = begin(p0)
   v0=p0
   VMIO.puts(v0)
   sec="HUPE"

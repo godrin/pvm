@@ -34,7 +34,7 @@ public class ExampleTests extends TestCase {
 	public void testSingle() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
-		runExample(new File(getExamplePath() + "/exception.pvm"));
+		runExample(new File(getExamplePath() + "/if.pvm"));
 	}
 
 	public void testExamples() throws VMExceptionOutOfMemory,

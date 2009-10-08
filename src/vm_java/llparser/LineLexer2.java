@@ -70,8 +70,7 @@ public class LineLexer2 {
 		add("sleep", SYMBOLS.SLEEP);
 		add("return", SYMBOLS.RETURN);
 		add("parameter\\[[0-9]*\\]", SYMBOLS.PARAMETER);
-		add("[a-zA-Z+-_][a-zA-Z0-9_]*", SYMBOLS.VAR);
-		// add("[A-Z][a-zA-Z0-9_]*", SYMBOLS.TYPE);
+		add("[a-zA-Z+_<-][a-zA-Z0-9_]*", SYMBOLS.VAR);
 		add("==", SYMBOLS.EQUAL);
 		add("=", SYMBOLS.ASSIGN);
 		add("\\.", SYMBOLS.DOT);
@@ -158,6 +157,7 @@ public class LineLexer2 {
 	}
 
 	public static void main(String[] args) throws IOException {
+		VMLog.setLogLevels(new VMLog.Level[]{VMLog.Level.DEBUG,VMLog.Level.ERROR,VMLog.Level.WARN});
 		LineLexer2 ll = new LineLexer2();
 		// output(ll.lex("begin"));
 

@@ -16,12 +16,12 @@ public class PRubyParserMRIRuby implements PRubyParser {
 				PRubyParserJRuby.PARSER_RB
 
 		};
-		
+
 		System.out.println("Parsing:");
-		
 
 		String input = source.getString();
 		System.out.println(input);
+		System.out.println("Parsed.");
 
 		String ret = runPipe(array, input);
 		return ret;
@@ -38,17 +38,17 @@ public class PRubyParserMRIRuby implements PRubyParser {
 
 			// write
 			OutputStream os = proc.getOutputStream();
-			InputStream error=proc.getErrorStream();
+			InputStream error = proc.getErrorStream();
 
 			os.write(input.getBytes());
 			os.close();
 
-			//proc.getOutputStream();
+			// proc.getOutputStream();
 			int read;
 			byte[] buffer = new byte[1024];
 
-			while((read=error.read(buffer))>0) {
-				System.out.println(new String(buffer,0,read));
+			while ((read = error.read(buffer)) > 0) {
+				System.out.println(new String(buffer, 0, read));
 			}
 
 			proc.waitFor();
@@ -76,7 +76,7 @@ public class PRubyParserMRIRuby implements PRubyParser {
 		PRubyParserMRIRuby p = new PRubyParserMRIRuby();
 		PRubySourceDef def = new PRubySourceDef("simple_function.prb",
 				new SinglePathSourceSource(new File("ruby")));
-		String res=p.parse(def);
+		String res = p.parse(def);
 		System.out.println(res);
 	}
 
