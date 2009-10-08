@@ -244,7 +244,7 @@ class ArgsCode<ASTCode
   end
 
   def getCode
-    @args.map{|a|a.to_s}
+    @args.map{|a|[a.to_s,',']}.flatten[0...-1]
   end
 end
 
