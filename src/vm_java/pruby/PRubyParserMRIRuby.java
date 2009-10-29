@@ -20,7 +20,7 @@ public class PRubyParserMRIRuby implements PRubyParser {
 		System.out.println("Parsing:");
 
 		String input = source.getString();
-		System.out.println(input);
+		//System.out.println(input);
 		System.out.println("Parsed.");
 
 		String ret = runPipe(array, input);
@@ -57,6 +57,13 @@ public class PRubyParserMRIRuby implements PRubyParser {
 			StringBuilder b = new StringBuilder();
 			while ((read = proc.getInputStream().read(buffer)) > 0) {
 				b.append(new String(buffer, 0, read));
+			}
+			if(proc.exitValue()!=0) {
+				VMLog.error("Exit Value:"+proc.exitValue());
+				
+				System.out.println(b.toString());
+				
+				return null;
 			}
 
 			return b.toString();

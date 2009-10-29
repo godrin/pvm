@@ -1,4 +1,4 @@
-Code=Struct.new(:before,:within,:after)
+Code=Struct.new(:before,:within,:after,:value)
 
 class Code
   def combined
@@ -23,7 +23,17 @@ class Code
 end
 
 class ASTCode
-  attr_accessor :compiler
+  attr_accessor :compiler, :parent
+  def initialize
+    @module=nil
+  end
+
+  def currentModule
+    @module||(
+    @parent.currentModule if @parent
+    )||nil
+  end
+
   def s(where,*args)
     args.flatten!
 
@@ -61,6 +71,10 @@ class ASTCode
     @code[where]<<args.join(" ")
   end
 
+  def v(*args)
+    s(:value,*args)
+  end
+
   def b(*args)
     s(:before,*(args+["\n"]))
   end
@@ -86,7 +100,7 @@ class ASTCode
   end
 
   def compile(*a)
-    @compiler.compile(*a)
+    @compiler.compile(self,*a)
   end
 
   def tmpVar
@@ -109,7 +123,7 @@ class ASTCode
 
     c=code
 
-    Code.new(@code[:before],@code[:within],@code[:after])
+    Code.new(@code[:before],@code[:within],@code[:after],@code[:value])
   end
 end
 
@@ -144,6 +158,7 @@ class BlockCode < ASTCode
       ws all
       result=all[-1].after if all[-1] and not all[-1].after=~/ *clear .*/
     }
+    v result
   end
 end
 
@@ -167,14 +182,14 @@ class DefnCode< ASTCode
 
   def code
     w(:_func, :ass, "begin", "(",*(compile(@args)+[")"]))
-   # pp "BOOODY",@body
+    # pp "BOOODY",@body
     compile(@body).combined.each{|s|
-    #  pp "COMBINDES",s
+      #  pp "COMBINDES",s
       ws *s
     }
 
     w "end"
-    w @name, :ass, :_func
+    w "self."+@name.to_s, :ass, :_func
     w "clear",:_func
   end
 end
@@ -185,7 +200,8 @@ class ScopeCode < ASTCode
   end
 
   def code
-    ws compile(*@args)
+
+    ws compile(*@args) if @args.length>0
   end
 end
 
@@ -196,7 +212,7 @@ class StrCode < ASTCode
 
   def code
     b :_tmp,:ass,"\""+@str.gsub("\\","\\\\").gsub("\"","\\")+"\""
-
+    v :_tmp
   end
 end
 
@@ -214,17 +230,31 @@ class CallCode<ASTCode
     args=res2.within
     before=res2.before
     after=res2.after
+    pp "L:",l
     if l
-      before=l.before+before
       after=after+l.after
-      b before
-      w l.within[0],".",func,"(",args,")"
-      a after
+      bs l.before
+      bs res2.before
+      w :_tmp,:ass,l.value,".",func,"(",args,")"
+      v :_tmp
+      as after
+      a :clear,:_tmp
     else
       bs before #if before.length>0
-      w func,"(",args,")"
+      w :_tmp,:ass,func,"(",args,")"
+      v :_tmp
       as after
+      a :clear,:_tmp
     end
+  end
+end
+
+class ConstCode<ASTCode
+  def initialize(name)
+    @name=name
+  end
+  def code
+    v @name
   end
 end
 
@@ -276,9 +306,118 @@ class ArglistCode<ASTCode
       end
       ws t
 
-      
       a res.after if res.after.length>0
       a "clear",t
     }
+  end
+end
+
+class ModuleCode<ASTCode
+  def initialize(name,body)
+
+    assert{not name.nil?}
+    #pp "NAME:",name
+    #exit
+    @name="MODULE_#{name}"
+    @module=name
+    @body=body
+
+  end
+
+  def code
+    b @name,:ass,"VMModule.newModule()"
+    ws compile(@body)
+  end
+end
+
+class ClassCode<ASTCode
+  def initialize(name,parent,body)
+    #puts "ARGSSSSS:"
+    #puts parent.class,name.class,body.class
+    assert{not name.nil?}
+
+    @name=name.to_s
+    @module=name
+    @body=body
+
+  end
+
+  def code
+    b @name.to_s,"=","VMKlass.newModule()"
+    ws compile(@body)
+  end
+end
+
+# const declare
+class CdeclCode<ASTCode
+  def initialize(name,body)
+    @name=name.to_s
+    @body=body
+  end
+
+  def code
+    t=tmpVar
+    bc=compile(@body)
+    bs bc.before,bc.within
+    ws t,"=",bc.value
+    as bc.after
+  end
+
+end
+
+class RescueCode<ASTCode
+  def initialize(block,rescueBlock)
+    @block=block
+    @rescueBlock=rescueBlock
+    #puts "---"
+    #puts @name
+    #puts @block
+    #exit
+  end
+  def code
+    rb=compile(@rescueBlock)
+    bs rb.before
+    w "self.except",:ass,rb.value
+    ws compile(@rescueBlock)
+    as rb.after
+    #FIXME
+  end
+end
+
+class ResbodyCode<ASTCode
+ def initialize(names,body)
+   puts ":::",names,"---",body
+   @body=body
+   @names=names
+   #exit
+ end
+ def code
+   names=compile(@names)
+   pp "BODY:",@body
+   b=compile(@body)
+   ws b.before
+   w :_block,:ass,b.value
+   names.value[1..-2].each{|n|
+     w "rescue",n,:_block
+   }
+   ws b.after
+   #pp names
+   #exit
+ end
+end
+
+class ArrayCode<ASTCode
+  def initialize(*args)
+    @args=args
+  end
+  def code
+    v "["
+    @args.each{|arg|
+      c=compile(arg)
+      bs c.before
+      as c.after
+      v c.value
+    }
+    v "]"
   end
 end

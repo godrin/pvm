@@ -1,7 +1,6 @@
 require 'ubygems'
 require 'ruby_parser.rb'
 require 'pp'
-
 require File.expand_path('../generators.rb',__FILE__)
 
 def assert
@@ -37,16 +36,21 @@ class Compiler
     "tmp_#{@counter}"
   end
 
-  def compile(input)
+  def compile(parent,input)
     return nil if input.nil?
     args=input.map{|x|x}
     #pp "COMP:",args
     klassName=args[0].to_s.upcaseFirstLetter
     klass=eval(klassName+"Code")
-    obj=klass.new(*args[1..-1])
+    cargs=args[1..-1]
+    #pp klass #,cargs
+    #puts "ARGS:",cargs,"--" #.map{|a|"#{a.class}:#{a}"}.join(" ")
+
+    obj=klass.new(*cargs)
     obj.compiler=self
+    obj.parent=parent
     result=obj.getCode
-    #pp "RESULT #{klassName}:",result
+    pp "RESULT #{klassName}:",result
     result
   end
 end
@@ -57,7 +61,7 @@ c=STDIN.read
 a=@processor.parse(c)
 c=Compiler.new
 #pp a
-result=c.compile(a)
+result=c.compile(nil,a)
 
 #pp result
 puts result

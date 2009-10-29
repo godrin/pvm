@@ -31,6 +31,12 @@ public class VMKlass extends VMModule {
 		super(context);
 	}
 
+	public VMKlass(VMContext context, VMKlass pParent)
+			throws VMExceptionOutOfMemory {
+		super(context);
+		mParent = pParent;
+	}
+
 	BasicObject create() {
 		return BasicObject.nil;
 	}
@@ -47,8 +53,8 @@ public class VMKlass extends VMModule {
 		return o;
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
-			VMExceptionOutOfMemory {
+	public RuntimeFunction getFunction(ObjectName name)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
 		BasicObject bo = getStatic(name);
 		if (bo == null) // && getClass().equals(javaClass))
@@ -85,7 +91,7 @@ public class VMKlass extends VMModule {
 			mParent = (VMKlass) bo;
 		}
 	}
-	
+
 	public VMObject _new(VMContext pContext) throws VMExceptionOutOfMemory {
 		return new VMObject(pContext, this);
 	}
