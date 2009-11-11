@@ -9,11 +9,11 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.types.Function;
-import vm_java.types.VMModule;
-import vm_java.types.ObjectName;
 import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.VMObject;
+import vm_java.types.basic.VMModule;
+import vm_java.types.basic.VMObject;
+import vm_java.types.foundation.ObjectName;
 
 public class RuntimeMemberFunction implements RuntimeFunction {
 	public static final String RETVALUE = "__retValue";

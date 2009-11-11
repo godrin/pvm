@@ -1,4 +1,4 @@
-package vm_java.types;
+package vm_java.types.foundation;
 
 import vm_java.code.Code;
 import vm_java.context.BasicObject;

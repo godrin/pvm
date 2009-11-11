@@ -7,7 +7,7 @@ import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.VMInteger;
+import vm_java.types.foundation.VMInteger;
 
 public class ASTInteger extends AST implements ASTRightValue {
 	int i;

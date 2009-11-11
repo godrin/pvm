@@ -12,7 +12,7 @@ import vm_java.internal.VMLog;
 import vm_java.internal.VMLog.Level;
 import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
-import vm_java.types.VMIO;
+import vm_java.types.buildins.VMIO;
 
 public class PRubyTest extends TestCase {
 	public void setUp() {

@@ -3,7 +3,7 @@ package vm_java.code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.ObjectName;
+import vm_java.types.foundation.ObjectName;
 
 @Deprecated
 public class VarLookup extends BasicObject{

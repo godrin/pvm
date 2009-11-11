@@ -7,8 +7,8 @@ package vm_java.context;
 import vm_java.VM;
 import vm_java.code.Code;
 import vm_java.internal.VMLog;
-import vm_java.types.VMInteger;
-import vm_java.types.VMString;
+import vm_java.types.foundation.VMInteger;
+import vm_java.types.foundation.VMString;
 
 /**
  * 

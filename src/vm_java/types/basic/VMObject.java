@@ -1,4 +1,4 @@
-package vm_java.types;
+package vm_java.types.basic;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -11,6 +11,12 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeMemberFunction;
+import vm_java.types.DontExpose;
+import vm_java.types.Function;
+import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.foundation.ObjectName;
+import vm_java.types.interfaces.MemberContainer;
+import vm_java.types.interfaces.MemberProvider;
 
 @DontExpose
 public  class VMObject extends BasicObject implements FunctionProvider,

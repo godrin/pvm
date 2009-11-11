@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package vm_java.types;
+package vm_java.types.basic;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,6 +16,10 @@ import vm_java.internal.VMLog;
 import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeMemberFunction;
+import vm_java.types.BuildinFunction;
+import vm_java.types.Function;
+import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.foundation.ObjectName;
 
 /**
  * 

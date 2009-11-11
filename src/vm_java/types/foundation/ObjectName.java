@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package vm_java.types;
+package vm_java.types.foundation;
 
 import vm_java.code.Code;
 import vm_java.context.BasicObject;

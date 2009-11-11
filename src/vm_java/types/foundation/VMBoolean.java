@@ -1,8 +1,9 @@
-package vm_java.types;
+package vm_java.types.foundation;
 
 import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.buildins.BuildInKlass;
 
 public class VMBoolean extends BuildInKlass {
 	private boolean b;

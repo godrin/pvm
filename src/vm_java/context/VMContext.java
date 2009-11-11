@@ -13,7 +13,7 @@ import vm_java.code.CodeBlock;
 import vm_java.code.Program;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.internal.VMLog;
-import vm_java.types.ObjectName;
+import vm_java.types.foundation.ObjectName;
 
 /**
  * 

@@ -10,8 +10,8 @@ import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeFunctionHelper;
-import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.foundation.ObjectName;
 
 public class CodeMethodCall extends CodeStatement {
 

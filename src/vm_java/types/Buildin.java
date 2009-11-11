@@ -8,7 +8,14 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.internal.VMLog;
+import vm_java.types.basic.VMKlass;
+import vm_java.types.basic.VMModule;
+import vm_java.types.buildins.VMIO;
+import vm_java.types.buildins.VMRuntime;
+import vm_java.types.foundation.VMArray;
+import vm_java.types.foundation.VMHash;
+import vm_java.types.foundation.VMInteger;
+import vm_java.types.foundation.VMString;
 
 public class Buildin {
 	public static void createBuildins(VMScope scope) throws VMException,
@@ -36,7 +43,6 @@ public class Buildin {
 
 		VMKlass k = new VMKlass(context);
 		k.setJavaClass(c);
-		//VMLog.debug("Exposing klass:" + name);
 
 		for (Method m : c.getMethods()) {
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package vm_java.types;
+package vm_java.types.buildins;
 
 import java.io.IOException;
 
@@ -16,12 +16,13 @@ import vm_java.context.VMScope;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
 import vm_java.machine.Task;
+import vm_java.types.foundation.VMString;
 
 /**
  * @author davidkamphausen
  * 
  */
-public class VMRuntime extends BuildInKlass implements BuildInInterface {
+public class VMRuntime extends BuildInKlass {
 
 	/**
 	 * @param context

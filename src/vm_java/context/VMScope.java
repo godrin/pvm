@@ -14,11 +14,11 @@ import vm_java.code.VMException;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
-import vm_java.types.ObjectName;
 import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.VMModule;
-import vm_java.types.VMObject;
+import vm_java.types.basic.VMModule;
+import vm_java.types.basic.VMObject;
+import vm_java.types.foundation.ObjectName;
 
 /**
  * 

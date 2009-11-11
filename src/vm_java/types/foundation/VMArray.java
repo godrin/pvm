@@ -1,4 +1,4 @@
-package vm_java.types;
+package vm_java.types.foundation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import vm_java.code.Code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.buildins.BuildInKlass;
 
 public class VMArray extends BuildInKlass {
 	List<BasicObject> mArray;

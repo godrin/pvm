@@ -11,7 +11,7 @@ import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LineLexer2.Result;
-import vm_java.types.VMBoolean;
+import vm_java.types.foundation.VMBoolean;
 
 /**
  * @author davidkamphausen

@@ -8,6 +8,9 @@ package vm_java.types;
 import java.util.Map;
 
 import vm_java.context.BasicObject;
+import vm_java.types.basic.VMKlass;
+import vm_java.types.foundation.ObjectName;
+import vm_java.types.interfaces.MemberContainer;
 
 /**
  * 

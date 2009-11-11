@@ -8,7 +8,7 @@ import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LineLexer2.Result;
-import vm_java.types.VMDouble;
+import vm_java.types.foundation.VMDouble;
 
 public class ASTDouble extends AST implements ASTRightValue {
 

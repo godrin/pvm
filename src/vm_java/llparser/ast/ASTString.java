@@ -7,7 +7,7 @@ import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.VMString;
+import vm_java.types.foundation.VMString;
 
 public class ASTString extends AST implements ASTRightValue{
 	String s;

@@ -12,7 +12,7 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LLParser2.ParseError;
-import vm_java.types.ObjectName;
+import vm_java.types.foundation.ObjectName;
 
 public class ASTMethodCall extends AST implements ASTStatementInterface,
 		ASTRightValue {

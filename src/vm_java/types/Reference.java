@@ -5,6 +5,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.types.foundation.ObjectName;
 
 public class Reference extends BasicObject {
 	private VMScope otherScope;

@@ -20,7 +20,7 @@ import vm_java.internal.VMLog.Level;
 import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
-import vm_java.types.VMIO;
+import vm_java.types.buildins.VMIO;
 
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
 

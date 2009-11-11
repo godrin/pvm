@@ -13,6 +13,8 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunctionHelper;
+import vm_java.types.foundation.ObjectName;
+import vm_java.types.foundation.VMCException;
 
 /**
  * 
@@ -22,7 +24,7 @@ import vm_java.runtime.RuntimeFunctionHelper;
  *         functions)
  */
 public class BuildinFunction extends Function {
-	Method method;
+	public Method method;
 
 	public BuildinFunction(VMContext context, Method m)
 			throws VMExceptionOutOfMemory {

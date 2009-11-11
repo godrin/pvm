@@ -1,4 +1,4 @@
-package vm_java.types;
+package vm_java.types.buildins;
 
 import java.lang.reflect.Method;
 
@@ -10,6 +10,8 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.CreateFunction;
 import vm_java.runtime.RuntimeFunction;
+import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.foundation.ObjectName;
 
 public abstract class BuildInKlass extends BasicObject implements FunctionProvider {
 
