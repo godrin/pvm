@@ -52,4 +52,15 @@ public class CodeIf extends CodeStatement {
 		}
 	}
 
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		if (wantedValue) {
+			c.add("if " + conditionName + " then " + blockName);
+		} else {
+			c.add("unless " + conditionName + " then " + blockName);
+		}
+		return c;
+	}
+
 }

@@ -13,13 +13,11 @@ class IfCode
     end
 
     def before
-      c=(@statement.before+
+      c=@statement.before+
       @statement.code+
-      @statement.after).indent
+      @statement.after
 
-      s("#{@blockName}=begin()")+c+
-      s("end")
-
+      @parent.bgn(@blockName,["*"],c,@statement.value)
     end
 
     def value
@@ -28,6 +26,9 @@ class IfCode
 
     def after
       s("clear #{@blockName}")
+    end
+    def s(str)
+      @parent.s(str)
     end
   end
 

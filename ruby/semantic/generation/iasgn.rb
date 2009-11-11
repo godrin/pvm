@@ -8,7 +8,11 @@ class IasgnCode
   end
 
   def code
-    @value.before+s("#{@name}=#{@value.value}")+@value.after
+    if @value.nil?
+      s(@name.to_s)
+    else
+      res=@value.before+@value.code+s("#{@name}=#{@value.value}")+@value.after
+    end
   end
 
   def value

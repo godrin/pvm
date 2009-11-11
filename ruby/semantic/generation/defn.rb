@@ -6,15 +6,15 @@ class DefnCode
     @t=tmpVar
   end
 
-  def code
+  def before
     []
   end
 
-  def before
+  def code
     b=@args.before
-    as=@args.value
-    b+s("#{@t}=begin(#{as})")+
-    @body.code.indent+s("end")+
+    as=@args.value.gsub("&","")
+    b+
+    bgnws(@t,[as],@body.code,@body.value)+  
     s("#{curModule}.#{@name}=#{@t}")
   end
 

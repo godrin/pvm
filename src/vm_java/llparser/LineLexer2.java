@@ -13,7 +13,8 @@ import vm_java.internal.VMLog;
 
 public class LineLexer2 {
 	enum SYMBOLS {
-		BEGIN, END, TYPE, PARAMETER, RETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, BRACKETS_OPEN, BRACKETS_CLOSE, PARENT_OPEN, PARENT_CLOSE, COMMA, EOF, COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE, DOUBLE
+		BEGIN_WITHSCOPE,
+		BEGIN, END, TYPE, PARAMETER, LRETURN, FRETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, BRACKETS_OPEN, BRACKETS_CLOSE, PARENT_OPEN, PARENT_CLOSE, COMMA, EOF, COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE, DOUBLE, INCLUDE
 	};
 
 	public static class Lex {
@@ -59,16 +60,19 @@ public class LineLexer2 {
 	private void init() {
 		add("(true|false)", SYMBOLS.BOOLEAN);
 		add("if", SYMBOLS.IF);
+		add("include",SYMBOLS.INCLUDE);
 		add("rescue", SYMBOLS.RESCUE);
 		add("then", SYMBOLS.THEN);
 		add("while", SYMBOLS.WHILE);
 		add("do", SYMBOLS.DO);
 		add("unless", SYMBOLS.UNLESS);
 		add("clear", SYMBOLS.CLEAR);
+		add("begin_withscope", SYMBOLS.BEGIN_WITHSCOPE);
 		add("begin", SYMBOLS.BEGIN);
 		add("end", SYMBOLS.END);
 		add("sleep", SYMBOLS.SLEEP);
-		add("return", SYMBOLS.RETURN);
+		add("lreturn", SYMBOLS.LRETURN);
+		add("freturn", SYMBOLS.FRETURN);
 		add("parameter\\[[0-9]*\\]", SYMBOLS.PARAMETER);
 		add("[a-zA-Z+_<-][a-zA-Z0-9_]*", SYMBOLS.VAR);
 		add("==", SYMBOLS.EQUAL);

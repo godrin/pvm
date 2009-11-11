@@ -9,6 +9,7 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunction;
+import vm_java.runtime.RuntimeFunctionHelper;
 import vm_java.types.ObjectName;
 import vm_java.types.VMExceptionFunctionNotFound;
 
@@ -16,11 +17,11 @@ public class CodeMethodCall extends CodeStatement {
 
 	ObjectName varName, methodName;
 	ObjectName returnName;
-	List<BasicObject> parameters;
+	List<ObjectName> parameters;
 
 	public CodeMethodCall(VMContext context, SourceInfo source,
 			ObjectName pReturnName, ObjectName objectName,
-			ObjectName pMethodName, List<BasicObject> ps)
+			ObjectName pMethodName, List<ObjectName> ps)
 			throws VMExceptionOutOfMemory {
 		super(context, source);
 		varName = objectName;
@@ -50,11 +51,16 @@ public class CodeMethodCall extends CodeStatement {
 				VMLog.error(info());
 				VMLog.warn("Method not found:");
 				VMLog.warn(scope.inspect());
+				VMLog.debug("SELF:");
+				VMLog.debug(scope.self().inspect());
 				// FIXME: return Quit_exception
 				throw new VMException(this, "Function " + methodName
 						+ " not found in " + varName + " (" + bo + "!");
 			}
-			f.run(scope, returnName, parameters, parentTask);
+
+			List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
+					parameters);
+			f.run(scope, returnName, bos, parentTask);
 		} catch (VMExceptionFunctionNotFound e) {
 			scope.setException(e.vm(getContext()));
 		}
@@ -64,5 +70,27 @@ public class CodeMethodCall extends CodeStatement {
 	@Override
 	public String inspect() {
 		return "[CodeMethodCall:FIXME]";
+	}
+
+	@Override
+	public Code toCode() {
+		StringBuilder b = new StringBuilder();
+
+		b.append(returnName.inlineCode()).append("=").append(varName.inlineCode()).append(".").append(
+				methodName.inlineCode()).append("(");
+
+		boolean first = true;
+		for (ObjectName bo : parameters) {
+			if (first) {
+				first = false;
+			} else {
+				b.append(", ");
+			}
+			b.append(bo.inlineCode());
+		}
+		b.append(")");
+		Code c=new Code();
+		c.add(b.toString());
+		return c;
 	}
 }

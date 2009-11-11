@@ -5,6 +5,7 @@
 package vm_java.context;
 
 import vm_java.VM;
+import vm_java.code.Code;
 import vm_java.internal.VMLog;
 import vm_java.types.VMInteger;
 import vm_java.types.VMString;
@@ -67,6 +68,12 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 	@Override
 	public int compareTo(BasicObject o) {
 		return mid.compareTo(o.mid);
+	}
+
+	abstract public Code toCode();
+
+	public String inlineCode() {
+		return toCode().toString().replace("\\n","");
 	}
 
 }

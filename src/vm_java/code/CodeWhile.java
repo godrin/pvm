@@ -10,7 +10,7 @@ import vm_java.types.VMBoolean;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public class CodeWhile extends CodeStatement {
-	
+
 	class Execution extends Task {
 
 		public Execution(VMScope pScope, Task pParent) {
@@ -39,14 +39,15 @@ public class CodeWhile extends CodeStatement {
 			}
 
 			if (cond == null) {
-				throw new VMException(CodeWhile.this, "Condition is not defined");
+				throw new VMException(CodeWhile.this,
+						"Condition is not defined");
 			}
 			if (b == null) {
 				throw new VMException(CodeWhile.this, "Block is not defined");
 			}
 
 			// spawn somehow
-			
+
 			if (cond.get()) {
 				getVM().addJob(b.execution(getScope(), this));
 				getVM().addJob(this);
@@ -54,15 +55,15 @@ public class CodeWhile extends CodeStatement {
 				finish();
 			}
 		}
-		
+
 	}
 
 	ObjectName conditionName;
 	ObjectName blockName;
 	boolean wantedValue;
 
-	public CodeWhile(VMContext pContext, SourceInfo source, ObjectName pCondition,
-			ObjectName pBlock)
+	public CodeWhile(VMContext pContext, SourceInfo source,
+			ObjectName pCondition, ObjectName pBlock)
 			throws VMExceptionOutOfMemory {
 		super(pContext, source);
 		conditionName = pCondition;
@@ -72,8 +73,19 @@ public class CodeWhile extends CodeStatement {
 	@Override
 	public void execute(VMScope scope, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		
+
 		getVM().addJob(new Execution(scope, parentTask));
+	}
+
+	@Override
+	public Code toCode() {
+		Code c=new Code();
+		if (wantedValue) {
+			c.add("while " + conditionName + " do " + blockName);
+		} else {
+			c.add("until " + conditionName + " do " + blockName);
+		}
+		return c;
 	}
 
 }

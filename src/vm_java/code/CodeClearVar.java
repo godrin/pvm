@@ -27,4 +27,11 @@ public class CodeClearVar extends CodeStatement {
 	public String inspect() {
 		return "[Clear:"+varName.inspect()+"]";
 	}
+
+	@Override
+	public Code toCode() {
+		Code c=new Code();
+		c.add("clear "+varName.inlineCode());
+		return c;
+	}
 }

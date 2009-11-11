@@ -53,4 +53,8 @@ public class Program extends BasicObject implements Runnable {
 	public String inspect() {
 		return "[Program]";
 	}
+
+	public Code toCode() {
+		return mBlock.toCode();
+	}
 }

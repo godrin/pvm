@@ -40,4 +40,25 @@ public class CodeArray extends CodeStatement {
 		scope.put(targetName, value);
 	}
 
+	@Override
+	public Code toCode() {
+		StringBuilder b = new StringBuilder();
+		b.append(targetName).append("=[");
+		boolean first = true;
+		for (ObjectName n : fromNames) {
+			if (first) {
+				first = false;
+			} else {
+				b.append(", ");
+			}
+
+			b.append(n.inlineCode());
+
+		}
+		b.append("]");
+		Code c=new Code();
+		c.add(b.toString());
+		return c;
+	}
+
 }

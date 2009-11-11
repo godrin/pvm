@@ -8,4 +8,7 @@ class ScopeCode
       []
     end
   end
+  def value
+    @body.value
+  end
 end

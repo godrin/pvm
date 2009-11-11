@@ -20,7 +20,8 @@ public class PRubyParserMRIRuby implements PRubyParser {
 		System.out.println("Parsing:");
 
 		String input = source.getString();
-		//System.out.println(input);
+		VMLog.debug("INPUT:");
+		VMLog.debug(input);
 		System.out.println("Parsed.");
 
 		String ret = runPipe(array, input);

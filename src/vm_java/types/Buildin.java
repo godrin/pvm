@@ -36,7 +36,7 @@ public class Buildin {
 
 		VMKlass k = new VMKlass(context);
 		k.setJavaClass(c);
-		VMLog.debug("Exposing klass:" + name);
+		//VMLog.debug("Exposing klass:" + name);
 
 		for (Method m : c.getMethods()) {
 
@@ -44,7 +44,7 @@ public class Buildin {
 				continue;
 
 			String mName = m.getName();
-			VMLog.debug("Expose:" + mName);
+			//VMLog.debug("Expose:" + mName);
 			BuildinFunction b = new BuildinFunction(context, m);
 			if ((m.getModifiers() & Modifier.STATIC) != 0) {
 				k.putStatic(context.intern(mName), b);

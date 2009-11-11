@@ -31,6 +31,17 @@ public class ExampleTests extends TestCase {
 				Level.WARN });
 	}
 
+	public void testChecks() throws VMExceptionOutOfMemory,
+			BlockIsFinalException, VMException, ParseError, IOException,
+			TestFailedException {
+
+		runExample(new File(getCheckPaths() + "/defn.rb"));
+	}
+
+	private String getCheckPaths() {
+		return "/Users/davidkamphausen/Documents/workspaceJava/vm_java/ruby/semantic/checks";
+	}
+
 	public void testSingle() throws VMExceptionOutOfMemory,
 			BlockIsFinalException, VMException, ParseError, IOException,
 			TestFailedException {
@@ -74,14 +85,15 @@ public class ExampleTests extends TestCase {
 		}
 		String buf = VMIO.content();
 		if (!buf.equals(wantedOutput)) {
-			System.out.println("Test:"+f);
-			System.out.println("WANTED:" + wantedOutput.replace("\n", ":\n") + ":");
+			System.out.println("Test:" + f);
+			System.out.println("WANTED:" + wantedOutput.replace("\n", ":\n")
+					+ ":");
 			System.out.println("GOT:" + buf.replace("\n", ":\n") + ":");
 			throw new TestFailedException();
 		}
 		VMIO.clear();
-		
-		if(vm.getFatalError()!=null) {
+
+		if (vm.getFatalError() != null) {
 			assertNull(vm.getFatalError());
 		}
 	}

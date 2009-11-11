@@ -9,7 +9,7 @@ public class PRubyParserJRuby implements PRubyParser {
 	}
 
 	// public final static String PARSER_RB = "ruby/parser_test.rb";
-	public final static String PARSER_RB = "ruby/compiler.rb";
+	public final static String PARSER_RB = "ruby/semantic/compiler.rb";
 	/*
 	 * public PRubyParserJRuby() { }
 	 * 

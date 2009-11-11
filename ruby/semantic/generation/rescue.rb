@@ -2,6 +2,7 @@ class RescueCode
   def init
     @blockName=tmpVar
     @rescueName=tmpVar
+    @ret=tmpVar
     #pp self
     #exit
   end
@@ -11,14 +12,17 @@ class RescueCode
   end
 
   def after
-    []
+    s("clear #{@blockName}")+
+    s("clear #{@rescueName}")
   end
 
   def code
-    s("#{@blockName}=begin()")+@block.code.indent+s("end")+
-    s("#{@rescueName}=begin()")+@rescueBlock.code.indent+s("end")+
-    s("secured #{@blockName} #{@rescueName}")+
-    s("clear #{@blockName}")+
-    s("clear #{@rescueName}")
+    bgn(@blockName,["*"],@block.code,@block.value) +
+    bgn(@rescueName,["*"],@rescueBlock.code,@rescueBlock.value)+
+    s("#{@ret}=secured #{@blockName} #{@rescueName}")
+  end
+  
+  def value
+    @ret
   end
 end

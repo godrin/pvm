@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
+import vm_java.code.Code;
 import vm_java.code.Program;
 import vm_java.code.VMException;
 import vm_java.context.VMContext;
@@ -60,6 +61,12 @@ public class VMRuntime extends BuildInKlass implements BuildInInterface {
 		Program prg = astP.instantiate(context);
 		vm.addJob(prg.execution(scope, task));
 		return scope;
+	}
+
+	@Override
+	public Code toCode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

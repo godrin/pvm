@@ -5,7 +5,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LLParser2.ParseError;
 
-public class SourceBased extends BasicObject {
+public abstract class SourceBased extends BasicObject {
 	public static class SourceInfo {
 
 		int lineNo;

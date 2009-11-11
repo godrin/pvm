@@ -30,7 +30,7 @@ public class MemberAssignment extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope,Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMException,
 			VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 		BasicObject l = scope.get(lObject);
 		BasicObject r = scope.get(rObject);
@@ -46,7 +46,16 @@ public class MemberAssignment extends CodeStatement {
 
 	@Override
 	public String inspect() {
-		return "[Assign:"+lObject.inspect()+"."+lMember.inspect()+"="+rObject.inspect()+"]";
+		return "[Assign:" + lObject.inspect() + "." + lMember.inspect() + "="
+				+ rObject.inspect() + "]";
+	}
+
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		c.add(lObject.inlineCode() + "." + lMember.inlineCode() + "="
+				+ rObject.inlineCode());
+		return c;
 	}
 
 }

@@ -8,4 +8,8 @@ class IvarCode
   def value
     @name
   end
+  
+  def code
+    s(@name.to_s)
+  end
 end

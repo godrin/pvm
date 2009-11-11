@@ -56,4 +56,18 @@ public class CodeAssignmentFromMember extends CodeStatement {
 		return "[AssignFromMember:" + lObjectName.inspect() + "="
 				+ rObjectName.inspect() + "." + rMemberName.inspect() + "]";
 	}
+
+	@Override
+	public Code toCode() {
+		StringBuilder b = new StringBuilder();
+		b.append(lObjectName.inlineCode()).append("=");
+		b.append(rObjectName.inlineCode());
+		if (rMemberName != null) {
+			b.append(".").append(rMemberName.inlineCode());
+		}
+		Code c=new Code();
+		c.add(b.toString());
+		return c;
+	}
+
 }

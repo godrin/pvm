@@ -34,4 +34,11 @@ public class CodeSleep extends CodeStatement {
 		}
 	}
 
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		c.add("sleep " + mTimeName);
+		return c;
+	}
+
 }

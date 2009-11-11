@@ -1,5 +1,6 @@
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -27,6 +28,11 @@ public class Reference extends BasicObject {
 	@Override
 	public String inspect() {
 		return "[Reference]";
+	}
+
+	@Override
+	public Code toCode() {
+		return otherName.toCode();
 	}
 
 }

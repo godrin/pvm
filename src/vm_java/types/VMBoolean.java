@@ -1,5 +1,6 @@
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
@@ -15,9 +16,10 @@ public class VMBoolean extends BuildInKlass {
 	public boolean get() {
 		return b;
 	}
+
 	public Object convertToJava(Object pk) {
 		if (pk.equals(java.lang.Integer.class)) {
-			if(b) {
+			if (b) {
 				return 1;
 			} else {
 				return 0;
@@ -26,6 +28,17 @@ public class VMBoolean extends BuildInKlass {
 			return Boolean.toString(b);
 		}
 		return null;
+	}
+
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		if (b) {
+			c.add("true");
+		} else {
+			c.add("false");
+		}
+		return c;
 	}
 
 }

@@ -20,6 +20,7 @@ import vm_java.llparser.ast.ASTClearVar;
 import vm_java.llparser.ast.ASTDouble;
 import vm_java.llparser.ast.ASTFunction;
 import vm_java.llparser.ast.ASTIf;
+import vm_java.llparser.ast.ASTInclude;
 import vm_java.llparser.ast.ASTInteger;
 import vm_java.llparser.ast.ASTMethodCall;
 import vm_java.llparser.ast.ASTProgram;
@@ -55,7 +56,7 @@ public class LLParser2 {
 	}
 
 	ASTProgram parse(String content) throws ParseError {
-		VMLog.debug(source());
+		VMLog.debug(content);
 		for (String line : content.split("\n")) {
 			lines.add(line);
 		}
@@ -83,6 +84,7 @@ public class LLParser2 {
 			lineNo += 1;
 			results = lexer.lex(line);
 			results = filterWhitespaces(results);
+			results = filterComments(results);
 
 			Lex lex = new Lex("", SYMBOLS.NEWLINE);
 			results.add(new Result(lex, "\n"));
@@ -90,6 +92,24 @@ public class LLParser2 {
 		mResult = results.get(0);
 		results.remove(0);
 		return mResult.lex.symbol;
+	}
+
+	private List<Result> filterComments(List<Result> results2) {
+		List<Result> n = new ArrayList<Result>();
+		boolean comment = false;
+		for (Result x : results2) {
+			if (comment) {
+				if (x.lex.symbol == SYMBOLS.NEWLINE) {
+					comment = false;
+				}
+			} else if (x.lex.symbol == SYMBOLS.COMMENT) {
+				comment = true;
+				// return n;
+			} else {
+				n.add(x);
+			}
+		}
+		return n;
 	}
 
 	private List<Result> filterWhitespaces(List<Result> results2) {
@@ -103,7 +123,7 @@ public class LLParser2 {
 	}
 
 	private ASTStatementInterface parseLine() throws ParseError {
-		// LineLexer2.output(mResult);
+		LineLexer2.output(mResult);
 		// LineLexer2.output(this.results);
 		ASTStatementInterface s = null;
 		if (mResult.lex.symbol == SYMBOLS.VAR) {
@@ -118,15 +138,21 @@ public class LLParser2 {
 			} else {
 				parseError();
 			}
-		} else if (token() == SYMBOLS.RETURN) {
+		} else if (token() == SYMBOLS.LRETURN || token() == SYMBOLS.FRETURN) {
 			fetchToken();
 			ASTVar v = parseVar();
 			fetchToken();
+			ASTReturn.Type t;
+			if (token() == SYMBOLS.LRETURN) {
+				t = ASTReturn.Type.LOCAL;
+			} else {
+				t = ASTReturn.Type.FAR;
+			}
 
-			s = new ASTReturn(source(), v);
+			s = new ASTReturn(source(), v, t);
 		} else if (token() == SYMBOLS.NEWLINE) {
 			fetchToken();
-			// VMLog.debug("IGNORE EMPTY LINE");
+			VMLog.debug("IGNORE EMPTY LINE");
 			return null;
 		} else if (token() == SYMBOLS.COMMENT) {
 			while (token() != SYMBOLS.NEWLINE)
@@ -151,6 +177,11 @@ public class LLParser2 {
 			fetchToken();
 			ASTVar rescueFunction = parseVar();
 			s = new ASTRescue(source(), rescueFunction);
+			fetchToken();
+		} else if(token()==SYMBOLS.INCLUDE) {
+			fetchToken();
+			ASTVar moduleName=parseVar();
+			s=new ASTInclude(source(),moduleName);
 			fetchToken();
 		} else {
 
@@ -246,6 +277,8 @@ public class LLParser2 {
 		ASTStatementInterface s = null;
 		if (t == SYMBOLS.BEGIN) {
 			s = new ASTAssign(source(), lValue, parseBegin());
+		} else if (t == SYMBOLS.BEGIN_WITHSCOPE) { // FIXME
+			s = new ASTAssign(source(), lValue, parseBegin());
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
 			s = new ASTAssign(source(), lValue, parseRValue());
 		} else if (t == SYMBOLS.STRING) {
@@ -263,9 +296,9 @@ public class LLParser2 {
 			s = new ASTAssign(source(), lValue, new ASTBoolean(source(),
 					mResult));
 			fetchToken();
-		} else if(t == SYMBOLS.DOUBLE) {
-			s = new ASTAssign(source(), lValue, new ASTDouble(source(),
-					mResult));
+		} else if (t == SYMBOLS.DOUBLE) {
+			s = new ASTAssign(source(), lValue,
+					new ASTDouble(source(), mResult));
 			fetchToken();
 		} else {
 			parseError();
@@ -354,7 +387,8 @@ public class LLParser2 {
 	}
 
 	private ASTRightValue parseBegin() throws ParseError {
-		assertTrue(token() == SYMBOLS.BEGIN);
+		assertTrue(token() == SYMBOLS.BEGIN
+				|| token() == SYMBOLS.BEGIN_WITHSCOPE);
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.PARENT_OPEN) {
 

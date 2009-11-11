@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.Code;
 import vm_java.code.FunctionProvider;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
@@ -34,8 +35,8 @@ public class VMModule extends BasicObject implements MemberContainer,
 		super(context);
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
-			VMExceptionOutOfMemory {
+	public RuntimeFunction getFunction(ObjectName name)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 		BasicObject bo = get(name);
 
 		if (bo instanceof RuntimeFunction)
@@ -83,19 +84,43 @@ public class VMModule extends BasicObject implements MemberContainer,
 
 	@Override
 	public String inspect() {
-		return "[Module]";
+		return toCode().toString();
+		//return "[Module]";
 	}
 
-	public VMModule _newModule(VMContext pContext) throws VMExceptionOutOfMemory, VMException {
-		VMModule mod=new VMModule(pContext);
+	public VMModule _newModule(VMContext pContext)
+			throws VMExceptionOutOfMemory, VMException {
+		VMModule mod = new VMModule(pContext);
 		mod.addFunctionsTo(this);
 		return mod;
 	}
-	
+
 	protected void addFunctionsTo(VMModule mod) throws VMException {
 		for (Map.Entry<ObjectName, BasicObject> entry : mObjects.entrySet()) {
 			mod.put(entry.getKey(), entry.getValue());
 		}
+	}
+
+	public void include(VMModule mod) throws VMException {
+		mMixins.add(mod);
+	}
+
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		c.add("module");
+		for(VMModule m:mMixins) {
+			c.add("include");
+			c.add(m.toCode().indent());
+		}
+		
+		for(Map.Entry<ObjectName, BasicObject> e:mObjects.entrySet()) {
+			c.add(e.getKey().inlineCode());
+			c.add("=");
+			c.add(e.getValue().toCode());
+		}
+
+		return c;
 	}
 
 }

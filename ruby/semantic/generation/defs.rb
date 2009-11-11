@@ -16,10 +16,8 @@ class DefsCode
 
   def code
     @args.before+
-    s("#{@t}=begin(#{@args.value})")+
-
-    @body.code.indent+
-    s("end")+
+    #s("#{@t}=begin(#{@args.value})")+
+    bgnws(@t,@args.value,@body.code,@body.value)+
     @args.after+
     s("#{@klass.value}:#{@name}=#{@t}")+
     s("clear #{@t}")

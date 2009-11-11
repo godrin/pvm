@@ -133,4 +133,12 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 	public String inspect() {
 		return "[Block:" + statements.size() + " sts =" + super.inspect() + "]";
 	}
+
+	public Code toCode() {
+		Code c=new Code();
+		for(CodeStatement cs:statements) {
+			c.add(cs.toCode());
+		}
+		return c;
+	}
 }

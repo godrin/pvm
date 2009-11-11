@@ -55,6 +55,8 @@ class Compiler
   end
 end
 
+if false
+
 @processor = RubyParser.new
 c=STDIN.read
 
@@ -65,3 +67,5 @@ result=c.compile(nil,a)
 
 #pp result
 puts result
+
+end

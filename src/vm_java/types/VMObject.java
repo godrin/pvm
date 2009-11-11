@@ -3,6 +3,7 @@ package vm_java.types;
 import java.util.Map;
 import java.util.TreeMap;
 
+import vm_java.code.Code;
 import vm_java.code.FunctionProvider;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
@@ -12,7 +13,7 @@ import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeMemberFunction;
 
 @DontExpose
-public class VMObject extends BasicObject implements FunctionProvider,
+public  class VMObject extends BasicObject implements FunctionProvider,
 		MemberProvider, MemberContainer {
 	private VMKlass mKlass;
 	private Map<ObjectName, BasicObject> data = new TreeMap<ObjectName, BasicObject>();
@@ -55,5 +56,11 @@ public class VMObject extends BasicObject implements FunctionProvider,
 	@Override
 	public void set(ObjectName memberName, BasicObject r) throws VMException {
 		data.put(memberName,r);
+	}
+
+	@Override
+	public Code toCode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

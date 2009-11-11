@@ -1,5 +1,6 @@
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
@@ -51,5 +52,12 @@ public class VMString extends BuildInKlass implements BuildInInterface {
 			return Integer.parseInt(mContent);
 		}
 		return null;
+	}
+	
+	@Override
+	public Code toCode() {
+		Code c=new Code();
+		c.add("\""+mContent+"\"");
+		return c;
 	}
 }

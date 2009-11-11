@@ -1,5 +1,6 @@
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
@@ -24,6 +25,12 @@ public class VMIO extends BuildInKlass implements BuildInInterface {
 	@DontExpose
 	public static void clear() {
 		output = new StringBuilder();
+	}
+
+	@Override
+	public Code toCode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

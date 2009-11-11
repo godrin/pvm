@@ -18,4 +18,10 @@ public class VarLookup extends BasicObject{
 		return "[VarLookup]";
 	}
 
+	@Override
+	public Code toCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

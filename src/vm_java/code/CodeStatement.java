@@ -17,20 +17,22 @@ import vm_java.types.VMExceptionFunctionNotFound;
  */
 public abstract class CodeStatement extends SourceBased {
 
-
-
 	CodeStatement(VMContext pContext, SourceInfo source)
 			throws VMExceptionOutOfMemory {
-		super(pContext,source);
+		super(pContext, source);
 	}
-
 
 	protected void assertNotNull(ObjectName leftMember) throws VMException {
 		if (leftMember == null)
 			throw new VMException(this, "Var is null!");
 	}
 
-	public abstract void execute(VMScope scope,Task parentTask) throws VMException,
-			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
+	public abstract void execute(VMScope scope, Task parentTask)
+			throws VMException, VMExceptionOutOfMemory,
+			VMExceptionFunctionNotFound;
 
+	public abstract Code toCode();
+	/*
+	 * public String toCode() { return ""; }
+	 */
 }

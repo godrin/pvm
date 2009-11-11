@@ -1,5 +1,6 @@
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
@@ -42,6 +43,13 @@ public class VMDouble extends BuildInKlass implements BuildInInterface {
 
 	public VMBoolean biggerThan(VMDouble i) throws VMExceptionOutOfMemory {
 		return new VMBoolean(getContext(), get() > i.get());
+	}
+
+	@Override
+	public Code toCode() {
+		Code c=new Code();
+		c.add(i.toString());
+		return c;
 	}
 
 }

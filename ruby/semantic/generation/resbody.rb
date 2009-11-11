@@ -6,21 +6,27 @@ class ResbodyCode
   end
 
   def ibefore
+
+    body_code=[]
+    body_code=@body.code if @body
+    body_value="nil"
+    body_value=@body.value if @body
+
     @types.before+
     s("#{@typeArray}=#{@types.value}")+
     @types.after+
-    s("#{@blockName}=begin()")+@body.code.indent+s("end")
+    bgn(@blockName,["*"],body_code,body_value)
+    #s("#{@blockName}=begin()")+@body.code.indent+s("end")
   end
 
   def code
 
     ibefore+
     s("#{@condName}=#{@typeArray}.member?(exception)")+
-    s("if #{@condName} then #{@blockName}")+
-    iafter
+    s("if #{@condName} then #{@blockName}")
   end
 
-  def iafter
+  def after
     s("clear #{@typeArray}")+
     s("clear #{@blockName}")+
     s("clear #{@condName}")

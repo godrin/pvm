@@ -30,19 +30,39 @@ public class LocalAssignment extends CodeStatement {
 		rObject = right;
 	}
 
-	public void execute(VMScope scope,Task parentTask) throws VMExceptionFunctionNotFound,
-			VMExceptionOutOfMemory, VMException {
+	public void execute(VMScope scope, Task parentTask)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
+			VMException {
 
 		BasicObject bo = rObject;
 		if (bo instanceof ObjectName)
 			bo = scope.get((ObjectName) bo);
 
 		scope.put(lObjectName, bo);
-		
+
 	}
+
 	@Override
 	public String inspect() {
-		return "[LocalAssign:"+lObjectName.inspect()+"="+rObject.inspect()+"]";
+		return "[LocalAssign:" + lObjectName.inspect() + "="
+				+ rObject.inspect() + "]";
+	}
+
+	@Override
+	public Code toCode() {
+		Code c = new Code();
+		Code tmp = rObject.toCode();
+		String r = "";
+		if (tmp != null) {
+
+			r = tmp.toString();
+			if (r != null)
+				r = r.replace("\\n", "");
+		} else {
+			r = "unknown";
+		}
+		c.add(lObjectName.inlineCode() + "=" + r);
+		return c;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import vm_java.code.Code;
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
@@ -71,6 +72,11 @@ public class BuildinFunction extends Function {
 		if (returnName != null) {
 			scope.put(returnName, r);
 		}
+	}
+
+	@Override
+	public Code toCode() {
+		return null;
 	}
 
 }

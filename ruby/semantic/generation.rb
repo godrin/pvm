@@ -4,7 +4,7 @@ class Base
   end
 
   def method_missing(name,*args)
-    puts "Not implemented #{self.class}.#{name}(#{args.inspect})"
+    puts "Not implemented #{self.class}.#{name}(#{args.inspect}) in #{filename}:#{line}"
     []
   end
 
@@ -19,14 +19,31 @@ class Base
   def curModule
     parent.curModule
   end
-  
+
   def s(str)
-    [str+(" "*(80-str.length))+"#"+filename+":#{line}"]
+    [str+(" "*(80-str.length))+"##"+filename+":#{line} ##"+self.class.to_s+" "+ caller[0].gsub(/.*\//,'')]
+  end
+
+  def self.clear
+    @@tmpVarC=0
+  end
+
+  def bgnws(left,parameters,body,result)
+    bgn(left,parameters,body,result,true)
+  end
+
+  def bgn(left,parameters,body,result,scope=false)
+    beg="begin"
+    beg+="_withscope" if scope
+    s("#{left}=#{beg}(#{parameters.join(", ")})")+
+    (body+
+    s("lreturn #{result}")).indent+
+    s("end")
   end
 end
 
 Dir[File.expand_path('../generation/*',__FILE__)].each{|f|
-  pp f
+  #pp f
   if f=~/^.*\.rb$/
     require f
   end

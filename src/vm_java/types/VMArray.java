@@ -3,6 +3,7 @@ package vm_java.types;
 import java.util.ArrayList;
 import java.util.List;
 
+import vm_java.code.Code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -22,6 +23,23 @@ public class VMArray extends BuildInKlass {
 	public BasicObject __getitem(VMInteger index) {
 		
 		return mArray.get(index.get());
+	}
+
+	@Override
+	public Code toCode() {
+		Code c=new Code();
+		c.add("[");
+		boolean first=true;
+		for(BasicObject bo:mArray) {
+			if(first) {
+				first=false;
+			} else {
+				c.addToLastLine(", ");
+			}
+			c.addToLastLine(bo.inlineCode());
+		}
+		c.addToLastLine("]");
+		return c;
 	}
 
 }

@@ -41,6 +41,10 @@ class Compiler
     "tmp_#{@counter}"
   end
 
+  def curModule
+    "self"
+  end
+
   def compile(info,args,filename)
     assert{filename}
     return nil if args.nil?
@@ -65,16 +69,25 @@ class Compiler
   end
 end
 
-@processor = RubyParser.new
-c=STDIN.read
+#'pp self.methods #.instance_variables
+#pp __FILE__
 
-a=@processor.parse(c)
-c=Compiler.new
-#pp a
-result=c.compile(nil,a,"filename.rb")
+if $0 == __FILE__
 
-#pp result
-#pp result
 
-pp "CODE:",result.code
-pp "VALUE:",result.value
+  @processor = RubyParser.new
+  c=STDIN.read
+
+  a=@processor.parse(c)
+  c=Compiler.new
+  #pp a
+  result=c.compile(nil,a,"filename.rb")
+
+  puts "include VMIO"
+  puts result.code
+  #pp result
+  #pp result
+
+  #pp "CODE:",result.code
+  #pp "VALUE:",result.value
+end

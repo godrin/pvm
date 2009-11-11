@@ -4,6 +4,7 @@
  */
 package vm_java.types;
 
+import vm_java.code.Code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -59,6 +60,16 @@ public class ObjectName extends BasicObject {
 	
 	public boolean isCapital() {
 		return toSymbolName().matches("^[A-Z].*$");
+	}
+
+	public Code toCode() {
+		Code c=new Code();
+		c.add(toSymbolName());
+		return c;
+	}
+
+	public String inlineCode() {
+		return toSymbolName();
 	}
 
 }

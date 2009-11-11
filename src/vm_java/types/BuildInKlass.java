@@ -11,7 +11,7 @@ import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.CreateFunction;
 import vm_java.runtime.RuntimeFunction;
 
-public class BuildInKlass extends BasicObject implements FunctionProvider {
+public abstract class BuildInKlass extends BasicObject implements FunctionProvider {
 
 	public BuildInKlass(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
@@ -69,5 +69,6 @@ public class BuildInKlass extends BasicObject implements FunctionProvider {
 	public String inspect() {
 		return "[BuildInKlass]";
 	}
+
 
 }

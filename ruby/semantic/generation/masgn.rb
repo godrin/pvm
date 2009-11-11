@@ -1,5 +1,11 @@
 # multi assign
 class MasgnCode
+  def init
+    if @rval
+      @rvals=@rval.elements(@names.elements.length)
+    end
+  end
+
   def before
     []
   end
@@ -9,19 +15,25 @@ class MasgnCode
   end
 
   def code
+    
+    if @rval.nil?
+      return @names.elements.map{|e|s("#{e}=nil")}.inject([]){|a,b|a+b}
+    end
+    
     @names.elements.each{|e|
       assert{[IasgnCode,SplatCode].member?(e.class)}
     }
 
     i=0
-    @names.each{|n|
+    @names.elements.each{|n|
       if n.is_a?(IasgnCode)
-        n.value=@rval[i]
+        pp @rvals[i]
+        n.value=@rvals[i]
       end
       i+=1
     }
 
-    @names.map{|iasgn|iasgn.code}.inject([]){|a,b|a+b}
+    @names.elements.map{|iasgn|iasgn.code}.inject([]){|a,b|a+b}
   end
 
   def value

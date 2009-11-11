@@ -26,7 +26,8 @@ public class PRubyTest extends TestCase {
 			InterruptedException {
 
 //		test("src/vm_java/examples", "example.prb");
-		test("ruby", "simple_function.prb");
+		//test("ruby", "simple_function.prb");
+		test("ruby/semantic/checks", "defn.rb");
 
 	}
 

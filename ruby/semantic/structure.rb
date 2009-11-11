@@ -185,7 +185,7 @@ class RescueCode<Base
     super(c)
     @block=compile(block)
     @rescueBlock=compile(rescueBlock)
-    assert{@block.is_a?(BlockCode)}
+    assert{not @block.nil?}
     assert{@rescueBlock.is_a?(ResbodyCode)}
   end
 end
@@ -194,7 +194,7 @@ class DefsCode<Base
   def initialize(c,klass,name,args,body)
     super(c)
     @klass=compile(klass)
-    assert{@klass.is_a?(ConstCode)}
+    assert{@klass.is_a?(ConstCode) || @klass.is_a?(SelfCode)}
     @name=name
     assert{@name.is_a?(Symbol)}
     @args=compile(args)
@@ -230,7 +230,7 @@ class ResbodyCode<Base
     @types=compile(types)
     assert{@types.is_a?(ArrayCode)}
     @body=compile(body)
-    assert{@body.is_a?(BlockCode)}
+    assert{@body.nil? or @body.is_a?(BlockCode)}
   end
 end
 
@@ -247,7 +247,7 @@ class LitCode<Base
   def initialize(c,lit)
     super(c)
     @lit=lit
-    assert{lit.is_a?(Symbol) || lit.is_a?(Numeric)}
+    assert{lit.is_a?(Symbol) || lit.is_a?(Numeric) || lit.is_a?(Range)}
   end
 end
 
@@ -264,12 +264,22 @@ class IasgnCode<Base
   end
 end
 
+# @args is set, when decompressing
 class SplatCode<Base
-  def initialize(c)
+  def initialize(c,args=nil)
+    @args=args
   end
 end
 
 LasgnCode=IasgnCode
+
+class GasgnCode<Base
+  def initialize(c,name,value)
+    super(c)
+    @name=name
+    @value=value 
+  end
+end
 
 class AttrasgnCode<Base
   def initialize(c,name,func,attributes)
@@ -285,11 +295,11 @@ end
 
 # FIXME: dont know
 class IterCode<Base
-  def initialize(c,a,b,x)
+  def initialize(c,collection,iterator,block)
     super(c)
-    @a=compile(a)
-    @b=compile(b)
-    @c=compile(x)
+    @collection=compile(collection)
+    @iterator=compile(iterator)
+    @block=compile(block)
   end
 end
 
@@ -403,5 +413,13 @@ class Op_asgn_orCode<Base
     @left=compile(left)
     assert{[IvarCode,GvarCode].member?(@left.class)}
     @right=compile(right)
+  end
+end
+
+
+class YieldCode<Base
+  def initialize(c,*args)
+    super(c)
+    @args=args.map{|a|compile(a)}
   end
 end

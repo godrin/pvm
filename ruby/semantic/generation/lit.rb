@@ -17,4 +17,8 @@ class LitCode
       @lit.to_s
     end
   end
+  def code
+    []
+    #s(@lit.to_s)
+  end
 end

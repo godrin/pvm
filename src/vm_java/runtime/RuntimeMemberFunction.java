@@ -44,8 +44,6 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 			List<BasicObject> parameters, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 
-		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(parentScope,
-				parameters);
 
 		VMScope subScope = createSubScope(parentScope);
 
@@ -55,7 +53,7 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 		}
 
 		VMLog.debug("Running function:" + function);
-		function.runFunction(subScope, returnName, bos, parentTask);
+		function.runFunction(subScope, returnName, parameters, parentTask);
 	}
 
 	protected VMScope createSubScope(VMScope scope) throws VMException {
