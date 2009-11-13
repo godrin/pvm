@@ -9,7 +9,7 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 /**
  * 
@@ -32,7 +32,9 @@ public abstract class CodeStatement extends SourceBased {
 			VMExceptionFunctionNotFound;
 
 	public abstract Code toCode();
-	/*
-	 * public String toCode() { return ""; }
-	 */
+
+	// Statements are closed and can't be inlined
+	public String inlineCode() {
+		return null;
+	}
 }

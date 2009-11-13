@@ -7,9 +7,10 @@ package vm_java.types;
 
 import java.util.Map;
 
+import vm_java.code.VMException;
 import vm_java.context.BasicObject;
+import vm_java.types.basic.ObjectName;
 import vm_java.types.basic.VMKlass;
-import vm_java.types.foundation.ObjectName;
 import vm_java.types.interfaces.MemberContainer;
 
 /**
@@ -26,12 +27,23 @@ public class CustomObject implements MemberContainer {
 	}
 
 	@Override
-	public BasicObject get(ObjectName objectName) {
+	public BasicObject getInstance(ObjectName objectName) {
 		return mObjects.get(objectName);
 	}
 
 	@Override
-	public void set(ObjectName memberName, BasicObject r) {
+	public void putInstance(ObjectName memberName, BasicObject r) {
 		mObjects.put(memberName,r);
+	}
+
+	@Override
+	public BasicObject getStatic(ObjectName objectName) {
+		return mClass.getInstance(objectName);
+	}
+
+	@Override
+	public void putStatic(ObjectName memberName, BasicObject r)
+			throws VMException {
+		mClass.putInstance(memberName, r);
 	}
 }

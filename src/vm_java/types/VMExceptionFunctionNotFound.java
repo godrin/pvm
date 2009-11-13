@@ -2,7 +2,7 @@ package vm_java.types;
 
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.foundation.VMCException;
+import vm_java.types.basic.VMCException;
 
 public class VMExceptionFunctionNotFound extends Exception {
 

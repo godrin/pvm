@@ -12,17 +12,19 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LLParser2.ParseError;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public class ASTMethodCall extends AST implements ASTStatementInterface,
 		ASTRightValue {
 	String var;
 	String method;
 	List<ASTVar> parameters;
+	boolean mstatic;
 
-	public ASTMethodCall(SourceInfo source, ASTVar v, ASTVar m, List<ASTVar> ps)
-			throws ParseError {
+	public ASTMethodCall(SourceInfo source, ASTVar v, ASTVar m,
+			List<ASTVar> ps, boolean isstatic) throws ParseError {
 		super(source);
+		mstatic = isstatic;
 		if (v != null)
 			var = v.name;
 
@@ -44,7 +46,7 @@ public class ASTMethodCall extends AST implements ASTStatementInterface,
 			returnName = left.code(context);
 
 		return new CodeMethodCall(context, source, returnName, context
-				.intern(var), context.intern(method), ps);
+				.intern(var), context.intern(method), ps, mstatic);
 	}
 
 	@Override

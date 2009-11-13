@@ -7,7 +7,9 @@ public class Code {
 	private List<String> lines = new ArrayList<String>();
 
 	public void add(String line) {
-		lines.add(line);
+		for (String l : line.split("\n")) {
+			lines.add(l);
+		}
 	}
 
 	public void add(Code code) {

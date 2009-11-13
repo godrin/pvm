@@ -7,18 +7,20 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 import vm_java.types.interfaces.MemberContainer;
 
 public class MemberAssignment extends CodeStatement {
 
 	ObjectName lObject, lMember;
 	ObjectName rObject;
+	boolean mstatic;
 
 	public MemberAssignment(VMContext context, SourceInfo source,
-			ObjectName self, ObjectName leftMember, ObjectName rightObject)
-			throws VMExceptionOutOfMemory, VMException {
+			ObjectName self, ObjectName leftMember, ObjectName rightObject,
+			boolean pstatic) throws VMExceptionOutOfMemory, VMException {
 		super(context, source);
+		mstatic = pstatic;
 
 		assertNotNull(self);
 		assertNotNull(leftMember);
@@ -36,7 +38,11 @@ public class MemberAssignment extends CodeStatement {
 		BasicObject r = scope.get(rObject);
 
 		if (l instanceof MemberContainer) {
-			((MemberContainer) l).set(lMember, r);
+			if (mstatic) {
+				((MemberContainer) l).putStatic(lMember, r);
+			} else {
+				((MemberContainer) l).putInstance(lMember, r);
+			}
 		} else {
 			VMLog.debug(lObject);
 			VMLog.debug(l);
@@ -53,7 +59,7 @@ public class MemberAssignment extends CodeStatement {
 	@Override
 	public Code toCode() {
 		Code c = new Code();
-		c.add(lObject.inlineCode() + "." + lMember.inlineCode() + "="
+		c.add(lObject.inlineCode() + (mstatic?"@":".") + lMember.inlineCode() + "="
 				+ rObject.inlineCode());
 		return c;
 	}

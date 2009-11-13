@@ -57,4 +57,9 @@ public class Program extends BasicObject implements Runnable {
 	public Code toCode() {
 		return mBlock.toCode();
 	}
+
+	@Override
+	public String inlineCode() {
+		return toCode().toString();
+	}
 }

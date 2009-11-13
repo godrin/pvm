@@ -133,6 +133,8 @@ public class LLParser2 {
 				s = parseAssign(v);
 			} else if (t == SYMBOLS.DOT) {
 				s = parseMemberAccess(v);
+			} else if (t == SYMBOLS.AT) {
+				s = parseStaticMemberAccess(v);
 			} else if (t == SYMBOLS.PARENT_OPEN) {
 				s = parseFunctionCall(v);
 			} else {
@@ -178,10 +180,10 @@ public class LLParser2 {
 			ASTVar rescueFunction = parseVar();
 			s = new ASTRescue(source(), rescueFunction);
 			fetchToken();
-		} else if(token()==SYMBOLS.INCLUDE) {
+		} else if (token() == SYMBOLS.INCLUDE) {
 			fetchToken();
-			ASTVar moduleName=parseVar();
-			s=new ASTInclude(source(),moduleName);
+			ASTVar moduleName = parseVar();
+			s = new ASTInclude(source(), moduleName);
 			fetchToken();
 		} else {
 
@@ -225,25 +227,35 @@ public class LLParser2 {
 	private ASTStatementInterface parseFunctionCall(ASTVar v) throws ParseError {
 		List<ASTVar> ps = parseParameters();
 		fetchToken();
-		return new ASTMethodCall(source(), null, v, ps);
+		return new ASTMethodCall(source(), null, v, ps, true);
 	}
 
 	private ASTStatementInterface parseMemberAccess(ASTVar v) throws ParseError {
+		return parseMemberAccess(v, false);
+	}
+
+	private ASTStatementInterface parseStaticMemberAccess(ASTVar v)
+			throws ParseError {
+		return parseMemberAccess(v, true);
+	}
+
+	private ASTStatementInterface parseMemberAccess(ASTVar v, boolean isstatic)
+			throws ParseError {
 		fetchToken();
 		ASTVar m = parseVar();
 		SYMBOLS t = fetchToken();
 		if (t == SYMBOLS.PARENT_OPEN) {
 			List<ASTVar> ps = parseParameters();
 			fetchToken();
-			return new ASTMethodCall(source(), v, m, ps);
+			return new ASTMethodCall(source(), v, m, ps, isstatic);
 		} else if (t == SYMBOLS.ASSIGN) {
 			fetchToken();
 			ASTVar rv = parseVar();
 			fetchToken();
-			return new ASTAssignMember(source(), v, m, rv);
+			return new ASTAssignMember(source(), v, m, rv, isstatic);
 		} else if (t == SYMBOLS.NEWLINE) {
 			List<ASTVar> ps = new ArrayList<ASTVar>();
-			return new ASTMethodCall(source(), v, m, ps);
+			return new ASTMethodCall(source(), v, m, ps, isstatic);
 		}
 
 		parseError();
@@ -332,6 +344,8 @@ public class LLParser2 {
 	private ASTRightValue parseRValue() throws ParseError {
 		ASTVar v = parseVar();
 		SYMBOLS t = fetchToken();
+
+		// FIXME: t==SYMBOLS.AT for static access
 		if (t == SYMBOLS.DOT) {
 			fetchToken();
 			ASTVar m = parseVar();
@@ -340,15 +354,12 @@ public class LLParser2 {
 			if (t == SYMBOLS.PARENT_OPEN) {
 				parameters = parseParameters();
 				t = fetchToken();
-			} /*
-			 * else { parameters = new ArrayList<ASTVar>(); }
-			 */
-
+			}
 			if (t == SYMBOLS.NEWLINE) {
 				if (parameters == null) {
 					return new ASTAssignFromMember(source(), v, m);
 				} else {
-					return new ASTMethodCall(source(), v, m, parameters);
+					return new ASTMethodCall(source(), v, m, parameters, false);
 				}
 			} else {
 				parseError();
@@ -364,7 +375,7 @@ public class LLParser2 {
 			List<ASTVar> ps = new ArrayList<ASTVar>();
 			ps.add(index);
 			return new ASTMethodCall(source(), v, new ASTVar(source(),
-					"__getitem"), ps);
+					"__getitem"), ps, false);
 		} else if (t == SYMBOLS.PARENT_OPEN) {
 			// parseError();
 			List<ASTVar> parameters = null;
@@ -373,7 +384,14 @@ public class LLParser2 {
 
 			if (t == SYMBOLS.NEWLINE) {
 				ASTVar x = new ASTVar(source(), "self");
-				return new ASTMethodCall(source(), x, v, parameters);
+				return new ASTMethodCall(source(), x, v, parameters, false); // FIXME
+				// -
+				// or
+				// is
+				// static
+				// correct
+				// here
+				// ?
 			} else {
 				parseError();
 			}

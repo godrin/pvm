@@ -3,13 +3,14 @@ package vm_java.types.foundation;
 import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.basic.VMKlassBuiltin;
 import vm_java.types.buildins.BuildInKlass;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class VMString extends BuildInKlass{
+public class VMString extends VMKlassBuiltin {
 	private java.lang.String mContent = "";
 	private final int OVERHEAD = 8;
 
@@ -19,7 +20,7 @@ public class VMString extends BuildInKlass{
 
 	public VMString(VMContext context, String s) throws VMExceptionOutOfMemory {
 		super(context);
-		mContent=s;
+		mContent = s;
 	}
 
 	public void setContent(java.lang.String pContent) {
@@ -35,15 +36,15 @@ public class VMString extends BuildInKlass{
 			return mContent.length() + OVERHEAD;
 		return OVERHEAD;
 	}
-	
-	
+
 	public VMString plus(VMString a) throws VMExceptionOutOfMemory {
-		return new VMString(getContext(),getContent()+a.getContent());
+		return new VMString(getContext(), getContent() + a.getContent());
 	}
+
 	/*
-	public VMString concat(VMString a) throws VMExceptionOutOfMemory {
-		return new VMString(getContext(),getContent()+a.getContent());
-	}*/
+	 * public VMString concat(VMString a) throws VMExceptionOutOfMemory { return
+	 * new VMString(getContext(),getContent()+a.getContent()); }
+	 */
 
 	public Object convertToJava(Object pk) {
 		if (pk.equals(java.lang.String.class)) {
@@ -54,11 +55,11 @@ public class VMString extends BuildInKlass{
 		}
 		return null;
 	}
-	
+
 	@Override
 	public Code toCode() {
-		Code c=new Code();
-		c.add("\""+mContent+"\"");
+		Code c = new Code();
+		c.add("\"" + mContent + "\"");
 		return c;
 	}
 }

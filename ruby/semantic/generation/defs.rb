@@ -19,7 +19,7 @@ class DefsCode
     #s("#{@t}=begin(#{@args.value})")+
     bgnws(@t,@args.value,@body.code,@body.value)+
     @args.after+
-    s("#{@klass.value}:#{@name}=#{@t}")+
+    s("#{@klass.value}@#{@name}=#{@t}")+
     s("clear #{@t}")
 
   end

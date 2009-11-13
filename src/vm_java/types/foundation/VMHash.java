@@ -7,9 +7,10 @@ import vm_java.code.Code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.basic.VMKlassBuiltin;
 import vm_java.types.buildins.BuildInKlass;
 
-public class VMHash extends BuildInKlass {
+public class VMHash extends VMKlassBuiltin {
 
 	Map<BasicObject, BasicObject> map;
 
@@ -27,10 +28,10 @@ public class VMHash extends BuildInKlass {
 		return value;
 	}
 
-	public static VMHash _new(VMContext pContext) throws VMExceptionOutOfMemory {
+/*	public static VMHash _new(VMContext pContext) throws VMExceptionOutOfMemory {
 		return new VMHash(pContext);
 	}
-
+*/
 	@Override
 	public Code toCode() {
 		Code c = new Code();

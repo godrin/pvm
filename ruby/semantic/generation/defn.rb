@@ -11,11 +11,18 @@ class DefnCode
   end
 
   def code
+    cm=curModule
+    if cm=="root"
+      cm="self@"
+    else
+      cm+="."
+    end
     b=@args.before
     as=@args.value.gsub("&","")
     b+
-    bgnws(@t,[as],@body.code,@body.value)+  
-    s("#{curModule}.#{@name}=#{@t}")
+    bgnws(@t,[as],@body.code,@body.value)+
+      
+    s("#{cm}#{@name}=#{@t}")
   end
 
   def after

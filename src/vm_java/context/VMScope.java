@@ -16,9 +16,9 @@ import vm_java.types.Buildin;
 import vm_java.types.Function;
 import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.basic.ObjectName;
 import vm_java.types.basic.VMModule;
 import vm_java.types.basic.VMObject;
-import vm_java.types.foundation.ObjectName;
 
 /**
  * 
@@ -38,6 +38,7 @@ public class VMScope {
 	public VMScope(VMContext pContext) throws VMExceptionOutOfMemory {
 		mContext = pContext;
 		selfModule = new VMModule(mContext);
+		selfModule.setName("root");
 
 		try {
 			Buildin.createBuildins(this);
@@ -91,6 +92,23 @@ public class VMScope {
 		return currentException;
 	}
 
+	public BasicObject get(ObjectName name, boolean mstatic) {
+		BasicObject ret = null;
+		if (mstatic) {
+			if (selfObject != null) {
+				ret = selfObject.getStatic(name);
+			}
+			if (ret == null) {
+				if (selfModule != null) {
+					ret = selfModule.getStatic(name);
+				}
+			}
+		} else {
+			return get(name);
+		}
+		return ret;
+	}
+
 	public BasicObject get(ObjectName name) {
 		BasicObject ret = null;
 
@@ -101,11 +119,11 @@ public class VMScope {
 
 		if (ret == null) {
 			if (selfObject != null) {
-				ret = selfObject.get(name);
+				ret = selfObject.getStatic(name);
 			}
 			if (ret == null) {
 				if (selfModule != null) {
-					ret = selfModule.get(name);
+					ret = selfModule.getStatic(name);
 				}
 			}
 
@@ -152,9 +170,9 @@ public class VMScope {
 		}
 	}
 
-	public RuntimeMemberFunction getFunction(ObjectName methodName)
-			throws VMExceptionFunctionNotFound {
-		Function f = (Function) get(methodName);
+	public RuntimeMemberFunction getFunction(ObjectName methodName,
+			boolean mstatic) throws VMExceptionFunctionNotFound {
+		Function f = (Function) get(methodName, mstatic);
 
 		if (selfObject == null)
 			return new RuntimeMemberFunction(selfModule, f);

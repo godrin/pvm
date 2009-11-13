@@ -11,19 +11,21 @@ import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeFunctionHelper;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public class CodeMethodCall extends CodeStatement {
 
 	ObjectName varName, methodName;
 	ObjectName returnName;
 	List<ObjectName> parameters;
+	boolean mstatic;
 
 	public CodeMethodCall(VMContext context, SourceInfo source,
 			ObjectName pReturnName, ObjectName objectName,
-			ObjectName pMethodName, List<ObjectName> ps)
+			ObjectName pMethodName, List<ObjectName> ps, boolean pstatic)
 			throws VMExceptionOutOfMemory {
 		super(context, source);
+		mstatic = pstatic;
 		varName = objectName;
 		methodName = pMethodName;
 		parameters = ps;
@@ -38,9 +40,9 @@ public class CodeMethodCall extends CodeStatement {
 			RuntimeFunction f = null;
 			BasicObject bo = null;
 			if (varName == null) {
-				f = scope.getFunction(methodName);
+				f = scope.getFunction(methodName, mstatic);
 			} else {
-				bo = scope.get(varName);
+				bo = scope.get(varName, mstatic);
 				if (bo instanceof FunctionProvider) {
 					FunctionProvider vmo = (FunctionProvider) bo;
 
@@ -50,7 +52,8 @@ public class CodeMethodCall extends CodeStatement {
 			if (f == null) {
 				VMLog.error(info());
 				VMLog.warn("Method not found:");
-				VMLog.warn(scope.inspect());
+				VMLog.debug(toCode());
+				// VMLog.warn(scope.inspect());
 				VMLog.debug("SELF:");
 				VMLog.debug(scope.self().inspect());
 				// FIXME: return Quit_exception
@@ -58,8 +61,8 @@ public class CodeMethodCall extends CodeStatement {
 						+ " not found in " + varName + " (" + bo + "!");
 			}
 
-			List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
-					parameters);
+			List<BasicObject> bos = RuntimeFunctionHelper.createArguments(
+					scope, parameters);
 			f.run(scope, returnName, bos, parentTask);
 		} catch (VMExceptionFunctionNotFound e) {
 			scope.setException(e.vm(getContext()));
@@ -76,7 +79,8 @@ public class CodeMethodCall extends CodeStatement {
 	public Code toCode() {
 		StringBuilder b = new StringBuilder();
 
-		b.append(returnName.inlineCode()).append("=").append(varName.inlineCode()).append(".").append(
+		b.append(returnName.inlineCode()).append("=").append(
+				varName.inlineCode()).append(".").append(
 				methodName.inlineCode()).append("(");
 
 		boolean first = true;
@@ -89,7 +93,7 @@ public class CodeMethodCall extends CodeStatement {
 			b.append(bo.inlineCode());
 		}
 		b.append(")");
-		Code c=new Code();
+		Code c = new Code();
 		c.add(b.toString());
 		return c;
 	}

@@ -23,7 +23,6 @@ import vm_java.runtime.RuntimeFunction;
 import vm_java.types.BuildinFunction;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
 import vm_java.types.interfaces.MemberContainer;
 import vm_java.types.interfaces.MemberProvider;
 
@@ -35,7 +34,9 @@ public class VMModule extends BasicObject implements MemberContainer,
 		FunctionProvider, MemberProvider {
 
 	private List<VMModule> mMixins = new ArrayList<VMModule>();
-	protected Map<ObjectName, BasicObject> mObjects = new TreeMap<ObjectName, BasicObject>();
+	protected Map<ObjectName, BasicObject> mStaticObjects = new TreeMap<ObjectName, BasicObject>();
+	protected Map<ObjectName, BasicObject> mInstanceObjects = new TreeMap<ObjectName, BasicObject>();
+	private String mName;
 
 	public VMModule(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
@@ -43,7 +44,7 @@ public class VMModule extends BasicObject implements MemberContainer,
 
 	public RuntimeFunction getFunction(ObjectName name)
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
-		BasicObject bo = get(name);
+		BasicObject bo = getStatic(name);
 
 		if (bo instanceof RuntimeFunction)
 			return (RuntimeFunction) bo;
@@ -58,18 +59,45 @@ public class VMModule extends BasicObject implements MemberContainer,
 		return null;
 	}
 
-	protected BasicObject getDirect(ObjectName name) {
-		return mObjects.get(name);
+	protected BasicObject getStaticDirect(ObjectName name) {
+		return mStaticObjects.get(name);
 
 	}
 
-	public BasicObject get(ObjectName name) {
+	public BasicObject getStatic(ObjectName name) {
 		VMLog.debug("searching:" + name);
-		VMLog.debug(mObjects.keySet());
-		BasicObject o = getDirect(name);
+		VMLog.debug(mStaticObjects.keySet());
+		BasicObject o = getStaticDirect(name);
 		if (o == null) {
 			for (VMModule m : mMixins) {
-				o = m.get(name);
+				o = m.getStatic(name);
+				if (o != null)
+					break;
+			}
+		}
+		
+		if(o==null && getName().equals("root")) {
+			return getInstance(name);
+		}
+		
+		VMLog.debug("found:" + o);
+		return o;
+	}
+
+	public void putStatic(ObjectName name, BasicObject bo) throws VMException {
+		mStaticObjects.put(name, bo);
+	}
+
+	
+	protected BasicObject getInstanceDirect(ObjectName name) {
+		return mInstanceObjects.get(name);
+
+	}
+	public BasicObject getInstance(ObjectName name) {
+		BasicObject o = getInstanceDirect(name);
+		if (o == null) {
+			for (VMModule m : mMixins) {
+				o = m.getInstance(name);
 				if (o != null)
 					break;
 			}
@@ -78,35 +106,39 @@ public class VMModule extends BasicObject implements MemberContainer,
 		return o;
 	}
 
-	public void put(ObjectName name, BasicObject bo) throws VMException {
-		mObjects.put(name, bo);
+	public void putInstance(ObjectName name, BasicObject bo) throws VMException {
+		mInstanceObjects.put(name, bo);
 	}
-
-	@Override
-	public void set(ObjectName memberName, BasicObject r) throws VMException {
-		put(memberName, r);
-
-	}
-
+	
+	
 	@Override
 	public String inspect() {
 		return toCode().toString();
-		//return "[Module]";
+		// return "[Module]";
+	}
+	
+	protected void addStaticsAsInstanceTo(VMModule k) throws VMException {
+		for(Map.Entry<ObjectName, BasicObject> e:mStaticObjects.entrySet()) {
+			k.putInstance(e.getKey(), e.getValue());
+		}
 	}
 
+	
+/*
 	public VMModule _newModule(VMContext pContext)
 			throws VMExceptionOutOfMemory, VMException {
 		VMModule mod = new VMModule(pContext);
 		mod.addFunctionsTo(this);
 		return mod;
 	}
-
+	*/
+/*
 	protected void addFunctionsTo(VMModule mod) throws VMException {
 		for (Map.Entry<ObjectName, BasicObject> entry : mObjects.entrySet()) {
 			mod.put(entry.getKey(), entry.getValue());
 		}
 	}
-
+*/
 	public void include(VMModule mod) throws VMException {
 		mMixins.add(mod);
 	}
@@ -114,19 +146,34 @@ public class VMModule extends BasicObject implements MemberContainer,
 	@Override
 	public Code toCode() {
 		Code c = new Code();
-		c.add("module");
-		for(VMModule m:mMixins) {
-			c.add("include");
-			c.add(m.toCode().indent());
+		c.add("module " + mName);
+		Code i = new Code();
+		for (VMModule m : mMixins) {
+			i.add("included " + m.toCode().indent());
 		}
-		
-		for(Map.Entry<ObjectName, BasicObject> e:mObjects.entrySet()) {
-			c.add(e.getKey().inlineCode());
-			c.add("=");
-			c.add(e.getValue().toCode());
+		for (Map.Entry<ObjectName, BasicObject> e : mStaticObjects.entrySet()) {
+			i.add("static:"+e.getKey().inlineCode() + "=" + e.getValue().inlineCode());
 		}
+		for (Map.Entry<ObjectName, BasicObject> e : mInstanceObjects.entrySet()) {
+			i.add("inst:"+e.getKey().inlineCode() + "=" + e.getValue().inlineCode());
+		}
+		c.add(i.indent());
+		c.add("end");
 
 		return c;
+	}
+
+	@Override
+	public String inlineCode() {
+		return toCode().toString();
+	}
+
+	public void setName(String mName) {
+		this.mName = mName;
+	}
+
+	public String getName() {
+		return mName;
 	}
 
 }

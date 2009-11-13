@@ -11,7 +11,7 @@ import vm_java.runtime.CodeBuildinFunction;
 import vm_java.runtime.CreateFunction;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public abstract class BuildInKlass extends BasicObject implements FunctionProvider {
 

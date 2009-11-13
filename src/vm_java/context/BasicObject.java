@@ -35,6 +35,10 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 	public long getMemoryUsage() {
 		return BASICOBJECT_OVERHEAD;
 	}
+	
+	public Long getID() {
+		return mid;
+	}
 
 	public static BasicObject convert(VMContext context, Object o)
 			throws VMExceptionOutOfMemory {
@@ -72,8 +76,10 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 
 	abstract public Code toCode();
 
+	abstract public String inlineCode();
+	/*
 	public String inlineCode() {
 		return toCode().toString().replace("\\n","");
 	}
-
+*/
 }

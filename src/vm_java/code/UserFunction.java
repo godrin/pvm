@@ -13,7 +13,7 @@ import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 /**
  * 
@@ -59,11 +59,12 @@ public class UserFunction extends Function {
 	@Override
 	public Code toCode() {
 		Code c = new Code();
+
 		c.add("begin_withscope("); // FIXME
-		boolean first=true;
+		boolean first = true;
 		for (ObjectName a : mArgs) {
-			if(first) {
-				first=false;
+			if (first) {
+				first = false;
 			} else {
 				c.addToLastLine(", ");
 			}
@@ -73,5 +74,10 @@ public class UserFunction extends Function {
 		c.add(mBlock.toCode().indent()); // FIXME: add scope ??
 		c.add("end");
 		return c;
+	}
+
+	@Override
+	public String inlineCode() {
+		return toCode().toString();
 	}
 }

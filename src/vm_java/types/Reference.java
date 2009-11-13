@@ -5,7 +5,7 @@ import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public class Reference extends BasicObject {
 	private VMScope otherScope;
@@ -15,9 +15,9 @@ public class Reference extends BasicObject {
 			throws VMExceptionOutOfMemory, VMException {
 
 		super(pOtherScope.getContext());
-		if(pOtherName==null)
-			throw new VMException(null,"Reference othername is null");
-		
+		if (pOtherName == null)
+			throw new VMException(null, "Reference othername is null");
+
 		otherName = pOtherName;
 		otherScope = pOtherScope;
 	}
@@ -34,6 +34,11 @@ public class Reference extends BasicObject {
 	@Override
 	public Code toCode() {
 		return otherName.toCode();
+	}
+
+	@Override
+	public String inlineCode() {
+		return "<reference to " + otherName.getName() + ">";
 	}
 
 }

@@ -13,10 +13,12 @@ public class ASTAssignMember extends AST implements ASTStatementInterface {
 	public ASTVar left;
 	public ASTVar leftMember;
 	public ASTVar right;
+	private boolean mstatic; 
 
 	public ASTAssignMember(SourceInfo source, ASTVar pleft, ASTVar pleftmember,
-			ASTVar pright) {
+			ASTVar pright, boolean isstatic) {
 		super(source);
+		mstatic=isstatic;
 		left = pleft;
 		right = pright;
 		leftMember = pleftmember;
@@ -28,7 +30,7 @@ public class ASTAssignMember extends AST implements ASTStatementInterface {
 		if (leftMember != null) {
 			return new MemberAssignment(context, source, context
 					.intern(left.name), context.intern(leftMember.name),
-					context.intern(right.name));
+					context.intern(right.name),mstatic);
 		} else {
 			LocalAssignment a = new LocalAssignment(context, source, context
 					.intern(left.name), context.intern(right.name));

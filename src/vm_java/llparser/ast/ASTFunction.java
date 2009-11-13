@@ -12,7 +12,7 @@ import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.types.Function;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public class ASTFunction extends AST implements ASTRightValue {
 

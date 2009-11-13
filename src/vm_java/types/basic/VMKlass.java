@@ -19,7 +19,6 @@ import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.BuildinFunction;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
 
 /**
  * 
@@ -27,9 +26,8 @@ import vm_java.types.foundation.ObjectName;
  */
 public class VMKlass extends VMModule {
 	private VMKlass mParent;
-	// these are klass-methods and klass-members
-	private Map<ObjectName, BasicObject> mStaticObjects = new TreeMap<ObjectName, BasicObject>();
-	private Class<? extends BasicObject> javaClass = null;
+
+	// dictionary ??
 
 	public VMKlass(VMContext context) throws VMExceptionOutOfMemory {
 		super(context);
@@ -45,13 +43,13 @@ public class VMKlass extends VMModule {
 		return BasicObject.nil;
 	}
 
-	public BasicObject get(ObjectName name) {
+	public BasicObject getInstance(ObjectName name) {
 
 		VMLog.debug("TRYING TO GET OUT OF CLASS:" + name);
-		BasicObject o = super.get(name);
+		BasicObject o = super.getInstance(name);
 		if (o == null) {
 			if (mParent != null) {
-				o = mParent.get(name);
+				o = mParent.getInstance(name);
 			}
 		}
 		return o;
@@ -61,8 +59,8 @@ public class VMKlass extends VMModule {
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
 		BasicObject bo = getStatic(name);
-		if (bo == null) // && getClass().equals(javaClass))
-			bo = get(name);
+		if (bo == null)
+			bo = getStatic(name);
 
 		if (bo instanceof RuntimeFunction)
 			return (RuntimeFunction) bo;
@@ -75,19 +73,6 @@ public class VMKlass extends VMModule {
 			return new RuntimeMemberFunction(this, (Function) bo);
 		}
 		return null;
-	}
-
-	private BasicObject getStatic(ObjectName name) {
-		BasicObject bo = mStaticObjects.get(name);
-		if (bo == null) {
-			if (mParent != null)
-				return mParent.getStatic(name);
-		}
-		return bo;
-	}
-
-	public void putStatic(ObjectName key, BuildinFunction value) {
-		mStaticObjects.put(key, value);
 	}
 
 	public void setParent(BasicObject bo) {
@@ -104,23 +89,9 @@ public class VMKlass extends VMModule {
 			VMException {
 		VMKlass k = new VMKlass(pContext);
 
-		VMLog.debug("ENTRIES static:");
-		for (Map.Entry<ObjectName, BasicObject> entry : mStaticObjects
-				.entrySet()) {
-			VMLog.debug(entry.getKey());
-		}
-		VMLog.debug("ENTRIES :");
-		for (Map.Entry<ObjectName, BasicObject> entry : super.mObjects
-				.entrySet()) {
-			VMLog.debug(entry.getKey());
-		}
-
-		addFunctionsTo(k);
+		addStaticsAsInstanceTo(k);
 
 		return k;
 	}
 
-	public void setJavaClass(Class<? extends BasicObject> c) {
-		javaClass = c;
-	}
 }

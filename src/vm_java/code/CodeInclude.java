@@ -7,8 +7,8 @@ import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.basic.ObjectName;
 import vm_java.types.basic.VMModule;
-import vm_java.types.foundation.ObjectName;
 
 public class CodeInclude extends CodeStatement {
 

@@ -14,12 +14,11 @@ import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.DontExpose;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.foundation.ObjectName;
 import vm_java.types.interfaces.MemberContainer;
 import vm_java.types.interfaces.MemberProvider;
 
 @DontExpose
-public  class VMObject extends BasicObject implements FunctionProvider,
+public class VMObject extends BasicObject implements FunctionProvider,
 		MemberProvider, MemberContainer {
 	private VMKlass mKlass;
 	private Map<ObjectName, BasicObject> data = new TreeMap<ObjectName, BasicObject>();
@@ -34,18 +33,14 @@ public  class VMObject extends BasicObject implements FunctionProvider,
 		return mKlass;
 	}
 
-	public BasicObject get(ObjectName name) {
-		BasicObject o = data.get(name);
-		if (o == null) {
-			o = mKlass.get(name);
-		}
-		return o;
+	public BasicObject getStatic(ObjectName name) {
+		return mKlass.getInstance(name);
 	}
 
-	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
-			VMExceptionOutOfMemory {
+	public RuntimeFunction getFunction(ObjectName name)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
-		BasicObject bo = get(name);
+		BasicObject bo = getStatic(name);
 		if (bo == null && mKlass != null)
 			return mKlass.getFunction(name);
 		if (bo instanceof Function) {
@@ -60,13 +55,37 @@ public  class VMObject extends BasicObject implements FunctionProvider,
 	}
 
 	@Override
-	public void set(ObjectName memberName, BasicObject r) throws VMException {
-		data.put(memberName,r);
+	public void putInstance(ObjectName memberName, BasicObject r)
+			throws VMException {
+		data.put(memberName, r);
 	}
 
 	@Override
 	public Code toCode() {
-		// TODO Auto-generated method stub
-		return null;
+		Code c = new Code();
+		c.add("<Klass #" + mKlass.getID() + ">");
+		Code i = new Code();
+		for (Map.Entry<ObjectName, BasicObject> e : data.entrySet()) {
+			i.add(e.getKey().inlineCode() + "=" + e.getValue().inlineCode());
+		}
+		c.add(i.indent());
+		c.add("</Klass #" + mKlass.getID() + ">");
+		return c;
+	}
+
+	@Override
+	public String inlineCode() {
+		return toCode().toString();
+	}
+
+	@Override
+	public BasicObject getInstance(ObjectName objectName) {
+		return data.get(objectName);
+	}
+
+	@Override
+	public void putStatic(ObjectName memberName, BasicObject r)
+			throws VMException {
+		mKlass.putInstance(memberName, r);
 	}
 }

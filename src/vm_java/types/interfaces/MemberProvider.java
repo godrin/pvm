@@ -1,8 +1,8 @@
 package vm_java.types.interfaces;
 
 import vm_java.context.BasicObject;
-import vm_java.types.foundation.ObjectName;
+import vm_java.types.basic.ObjectName;
 
 public interface MemberProvider {
-	BasicObject get(ObjectName objectName);
+	BasicObject getStatic(ObjectName objectName);
 }

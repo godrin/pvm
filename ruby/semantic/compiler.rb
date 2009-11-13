@@ -42,7 +42,7 @@ class Compiler
   end
 
   def curModule
-    "self"
+    "root"
   end
 
   def compile(info,args,filename)
