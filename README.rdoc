@@ -1,6 +1,19 @@
-== Ruby / PVM
+== PRuby / PVM
 PVM stands for "parallel virtual machine".
 The aim of this project is a virtual machine that's able to handle:
 * massive parallel threads
 * complete control of all resources (memory, cpu time, network traffic)
 * a small subset of the ruby-stdlib, that supports everything you need for a networking application
+
+== Aims
+PRuby is not so much a simple interpreter, but more like a running environment /  application server
+A basic configuration sets:
+* how much resources from the local host should be used at most.
+In network mode:
+* how much resources are open to other users
+* how much resources should be used from other node
+For networking mode to work securely the following is needed:
+* Only a limited count of different users can be allowed to access to node (at any moment AND over infinity)
+* Disk access is only available for a limited set of functions
+* Each user has his own sandbox with limited disk-space and ram-space
+* Disk-space is granted, but not ensured, so remote data can be destroyed or unavailable
