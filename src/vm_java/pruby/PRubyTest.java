@@ -49,6 +49,23 @@ public class PRubyTest extends TestCase {
 		PRuby pruby = new PRuby(vm, rubyParser);
 		pruby.run(new PRubySourceDef(file, source));
 		vm.join();
+		String wan=getWantedOutput(source,file);
+		System.out.println("Content:"+VMIO.content());
+		assertEquals(wan, VMIO.content());
 		VMIO.clear();
+		
+	}
+
+	private String getWantedOutput(SinglePathSourceSource source,String file) {
+		boolean started=false;
+		StringBuilder b=new StringBuilder();
+		for(String line:source.getProgramAsString(file).split("\n")) {
+			if(line.equals("# OUTPUT")) {
+				started=true;
+			} else if (started) {
+				b.append(line.replaceAll("^# ","")).append("\n");
+			}
+		}
+		return b.toString();
 	}
 }

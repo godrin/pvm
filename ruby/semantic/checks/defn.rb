@@ -17,3 +17,5 @@ z=a("aa")
 # clear tmp5
 # z=tmp6
 # clear tmp6
+# OUTPUT
+# aa

@@ -33,7 +33,7 @@ public class SinglePathSourceSource implements SourceSource {
 	public String getProgramAsString(String path) {
 		if (path.matches("^[a-zA-Z0-9_\\.]*$")) {
 			File f = new File(dir.getAbsolutePath() + File.separator + path);
-			System.out.println(f);
+			System.out.println("("+f+")");
 			if (f.isFile()) {
 				try {
 					return FileTool.loadFileString(f.getAbsoluteFile());
