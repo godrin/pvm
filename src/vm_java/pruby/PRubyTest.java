@@ -24,10 +24,13 @@ public class PRubyTest extends TestCase {
 	public void testPRuby() throws ParseError, IOException,
 			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
 			InterruptedException {
+		String dir = "ruby/semantic/checks";
 
-//		test("src/vm_java/examples", "example.prb");
-		//test("ruby", "simple_function.prb");
-		test("ruby/semantic/checks", "defn.rb");
+		for (String file : new File(dir).list()) {
+			if (file.matches(".*\\.rb")) {
+				test(dir, file);
+			}
+		}
 
 	}
 
@@ -49,21 +52,21 @@ public class PRubyTest extends TestCase {
 		PRuby pruby = new PRuby(vm, rubyParser);
 		pruby.run(new PRubySourceDef(file, source));
 		vm.join();
-		String wan=getWantedOutput(source,file);
-		System.out.println("Content:"+VMIO.content());
+		String wan = getWantedOutput(source, file);
+		System.out.println("Content:" + VMIO.content());
 		assertEquals(wan, VMIO.content());
 		VMIO.clear();
-		
+
 	}
 
-	private String getWantedOutput(SinglePathSourceSource source,String file) {
-		boolean started=false;
-		StringBuilder b=new StringBuilder();
-		for(String line:source.getProgramAsString(file).split("\n")) {
-			if(line.equals("# OUTPUT")) {
-				started=true;
+	private String getWantedOutput(SinglePathSourceSource source, String file) {
+		boolean started = false;
+		StringBuilder b = new StringBuilder();
+		for (String line : source.getProgramAsString(file).split("\n")) {
+			if (line.equals("# OUTPUT")) {
+				started = true;
 			} else if (started) {
-				b.append(line.replaceAll("^# ","")).append("\n");
+				b.append(line.replaceAll("^# ", "")).append("\n");
 			}
 		}
 		return b.toString();

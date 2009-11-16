@@ -3,6 +3,7 @@ class ResbodyCode
     @typeArray=tmpVar
     @blockName=tmpVar
     @condName=tmpVar
+    @resultVar=tmpVar
   end
 
   def ibefore
@@ -20,15 +21,20 @@ class ResbodyCode
   end
 
   def code
-
     ibefore+
     s("#{@condName}=#{@typeArray}.member?(exception)")+
-    s("if #{@condName} then #{@blockName}")
+    s("#{@resultVar}=nil")+
+    s("if #{@condName} then #{@blockName}")+
+    s("#{@resultVar}=#{@blockName}.value")
   end
 
   def after
     s("clear #{@typeArray}")+
     s("clear #{@blockName}")+
-    s("clear #{@condName}")
+    s("clear #{@condName}")+
+    s("clear #{@resultVar}")
+    
+    
+    
   end
 end

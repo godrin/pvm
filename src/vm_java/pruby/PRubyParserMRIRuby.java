@@ -13,7 +13,7 @@ public class PRubyParserMRIRuby implements PRubyParser {
 	@Override
 	public String parse(PRubySourceDef source) {
 		String[] array = new String[] { "/usr/bin/ruby",
-				PRubyParserJRuby.PARSER_RB
+				PRubyParserJRuby.PARSER_RB, source.getPath()
 
 		};
 
@@ -59,11 +59,11 @@ public class PRubyParserMRIRuby implements PRubyParser {
 			while ((read = proc.getInputStream().read(buffer)) > 0) {
 				b.append(new String(buffer, 0, read));
 			}
-			if(proc.exitValue()!=0) {
-				VMLog.error("Exit Value:"+proc.exitValue());
-				
+			if (proc.exitValue() != 0) {
+				VMLog.error("Exit Value:" + proc.exitValue());
+
 				System.out.println(b.toString());
-				
+
 				return null;
 			}
 

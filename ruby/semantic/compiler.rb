@@ -81,13 +81,8 @@ if $0 == __FILE__
   a=@processor.parse(c)
   c=Compiler.new
   #pp a
-  result=c.compile(nil,a,"filename.rb")
+  result=c.compile(nil,a,ARGV[0]||"filename.rb")
 
   puts "include VMIO"
   puts result.code
-  #pp result
-  #pp result
-
-  #pp "CODE:",result.code
-  #pp "VALUE:",result.value
 end

@@ -4,7 +4,7 @@ class Base
   end
 
   def method_missing(name,*args)
-    puts "Not implemented #{self.class}.#{name}(#{args.inspect}) in #{filename}:#{line}"
+    STDERR.puts "Not implemented #{self.class}.#{name}(#{args.inspect}) in #{filename}:#{line}"
     []
   end
 
@@ -33,6 +33,9 @@ class Base
   end
 
   def bgn(left,parameters,body,result,scope=false)
+ #   assert{result.is_a?(String)}
+ #   assert{result.length>0}
+    STDERR.puts caller.inspect unless result.is_a?(String)
     beg="begin"
     beg+="_withscope" if scope
     s("#{left}=#{beg}(#{parameters.join(", ")})")+
