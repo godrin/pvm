@@ -8,7 +8,7 @@ z=a("aa")
 #   clear tmp1
 #   lreturn tmp2
 # end
-# self.a=tmp3
+# self@a=tmp3
 # clear tmp3
 # tmp4="aa"
 # tmp5=tmp4

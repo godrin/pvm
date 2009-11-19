@@ -8,7 +8,7 @@ class ScopeCode
       []
     end
   end
-  def boy
+  def body
     @body
   end
   def value

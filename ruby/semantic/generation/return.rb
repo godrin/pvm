@@ -2,6 +2,10 @@ class ReturnCode
   def init
     @v=tmpVar
   end
+  
+  def before
+    []
+  end
 
   def code
     @what.before+

@@ -17,7 +17,6 @@ class ResbodyCode
     s("#{@typeArray}=#{@types.value}")+
     @types.after+
     bgn(@blockName,["*"],body_code,body_value)
-    #s("#{@blockName}=begin()")+@body.code.indent+s("end")
   end
 
   def code
@@ -33,8 +32,9 @@ class ResbodyCode
     s("clear #{@blockName}")+
     s("clear #{@condName}")+
     s("clear #{@resultVar}")
-    
-    
-    
+  end
+  
+  def value
+    @resultVar
   end
 end

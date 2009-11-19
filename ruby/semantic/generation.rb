@@ -33,9 +33,13 @@ class Base
   end
 
   def bgn(left,parameters,body,result,scope=false)
- #   assert{result.is_a?(String)}
- #   assert{result.length>0}
-    STDERR.puts caller.inspect unless result.is_a?(String)
+    if result.is_a?(String)
+      assert{result=~/[a-z].*/ || result=="nil"}
+    else
+      pp result
+      raise 1
+    end
+    #STDERR.puts caller.inspect unless result.is_a?(String)
     beg="begin"
     beg+="_withscope" if scope
     s("#{left}=#{beg}(#{parameters.join(", ")})")+

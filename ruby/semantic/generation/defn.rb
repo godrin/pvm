@@ -13,7 +13,7 @@ class DefnCode
   def code
     
     #STDERR.puts "BODY:",@body.body.class
-    pp "BO",@body.inspect unless @body.value.is_a?(String)
+    #pp "BO",@body.inspect unless @body.value.is_a?(String)
     
     cm=curModule
     if cm=="root"

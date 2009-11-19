@@ -1,7 +1,6 @@
 class LitCode
   def init
-    #pp self
-    #exit
+    @t=tmpVar
   end
   def before
     []
@@ -9,16 +8,21 @@ class LitCode
   def after
     []
   end
-  def value
+  def before
     case @lit
     when Symbol
-      ":"+@lit.to_s
+      s(@t+"=:"+@lit.to_s)
     else
-      @lit.to_s
+      s(@t+"="+@lit.to_s)
     end
+  end
+  def value
+    @t
+  end
+  def after
+    s("clear #{@t}")
   end
   def code
     []
-    #s(@lit.to_s)
   end
 end

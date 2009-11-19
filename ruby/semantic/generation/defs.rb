@@ -23,4 +23,8 @@ class DefsCode
     s("clear #{@t}")
 
   end
+  
+  def value
+    @klass.value
+  end
 end

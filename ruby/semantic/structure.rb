@@ -264,6 +264,20 @@ class IasgnCode<Base
   end
 end
 
+class LasgnCode<Base
+  def initialize(c,name,value=nil)
+    super(c)
+    @name=name
+    assert{@name.is_a?(Symbol)}
+    @value=compile(value)
+  end
+
+  def value=(v)
+    @value=v
+  end
+end
+
+
 # @args is set, when decompressing
 class SplatCode<Base
   def initialize(c,args=nil)
@@ -271,13 +285,13 @@ class SplatCode<Base
   end
 end
 
-LasgnCode=IasgnCode
+
 
 class GasgnCode<Base
   def initialize(c,name,value)
     super(c)
     @name=name
-    @value=value 
+    @value=compile(value) 
   end
 end
 

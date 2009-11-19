@@ -13,6 +13,11 @@ class IfCode
     end
 
     def before
+      unless @statement.value=~/tmp.*/
+        puts @statement
+        
+      end
+      #exit
       c=@statement.before+
       @statement.code+
       @statement.after
