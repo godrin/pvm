@@ -6,10 +6,11 @@ class GasgnCode
     []
   end
   def code
+    #pp @value.before
     if @value
       @value.before+
       s("#{@tmp}=#{@value.value}")+
-      s("self$#{@name}=#{@tmp}")+
+      s("self#{@name}=#{@tmp}")+
       @value.after
     else
       s("#{@tmp}=nil")+

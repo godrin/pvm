@@ -25,4 +25,13 @@ class ArrayCode
     pp caller
     exit
   end
+  
+  def [](i)
+    @elements[i].value
+    #raise :FIXME
+  end
+  
+  def size
+    @elements.length
+  end
 end

@@ -17,11 +17,24 @@ class RescueCode
   end
 
   def code
-    bgn(@blockName,["*"],@block.code,@block.value) +
-    bgn(@rescueName,["*"],@rescueBlock.code,@rescueBlock.value)+
-    s("#{@ret}=secured #{@blockName} #{@rescueName}")
+    #bgn(@blockName,["*"],@block.code,@block.value) +
+    #bgn(@rescueName,["*"],@rescueBlock.code,@rescueBlock.value)+
+    #s("#{@ret}=secured #{@blockName} #{@rescueName}")
+
+    s("try")+
+    (
+    @block.code+
+    s("@ret=#{@block.value}")).indent+
+    @rescueBlocks.map{|b|
+
+      b.code+
+      s("#{@ret}=#{b.value}").indent+
+      b.after.indent
+    }+
+    s("end")
+
   end
-  
+
   def value
     @ret
   end

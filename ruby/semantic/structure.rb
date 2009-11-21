@@ -181,12 +181,12 @@ class SelfCode<Base
 end
 
 class RescueCode<Base
-  def initialize(c,block,rescueBlock)
+  def initialize(c,block,*rescueBlocks)
     super(c)
     @block=compile(block)
-    @rescueBlock=compile(rescueBlock)
+    @rescueBlocks=rescueBlocks.map{|b|compile(b)}
     assert{not @block.nil?}
-    assert{@rescueBlock.is_a?(ResbodyCode)}
+    #assert{@rescueBlock.is_a?(ResbodyCode)}
   end
 end
 

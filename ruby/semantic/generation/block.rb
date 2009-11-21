@@ -9,18 +9,38 @@ class BlockCode
 
   def code
     last=@statements[-1]
-      
+
     cs=@statements[0..-2].map{|s|
       s.before+s.code+s.after
     }
+
     if last
       cs+=last.before+last.code
-    end  
+    end
     cs=cs.flatten
-    cs
+    checkExceptions(cs)
   end
 
   def value
     @statements[-1].value
+  end
+
+  private
+
+  def checkExceptions(array)
+    a=[]
+    noadd=false
+    array.each{|e|
+      if noadd
+        if e=~/ *end/
+          noadd=false
+          a<<e
+        end
+      else
+        a<<e
+        noadd=true if e=~/[elf]return .*/
+      end
+    }
+    a
   end
 end
