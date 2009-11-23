@@ -30,7 +30,7 @@ Dir[p].each{|f|
   
   pp tree
   result=compiler.compile(nil,tree,f).code
-  lefts=pvm.split("\n").map{|l|l.chomp}
+  lefts=pvm.split("\n").map{|l|l.chomp}.select_until{|l|l=~/.*OUTPUT.*/}
   rights=result.map{|l|l.chomp}
 
   i=0

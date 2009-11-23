@@ -60,4 +60,15 @@ class Array
   def indent
     map{|l|"  "+l}
   end
+  def select_until
+    n=[]
+    ok=true
+    map{|e|
+      ok&=!(yield e)
+      if ok
+        n<<e
+      end
+    }
+    n
+  end
 end

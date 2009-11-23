@@ -4,20 +4,22 @@ end
 
 a{|x|puts x}
   
-# tmp3=begin_withscope(block)
+# tmp4=begin_withscope(block)
 #   tmp1=123
-#   tmp2=block.call(tmp1)
+#   tmp2=tmp1
+#   tmp3=block.call(tmp2)
 #   clear tmp1
-#   lreturn tmp2
+#   clear tmp2
+#   lreturn tmp3
 # end
-# self.a=tmp3
-# clear tmp3
-# tmp7=begin(x)
-#   tmp5=x
-#   tmp6=puts(tmp5)
-#   clear tmp5
+# self@a=tmp4
+# clear tmp4
+# tmp8=begin(x)
+#   tmp6=x
+#   tmp7=puts(tmp6)
 #   clear tmp6
+#   lreturn tmp7
 # end
-# tmp4=a(tmp7)
-# clear tmp7
+# tmp5=a(tmp8)
+# clear tmp8
   

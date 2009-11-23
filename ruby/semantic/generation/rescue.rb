@@ -1,10 +1,8 @@
 class RescueCode
   def init
-    @blockName=tmpVar
-    @rescueName=tmpVar
+    #@blockName=tmpVar
+    #@rescueName=tmpVar
     @ret=tmpVar
-    #pp self
-    #exit
   end
 
   def before
@@ -12,19 +10,16 @@ class RescueCode
   end
 
   def after
-    s("clear #{@blockName}")+
-    s("clear #{@rescueName}")
+    s("clear #{@ret}")
+    #s("clear #{@blockName}")+
+    #s("clear #{@rescueName}")
   end
 
   def code
-    #bgn(@blockName,["*"],@block.code,@block.value) +
-    #bgn(@rescueName,["*"],@rescueBlock.code,@rescueBlock.value)+
-    #s("#{@ret}=secured #{@blockName} #{@rescueName}")
-
     s("try")+
     (
     @block.code+
-    s("@ret=#{@block.value}")).indent+
+    s("#{@ret}=#{@block.value}")).indent+
     @rescueBlocks.map{|b|
 
       b.code+

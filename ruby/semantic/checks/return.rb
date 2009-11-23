@@ -16,8 +16,6 @@ z=a("aa")
 #     tmp7=tmp6
 #     clear tmp6
 #     freturn tmp7
-#     clear tmp7
-#     lreturn tmp7
 #   end
 #   if tmp5 then tmp8=tmp14()
 #   clear tmp5

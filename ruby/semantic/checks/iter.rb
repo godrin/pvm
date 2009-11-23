@@ -20,7 +20,7 @@ x=(a.each{|i|
 #   tmp8=i
 #   tmp9=puts(tmp8)
 #   clear tmp8
-#   clear tmp9
+#   lreturn tmp9
 # end
 # tmp7=a.each(tmp10)
 # clear tmp10

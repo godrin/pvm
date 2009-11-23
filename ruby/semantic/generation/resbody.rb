@@ -4,7 +4,7 @@ class ResbodyCode
   end
 
   def code
-    return [] if @types.size==0
+    return s("rescue") if @types.size==0
     s("rescue #{exceptionType}=>#{exceptionVar}")+
     (
     if @body
@@ -16,7 +16,11 @@ class ResbodyCode
   end
 
   def after
-    s("clear #{@resultVar}")
+    if @types.size==0
+      []
+    else
+      s("clear #{@resultVar}")
+    end
   end
 
   def value
