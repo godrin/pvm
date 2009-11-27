@@ -17,7 +17,6 @@ public class ASTInteger extends AST implements ASTRightValue {
 		i = Integer.parseInt(input);
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new LocalAssignment(context, source, context.intern(left.name),

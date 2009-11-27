@@ -4,8 +4,11 @@ class ResbodyCode
   end
 
   def code
-    return s("rescue") if @types.size==0
-    s("rescue #{exceptionType}=>#{exceptionVar}")+
+    if @types.size==0
+      s("rescue")
+    else
+      s("rescue #{exceptionType}=>#{exceptionVar}")
+    end+
     (
     if @body
       @body.code+s("#{@resultVar}=#{@body.value}")
@@ -34,10 +37,10 @@ class ResbodyCode
   private
 
   def exceptionVar
-    @types[1]
+    @types[-1]
   end
 
   def exceptionType
-    @types[0]
+    @types[0..-2].join(", ")
   end
 end

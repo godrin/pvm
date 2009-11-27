@@ -14,7 +14,6 @@ import vm_java.code.VMException;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
-import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.ObjectName;
 import vm_java.types.basic.VMModule;
@@ -30,8 +29,6 @@ public class VMScope {
 	VMContext mContext;
 	VMModule selfModule = null;
 	VMObject selfObject = null;
-	BasicObject currentException = null;
-	boolean returned = false;
 
 	public final static String SELF = "nv_self";
 
@@ -82,14 +79,6 @@ public class VMScope {
 				put(entry.getKey(), entry.getValue());
 			}
 		}
-	}
-
-	public void setException(BasicObject bo) {
-		currentException = bo;
-	}
-
-	public BasicObject getException() {
-		return currentException;
 	}
 
 	public BasicObject get(ObjectName name, boolean mstatic) {
@@ -149,9 +138,6 @@ public class VMScope {
 		return null; // FIXME
 	}
 
-	/*
-	 * public Map<String, BasicObject> getFuncCallArgs() { return mArgs; }
-	 */
 	public void put(ObjectName objectName, BasicObject value)
 			throws VMException {
 
@@ -161,13 +147,7 @@ public class VMScope {
 		if (SELF.equals(objectName.getName()))
 			throw new VMException(null, "Self accessed!");
 
-		BasicObject old = mReferences.get(objectName);
-		if (old instanceof Reference) {
-			((Reference) old).set(value);
-			setReturned();
-		} else {
-			mReferences.put(objectName, value);
-		}
+		mReferences.put(objectName, value);
 	}
 
 	public RuntimeMemberFunction getFunction(ObjectName methodName,
@@ -183,18 +163,11 @@ public class VMScope {
 	public void clear(ObjectName name) {
 		mReferences.remove(name);
 	}
-
-	public boolean exception() {
-		return currentException != null;
-	}
-
+/*
 	public boolean finished() {
-		return returned || currentException != null;
+		return returned != null;
 	}
-
-	public void setReturned() {
-		returned = true;
-	}
+*/
 
 	public String inspect() {
 		StringBuilder sb = new StringBuilder();
@@ -203,12 +176,10 @@ public class VMScope {
 			sb.append("  " + entry.getKey().inspect() + " => "
 					+ entry.getValue().inspect());
 		}
-		sb.append("  returned:" + returned + "\n");
-		if (currentException != null)
-			sb.append("  exception:" + currentException.inspect() + "\n");
+		//sb.append("  returned:" + returned + "\n");
+		//sb.append("  returnContent:" + returnContent + "\n");
 		sb.append("]\n");
 
-		// TODO Auto-generated method stub
 		return sb.toString();
 	}
 

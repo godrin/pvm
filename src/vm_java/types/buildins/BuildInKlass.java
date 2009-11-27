@@ -29,7 +29,6 @@ public abstract class BuildInKlass extends BasicObject implements FunctionProvid
 		return null;
 	}
 
-	@Override
 	public RuntimeFunction getFunction(ObjectName name) throws VMExceptionFunctionNotFound,
 			VMExceptionOutOfMemory {
 

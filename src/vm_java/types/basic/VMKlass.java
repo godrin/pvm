@@ -5,9 +5,6 @@
 
 package vm_java.types.basic;
 
-import java.util.Map;
-import java.util.TreeMap;
-
 import vm_java.code.VMException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;

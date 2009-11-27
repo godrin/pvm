@@ -16,7 +16,6 @@ public class ASTClearVar extends AST implements ASTStatementInterface {
 		var=v;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new CodeClearVar(context,source,context.intern(var.name));

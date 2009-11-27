@@ -3,14 +3,13 @@ package vm_java.types.foundation;
 import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.basic.VMKlassBuiltin;
-import vm_java.types.buildins.BuildInKlass;
+import vm_java.types.basic.VMBuildinObjectBase;
 
 /**
  * 
  * @author davidkamphausen
  */
-public class VMString extends VMKlassBuiltin {
+public class VMString extends VMBuildinObjectBase {
 	private java.lang.String mContent = "";
 	private final int OVERHEAD = 8;
 

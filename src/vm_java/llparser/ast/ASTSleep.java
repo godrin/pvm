@@ -16,7 +16,7 @@ public class ASTSleep extends AST implements ASTStatementInterface {
 		time = v;
 	}
 
-	@Override
+
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new CodeSleep(context, source, context.intern(time.name));

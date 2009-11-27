@@ -13,8 +13,7 @@ import vm_java.internal.VMLog;
 
 public class LineLexer2 {
 	enum SYMBOLS {
-		BEGIN_WITHSCOPE,
-		BEGIN, END, TYPE, PARAMETER, LRETURN, FRETURN, VAR, EQUAL, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, BRACKETS_OPEN, BRACKETS_CLOSE, PARENT_OPEN, PARENT_CLOSE, COMMA, EOF, COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE, DOUBLE, INCLUDE, AT
+		BEGIN_WITHSCOPE, BEGIN, END, TYPE, PARAMETER, LRETURN, FRETURN, VAR, EQUAL, NILQ, ASSIGN, DOT, WHITESPACE, SYMBOL, STRING, ERROR, NEWLINE, INTEGER, BRACKETS_OPEN, BRACKETS_CLOSE, PARENT_OPEN, PARENT_CLOSE, COMMA, EOF, COMMENT, BRACES_OPEN, BRACES_CLOSE, CLEAR, SLEEP, IF, THEN, WHILE, DO, UNLESS, BOOLEAN, RESCUE, DOUBLE, INCLUDE, AT, TRY, ARROW, GLOBAL, ERETURN
 	};
 
 	public static class Lex {
@@ -60,11 +59,15 @@ public class LineLexer2 {
 	private void init() {
 		add("(true|false)", SYMBOLS.BOOLEAN);
 		add("if", SYMBOLS.IF);
-		add("include",SYMBOLS.INCLUDE);
-		add("rescue", SYMBOLS.RESCUE);
+		add("include", SYMBOLS.INCLUDE);
 		add("then", SYMBOLS.THEN);
+		add("try", SYMBOLS.TRY);
+		add("nil?",SYMBOLS.NILQ);
+		add("rescue", SYMBOLS.RESCUE);
+		add("=>", SYMBOLS.ARROW);
 		add("while", SYMBOLS.WHILE);
-		add("@",SYMBOLS.AT);
+		add("@", SYMBOLS.AT);
+		add("\\$", SYMBOLS.GLOBAL);
 		add("do", SYMBOLS.DO);
 		add("unless", SYMBOLS.UNLESS);
 		add("clear", SYMBOLS.CLEAR);
@@ -72,6 +75,7 @@ public class LineLexer2 {
 		add("begin", SYMBOLS.BEGIN);
 		add("end", SYMBOLS.END);
 		add("sleep", SYMBOLS.SLEEP);
+		add("ereturn", SYMBOLS.ERETURN);
 		add("lreturn", SYMBOLS.LRETURN);
 		add("freturn", SYMBOLS.FRETURN);
 		add("parameter\\[[0-9]*\\]", SYMBOLS.PARAMETER);
@@ -162,7 +166,8 @@ public class LineLexer2 {
 	}
 
 	public static void main(String[] args) throws IOException {
-		VMLog.setLogLevels(new VMLog.Level[]{VMLog.Level.DEBUG,VMLog.Level.ERROR,VMLog.Level.WARN});
+		VMLog.setLogLevels(new VMLog.Level[] { VMLog.Level.DEBUG,
+				VMLog.Level.ERROR, VMLog.Level.WARN });
 		LineLexer2 ll = new LineLexer2();
 		// output(ll.lex("begin"));
 

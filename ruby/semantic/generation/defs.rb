@@ -15,15 +15,16 @@ class DefsCode
   end
 
   def code
+    
+    
     @args.before+
     #s("#{@t}=begin(#{@args.value})")+
-    bgnws(@t,@args.value,@body.code,@body.value)+
+    bgnws(@t,[@args.value],@body.code,@body.value.to_s)+
     @args.after+
     s("#{@klass.value}@#{@name}=#{@t}")+
     s("clear #{@t}")
-
   end
-  
+
   def value
     @klass.value
   end

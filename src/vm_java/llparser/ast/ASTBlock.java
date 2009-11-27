@@ -38,7 +38,6 @@ public class ASTBlock extends AST implements ASTRightValue {
 		return cb;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext pContext, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		CodeBlock cb = new CodeBlock(pContext, source);

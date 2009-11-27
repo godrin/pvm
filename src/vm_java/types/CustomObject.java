@@ -26,22 +26,18 @@ public class CustomObject implements MemberContainer {
 		return this;
 	}
 
-	@Override
 	public BasicObject getInstance(ObjectName objectName) {
 		return mObjects.get(objectName);
 	}
 
-	@Override
 	public void putInstance(ObjectName memberName, BasicObject r) {
 		mObjects.put(memberName,r);
 	}
 
-	@Override
 	public BasicObject getStatic(ObjectName objectName) {
 		return mClass.getInstance(objectName);
 	}
 
-	@Override
 	public void putStatic(ObjectName memberName, BasicObject r)
 			throws VMException {
 		mClass.putInstance(memberName, r);

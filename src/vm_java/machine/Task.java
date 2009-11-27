@@ -5,9 +5,11 @@ import java.util.List;
 
 import vm_java.VM;
 import vm_java.code.VMException;
+import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 public abstract class Task {
@@ -16,6 +18,9 @@ public abstract class Task {
 	private Task parent;
 	private long lastExecution;
 	private long waitAtleastTil;
+
+	private Type returned = null;
+	private BasicObject returnContent = null;
 
 	public Task(VMScope pScope) {
 		scope = pScope;
@@ -79,6 +84,10 @@ public abstract class Task {
 					"children.size is not null while finishing!");
 		}
 		if (parent != null) {
+			if (getReturnType() != null) {
+				parent.setReturn(getReturnType(), getReturnValue());
+			}
+
 			parent.removeChild(this);
 			parent = null;
 		}
@@ -112,4 +121,19 @@ public abstract class Task {
 			VMLog.debug(t);
 		}
 	}
+	
+	
+	public void setReturn(Type returnType, BasicObject pReturnContent) {
+		returned = returnType;
+		returnContent = pReturnContent;
+	}
+	public Type getReturnType() {
+		return returned;
+	}
+
+	public BasicObject getReturnValue() {
+		return returnContent;
+	}
+
+
 }

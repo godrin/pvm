@@ -30,6 +30,7 @@ import vm_java.llparser.ast.ASTRightValue;
 import vm_java.llparser.ast.ASTSleep;
 import vm_java.llparser.ast.ASTStatementInterface;
 import vm_java.llparser.ast.ASTString;
+import vm_java.llparser.ast.ASTTry;
 import vm_java.llparser.ast.ASTVar;
 import vm_java.llparser.ast.ASTWhile;
 
@@ -56,7 +57,7 @@ public class LLParser2 {
 	}
 
 	ASTProgram parse(String content) throws ParseError {
-		VMLog.debug(content);
+		VMLog.debug(Integer.toString(lineNo) + ": " + content);
 		for (String line : content.split("\n")) {
 			lines.add(line);
 		}
@@ -135,21 +136,27 @@ public class LLParser2 {
 				s = parseMemberAccess(v);
 			} else if (t == SYMBOLS.AT) {
 				s = parseStaticMemberAccess(v);
+			} else if (t == SYMBOLS.GLOBAL) {
+				s = parseGlobalAccess(v);
 			} else if (t == SYMBOLS.PARENT_OPEN) {
 				s = parseFunctionCall(v);
 			} else {
 				parseError();
 			}
-		} else if (token() == SYMBOLS.LRETURN || token() == SYMBOLS.FRETURN) {
+		} else if (token() == SYMBOLS.LRETURN || token() == SYMBOLS.FRETURN
+				|| token() == SYMBOLS.ERETURN) {
+			SYMBOLS sym = token();
 			fetchToken();
 			ASTVar v = parseVar();
-			fetchToken();
 			ASTReturn.Type t;
-			if (token() == SYMBOLS.LRETURN) {
+			if (sym == SYMBOLS.ERETURN) {
+				t = ASTReturn.Type.EXCEPTION;
+			} else if (sym == SYMBOLS.LRETURN) {
 				t = ASTReturn.Type.LOCAL;
 			} else {
 				t = ASTReturn.Type.FAR;
 			}
+			fetchToken();
 
 			s = new ASTReturn(source(), v, t);
 		} else if (token() == SYMBOLS.NEWLINE) {
@@ -175,16 +182,20 @@ public class LLParser2 {
 			s = parseIf();
 		} else if (token() == SYMBOLS.WHILE) {
 			s = parseWhile();
-		} else if (token() == SYMBOLS.RESCUE) {
-			fetchToken();
-			ASTVar rescueFunction = parseVar();
-			s = new ASTRescue(source(), rescueFunction);
-			fetchToken();
+			/*
+			 * }
+			 * 
+			 * else if (token() == SYMBOLS.RESCUE) { fetchToken(); ASTVar
+			 * rescueFunction = parseVar(); s = new ASTRescue(source(),
+			 * rescueFunction); fetchToken();
+			 */
 		} else if (token() == SYMBOLS.INCLUDE) {
 			fetchToken();
 			ASTVar moduleName = parseVar();
 			s = new ASTInclude(source(), moduleName);
 			fetchToken();
+		} else if (token() == SYMBOLS.TRY) {
+			s = parseTry();
 		} else {
 
 			parseError();
@@ -199,6 +210,59 @@ public class LLParser2 {
 		else
 			fetchToken();
 		return s;
+	}
+
+	private ASTStatementInterface parseTry() throws ParseError {
+		fetchToken();
+		if (token() == SYMBOLS.NEWLINE) {
+			ASTBlock block = parseBlock();
+			List<ASTRescue> rescues = new ArrayList<ASTRescue>();
+
+			eatNewlines();
+			if (token() != SYMBOLS.RESCUE) {
+				parseError();
+			}
+			while (token() == SYMBOLS.RESCUE) {
+				rescues.add(parseRescue());
+			}
+
+			return new ASTTry(source(), block, rescues);
+		} else {
+			parseError();
+		}
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private ASTRescue parseRescue() throws ParseError {
+		List<ASTVar> types = new ArrayList<ASTVar>();
+		ASTVar varName = null;
+
+		if (token() != SYMBOLS.RESCUE) {
+			parseError();
+		}
+		fetchToken();
+
+		while (token() == SYMBOLS.VAR) {
+			types.add(parseVar());
+			fetchToken();
+			if (token() == SYMBOLS.COMMA) {
+				fetchToken();
+			}
+		}
+		if (token() == SYMBOLS.ARROW) {
+			fetchToken();
+			varName = parseVar();
+		}
+		// eatNewlines();
+		ASTBlock block = parseBlock();
+		return new ASTRescue(source(), block, types, varName);
+	}
+
+	private void eatNewlines() throws ParseError {
+		while (token() == SYMBOLS.NEWLINE) {
+			fetchToken();
+		}
 	}
 
 	private ASTStatementInterface parseWhile() throws ParseError {
@@ -236,6 +300,11 @@ public class LLParser2 {
 
 	private ASTStatementInterface parseStaticMemberAccess(ASTVar v)
 			throws ParseError {
+		return parseMemberAccess(v, true);
+	}
+
+	private ASTStatementInterface parseGlobalAccess(ASTVar v) throws ParseError {
+		// FIXME
 		return parseMemberAccess(v, true);
 	}
 
@@ -464,7 +533,7 @@ public class LLParser2 {
 	private ASTBlock parseBlock() throws ParseError {
 		fetchToken();
 		ASTBlock block = new ASTBlock(source());
-		while (token() != SYMBOLS.END) {
+		while (token() != SYMBOLS.END && token() != SYMBOLS.RESCUE) {
 			/*
 			 * } if (t == SYMBOLS.END) { parseError(); } else {
 			 */
@@ -473,8 +542,10 @@ public class LLParser2 {
 				block.add(statement);
 			}
 		}
-		if (fetchToken() != SYMBOLS.NEWLINE)
-			parseError();
+		if (token() == SYMBOLS.END) {
+			if (fetchToken() != SYMBOLS.NEWLINE)
+				parseError();
+		}
 
 		return block;
 		// TODO Auto-generated method stub

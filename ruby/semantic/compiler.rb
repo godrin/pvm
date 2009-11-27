@@ -50,7 +50,9 @@ class Compiler
     return nil if args.nil?
     parent=self
     parent=info.parent if info
-    info=Base::Info.new(parent,filename,args.line,self)
+    rubyCode=nil
+    rubyCode=info.rubyCode if info
+    info=Base::Info.new(parent,filename,args.line,self,rubyCode)
     parent||=self
     klassName=args[0].to_s.upcaseFirstLetter
 
@@ -73,7 +75,8 @@ end
 #pp __FILE__
 
 if $0 == __FILE__
-
+  def pp(*x)
+  end
 
   @processor = RubyParser.new
   c=STDIN.read
@@ -85,4 +88,5 @@ if $0 == __FILE__
 
   puts "include VMIO"
   puts result.code
+else
 end

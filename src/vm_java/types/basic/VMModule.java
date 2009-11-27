@@ -30,7 +30,7 @@ import vm_java.types.interfaces.MemberProvider;
  * 
  * @author davidkamphausen
  */
-public class VMModule extends BasicObject implements MemberContainer,
+public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		FunctionProvider, MemberProvider {
 
 	private List<VMModule> mMixins = new ArrayList<VMModule>();

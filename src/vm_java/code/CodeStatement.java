@@ -27,7 +27,7 @@ public abstract class CodeStatement extends SourceBased {
 			throw new VMException(this, "Var is null!");
 	}
 
-	public abstract void execute(VMScope scope, Task parentTask)
+	public abstract void execute(VMScope scope, Task task)
 			throws VMException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound;
 

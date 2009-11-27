@@ -26,7 +26,6 @@ public class ASTFunction extends AST implements ASTRightValue {
 		mBlock = parsedBlock;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		List<ObjectName> ps = new ArrayList<ObjectName>();

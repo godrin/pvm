@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'pp'
 require 'compiler.rb'
 
@@ -20,6 +21,9 @@ processor = RubyParser.new
 compiler=Compiler.new
 
 p=File.expand_path('../checks/*.rb',__FILE__)
+
+#p="/usr/lib/ruby/1.8/racc/parser.rb"
+
 Dir[p].each{|f|
   Base.clear
   file=loadFile(f)

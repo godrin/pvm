@@ -24,7 +24,6 @@ public class ASTAssignMember extends AST implements ASTStatementInterface {
 		leftMember = pleftmember;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		if (leftMember != null) {

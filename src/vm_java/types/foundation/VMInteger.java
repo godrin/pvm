@@ -3,10 +3,9 @@ package vm_java.types.foundation;
 import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.basic.VMKlassBuiltin;
-import vm_java.types.buildins.BuildInKlass;
+import vm_java.types.basic.VMBuildinObjectBase;
 
-public class VMInteger extends VMKlassBuiltin{
+public class VMInteger extends VMBuildinObjectBase{
 	Integer i = null;
 
 	public VMInteger(VMContext context) throws VMExceptionOutOfMemory {
@@ -52,5 +51,17 @@ public class VMInteger extends VMKlassBuiltin{
 		Code c = new Code();
 		c.add(i.toString());
 		return c;
+	}
+
+	@Override
+	public String inlineCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String inspect() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

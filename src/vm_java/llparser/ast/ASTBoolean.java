@@ -37,7 +37,6 @@ public class ASTBoolean extends AST implements ASTRightValue {
 	 * vm_java.llparser.ast.ASTRightValue#instantiate(vm_java.context.VMContext,
 	 * vm_java.llparser.ast.ASTVar)
 	 */
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new LocalAssignment(context, source, context.intern(left.name),

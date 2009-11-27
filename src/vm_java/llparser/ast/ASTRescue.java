@@ -3,13 +3,17 @@
  */
 package vm_java.llparser.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.CodeStatement;
-import vm_java.code.LocalAssignment;
+import vm_java.code.CodeBlock;
+import vm_java.code.CodeRescue;
 import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.types.basic.ObjectName;
 
 /**
  * @author davidkamphausen
@@ -17,15 +21,21 @@ import vm_java.context.VMExceptionOutOfMemory;
  */
 public class ASTRescue extends AST implements ASTStatementInterface {
 
-	ASTVar resFunction;
+	ASTBlock block;
+	List<ASTVar> rescueTypes;
+	ASTVar rescueVar;
 
 	/**
 	 * @param pSource
+	 * @param types
 	 * @param rescueFunction
 	 */
-	public ASTRescue(SourceInfo pSource, ASTVar rescueFunction) {
+	public ASTRescue(SourceInfo pSource, ASTBlock pblock, List<ASTVar> types,
+			ASTVar prescueType) {
 		super(pSource);
-		resFunction = rescueFunction;
+		block = pblock;
+		rescueTypes = types;
+		rescueVar = prescueType;
 	}
 
 	/*
@@ -35,11 +45,21 @@ public class ASTRescue extends AST implements ASTStatementInterface {
 	 * vm_java.llparser.ast.ASTStatementInterface#instantiate(vm_java.context
 	 * .VMContext)
 	 */
-	@Override
-	public CodeStatement instantiate(VMContext context)
+	public CodeRescue instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		return new LocalAssignment(context, source, context.internal("rescue"),
-				context.intern(resFunction.name));
+		CodeBlock b = block.instantiate(context);
+		List<ObjectName> types = new ArrayList<ObjectName>();
+		for (ASTVar v : rescueTypes) {
+			vm_java.types.basic.ObjectName on = v.code(context);
+			types.add(on);
+		}
+		if (rescueVar != null) {
+			return new CodeRescue(context, source, types, rescueVar
+					.code(context), block.instantiate(context));
+		} else {
+			return new CodeRescue(context, source, types, null, block
+					.instantiate(context));
+		}
 	}
 
 }

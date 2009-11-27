@@ -21,19 +21,23 @@ class MasgnCode
     end
     
     @names.elements.each{|e|
-      assert{[IasgnCode,SplatCode].member?(e.class)}
+      pp "KLASS:",e.class
+      assert{[LasgnCode,IasgnCode,SplatCode].member?(e.class)}
     }
 
     i=0
     @names.elements.each{|n|
       if n.is_a?(IasgnCode)
-        pp @rvals[i]
         n.value=@rvals[i]
       end
       i+=1
     }
 
     @names.elements.map{|iasgn|iasgn.code}.inject([]){|a,b|a+b}
+  end
+  
+  def as_parameters
+    @names.value
   end
 
   def value

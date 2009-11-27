@@ -7,10 +7,12 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunction;
 import vm_java.runtime.RuntimeFunctionHelper;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.VMExceptions;
 import vm_java.types.basic.ObjectName;
 
 public class CodeMethodCall extends CodeStatement {
@@ -33,7 +35,7 @@ public class CodeMethodCall extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task pTask) throws VMException,
 			VMExceptionOutOfMemory {
 		try {
 
@@ -63,9 +65,10 @@ public class CodeMethodCall extends CodeStatement {
 
 			List<BasicObject> bos = RuntimeFunctionHelper.createArguments(
 					scope, parameters);
-			f.run(scope, returnName, bos, parentTask);
+			f.run(scope, returnName, bos, pTask);
 		} catch (VMExceptionFunctionNotFound e) {
-			scope.setException(e.vm(getContext()));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(
+					getContext(), e));
 		}
 
 	}

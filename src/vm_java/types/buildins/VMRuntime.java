@@ -16,14 +16,14 @@ import vm_java.context.VMScope;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
 import vm_java.machine.Task;
-import vm_java.types.basic.VMModuleBuiltin;
+import vm_java.types.basic.VMBuildinObjectBase;
 import vm_java.types.foundation.VMString;
 
 /**
  * @author davidkamphausen
  * 
  */
-public class VMRuntime extends VMModuleBuiltin {
+public class VMRuntime extends VMBuildinObjectBase {
 
 	/**
 	 * @param context

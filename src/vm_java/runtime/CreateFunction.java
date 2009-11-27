@@ -9,10 +9,11 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.VMExceptions;
 import vm_java.types.basic.ObjectName;
-import vm_java.types.basic.VMCException;
 
 public class CreateFunction implements RuntimeFunction {
 	Class<? extends BasicObject> klass;
@@ -21,9 +22,8 @@ public class CreateFunction implements RuntimeFunction {
 		klass = _klass;
 	}
 
-	@Override
 	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters, Task parentTask) throws VMException,
+			List<BasicObject> parameters, Task pTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		Constructor<? extends BasicObject> c;
 		VMContext context=scope.getContext();
@@ -33,17 +33,17 @@ public class CreateFunction implements RuntimeFunction {
 			if (returnName != null)
 				scope.put(returnName, bo);
 		} catch (SecurityException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		} catch (NoSuchMethodException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		} catch (IllegalArgumentException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		} catch (InstantiationException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		} catch (IllegalAccessException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		} catch (InvocationTargetException e) {
-			scope.setException(new VMCException(context,e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(context, e));
 		}
 
 	}

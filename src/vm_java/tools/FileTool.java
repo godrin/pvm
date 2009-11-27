@@ -3,7 +3,6 @@ package vm_java.tools;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public final class FileTool {
@@ -22,7 +21,7 @@ public final class FileTool {
 	}
 
 	public static String loadFileString(File path) throws IOException {
-		StringBuilder b=new StringBuilder();
+		StringBuilder b = new StringBuilder();
 		FileInputStream fis = new FileInputStream(path);
 		byte[] buffer = new byte[1024];
 		int read;

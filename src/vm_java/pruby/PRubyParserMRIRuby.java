@@ -10,7 +10,6 @@ import vm_java.internal.VMLog.Level;
 
 public class PRubyParserMRIRuby implements PRubyParser {
 
-	@Override
 	public String parse(PRubySourceDef source) {
 		String[] array = new String[] { "/usr/bin/ruby",
 				PRubyParserJRuby.PARSER_RB, source.getPath()

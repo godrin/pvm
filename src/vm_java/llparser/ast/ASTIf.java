@@ -20,7 +20,6 @@ public class ASTIf extends AST implements ASTStatementInterface {
 		wantedValue=pWantedValue;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new CodeIf(context, source,

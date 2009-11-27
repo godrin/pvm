@@ -7,6 +7,8 @@ package vm_java.context;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import vm_java.VM;
 import vm_java.code.CodeBlock;
@@ -33,6 +35,7 @@ public class VMContext {
 	private float mCpuTime;
 	long lastId = 0;
 	private List<SourcePath> sourcePaths = new ArrayList<SourcePath>();
+	private Map<String,BasicObject> buildinTypes=new TreeMap<String,BasicObject>();
 
 	public VMContext(VM pVM) {
 		mVM = pVM;
@@ -54,6 +57,18 @@ public class VMContext {
 		Program p = new Program(this, pBlock);
 		add(p);
 		return p;
+	}
+	
+	public void setBuildinType(String buildInKlassName,BasicObject klass) {
+		buildinTypes.put(buildInKlassName,klass);
+	}
+	public BasicObject getBuildinType(String buildInKlassName) {
+		System.out.println(buildInKlassName);
+		for(String k:buildinTypes.keySet()) {
+			System.out.println("KEYS:"+k);
+			
+		}
+		return buildinTypes.get(buildInKlassName);
 	}
 
 	synchronized void add(BasicObject pObject) throws VMExceptionOutOfMemory {

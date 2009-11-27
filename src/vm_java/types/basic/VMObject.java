@@ -54,7 +54,6 @@ public class VMObject extends BasicObject implements FunctionProvider,
 		return "[VMObject]";
 	}
 
-	@Override
 	public void putInstance(ObjectName memberName, BasicObject r)
 			throws VMException {
 		data.put(memberName, r);
@@ -78,12 +77,10 @@ public class VMObject extends BasicObject implements FunctionProvider,
 		return toCode().toString();
 	}
 
-	@Override
 	public BasicObject getInstance(ObjectName objectName) {
 		return data.get(objectName);
 	}
 
-	@Override
 	public void putStatic(ObjectName memberName, BasicObject r)
 			throws VMException {
 		mKlass.putInstance(memberName, r);

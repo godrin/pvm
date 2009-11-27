@@ -2,7 +2,6 @@ package vm_java.pruby;
 
 public class PRubyParserJRuby implements PRubyParser {
 
-	@Override
 	public String parse(PRubySourceDef source) {
 		// TODO Auto-generated method stub
 		return null;

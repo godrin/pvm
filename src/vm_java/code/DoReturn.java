@@ -21,7 +21,7 @@ public class DoReturn extends CodeStatement {
 
 	@Override
 	public void execute(VMScope scope, Task parentTask) throws VMException {
-		scope.setReturned();
+		parentTask.setReturn(type, scope.get(name));
 	}
 
 	@Override
@@ -32,12 +32,14 @@ public class DoReturn extends CodeStatement {
 	@Override
 	public Code toCode() {
 		Code c = new Code();
+		String cmd = "lreturn";
 		if (type == Type.FAR) {
-			c.add("freturn " + name.inlineCode());
-		} else {
-			c.add("lreturn " + name.inlineCode());
-
+			cmd = "freturn";
+		} else if (type == Type.EXCEPTION) {
+			cmd = "ereturn";
 		}
+
+		c.add(cmd + " " + name.inlineCode());
 		return c;
 	}
 

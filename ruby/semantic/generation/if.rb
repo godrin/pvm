@@ -13,11 +13,6 @@ class IfCode
     end
 
     def before
-      unless @statement.value=~/tmp.*/
-        puts @statement
-        
-      end
-      #exit
       c=@statement.before+
       @statement.code+
       @statement.after
@@ -57,7 +52,7 @@ class IfCode
     #pp @else
     #exit
 
-    before=bcond.before
+    before=bcond.before+bcond.code
     before+=bthen.before if bthen
     before+=belse.before if belse
 

@@ -19,7 +19,6 @@ public class ASTDouble extends AST implements ASTRightValue {
 		doub = Double.parseDouble(mResult.getString());
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new LocalAssignment(context, source, context.intern(left.name),

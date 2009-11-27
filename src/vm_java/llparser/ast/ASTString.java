@@ -15,7 +15,6 @@ public class ASTString extends AST implements ASTRightValue{
 		super(source);
 		s=str;
 	}
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new LocalAssignment(context,source,

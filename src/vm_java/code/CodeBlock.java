@@ -7,13 +7,11 @@ package vm_java.code;
 import java.util.ArrayList;
 import java.util.List;
 
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
-import vm_java.types.basic.ObjectName;
 
 /**
  * 
@@ -47,27 +45,6 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 		@Override
 		public void run() throws VMException, VMExceptionOutOfMemory,
 				VMExceptionFunctionNotFound {
-			if (getScope().exception()) {
-
-				ObjectName rescueName = getScope().getContext().internal(
-						"rescue");
-				BasicObject rescue = getScope().get(rescueName);
-				if (rescue != null) {
-					
-					getScope().setException(null);
-					if (rescue instanceof CodeBlock) {
-						Task paTask = getParent();
-
-						getVM().addJob(
-								new Execution((CodeBlock) rescue, getScope(),
-										paTask));
-					}
-				}
-
-				finish();
-				return;
-			}
-
 			if (finished()) {
 				finish();
 				return;
@@ -85,7 +62,7 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 		}
 
 		private boolean finished() {
-			return getScope().finished() || !hasNext();
+			return getReturnType() != null;
 		}
 
 		@Override
@@ -135,8 +112,8 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 	}
 
 	public Code toCode() {
-		Code c=new Code();
-		for(CodeStatement cs:statements) {
+		Code c = new Code();
+		for (CodeStatement cs : statements) {
 			c.add(cs.toCode());
 		}
 		return c;
@@ -144,6 +121,6 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 
 	@Override
 	public String inlineCode() {
-		return "begin\n"+toCode().indent().toString()+"end\n";
+		return "begin\n" + toCode().indent().toString() + "end\n";
 	}
 }

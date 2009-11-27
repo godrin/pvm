@@ -14,7 +14,6 @@ public class SinglePathSourceSource implements SourceSource {
 		dir = pdir;
 	}
 
-	@Override
 	public byte[] getProgram(String path) {
 		if (path.matches("^[a-zA-Z0-9_\\.]*$")) {
 			File f = new File(dir.getAbsolutePath() + File.separator + path);
@@ -29,7 +28,6 @@ public class SinglePathSourceSource implements SourceSource {
 		return null;
 	}
 
-	@Override
 	public String getProgramAsString(String path) {
 		if (path.matches("^[a-zA-Z0-9_\\.]*$")) {
 			File f = new File(dir.getAbsolutePath() + File.separator + path);

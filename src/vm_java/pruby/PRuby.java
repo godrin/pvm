@@ -1,5 +1,6 @@
 package vm_java.pruby;
 
+import java.io.File;
 import java.io.IOException;
 
 import vm_java.VM;
@@ -10,6 +11,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
 
@@ -38,6 +40,29 @@ public class PRuby {
 		VMLog.debug(prg.toCode());
 		VMLog.debug("CODE!");
 		vm.run();
+	}
+	
+	public static void main(String[] args) throws ParseError, IOException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			InterruptedException {
+		
+		// FIXME: parse args correctly
+		runFile(args[0]);
+		
+	}
+
+	private static void runFile(String filename) throws ParseError, IOException, VMExceptionOutOfMemory, BlockIsFinalException, VMException, InterruptedException {
+		File f=new File(filename);
+		File dir=f.getParentFile();
+		String file=f.getName();
+		
+		SinglePathSourceSource source = new SinglePathSourceSource(dir);
+		LLParser2 vmParser = new LLParser2();
+		VM vm = new VM(vmParser);
+		PRubyParser rubyParser = new PRubyParserMRIRuby();
+		PRuby pruby = new PRuby(vm, rubyParser);
+		pruby.run(new PRubySourceDef(file, source));
+		vm.join();
 	}
 	
 

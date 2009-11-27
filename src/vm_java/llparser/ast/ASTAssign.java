@@ -19,7 +19,6 @@ public class ASTAssign extends AST implements ASTStatementInterface {
 		rValue = pRValue;
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		VMLog.debug(rValue);

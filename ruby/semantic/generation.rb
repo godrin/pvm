@@ -34,10 +34,13 @@ class Base
 
   def bgn(left,parameters,body,result,scope=false)
     if result.is_a?(String)
-      assert{result=~/[a-z].*/ || result=="nil"}
+      assert{result=~/[A-Za-z].*/ || result=="nil"}
     else
-      pp result
-      raise 1
+      t=tmpVar
+      body+=s("#{t}=#{result}")
+      result=t
+      #pp "RESULT:",result
+      #raise 1
     end
     #STDERR.puts caller.inspect unless result.is_a?(String)
     beg="begin"

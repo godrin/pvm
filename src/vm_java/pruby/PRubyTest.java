@@ -26,9 +26,15 @@ public class PRubyTest extends TestCase {
 			InterruptedException {
 		String dir = "ruby/semantic/checks";
 
-		for (String file : new File(dir).list()) {
-			if (file.matches(".*\\.rb")) {
-				test(dir, file);
+		if (true) {
+			String file = "exception_simple.rb";
+			test(dir, file);
+		} else {
+
+			for (String file : new File(dir).list()) {
+				if (file.matches(".*\\.rb")) {
+					test(dir, file);
+				}
 			}
 		}
 

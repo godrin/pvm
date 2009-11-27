@@ -34,7 +34,6 @@ public class Program extends BasicObject implements Runnable {
 		return mBlock;
 	}
 
-	@Override
 	public void go(VMScope scope,Task pParentTask) throws VMException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub

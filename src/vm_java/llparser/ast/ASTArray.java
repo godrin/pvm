@@ -23,7 +23,6 @@ public class ASTArray extends AST implements ASTRightValue {
 		mArray.add(v);
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		CodeArray ca = new CodeArray(context, source, context.intern(left.name));

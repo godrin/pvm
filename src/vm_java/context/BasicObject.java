@@ -69,7 +69,6 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 
 	public abstract String inspect();
 
-	@Override
 	public int compareTo(BasicObject o) {
 		return mid.compareTo(o.mid);
 	}
@@ -82,4 +81,8 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 		return toCode().toString().replace("\\n","");
 	}
 */
+
+	public BasicObject getKlass() {
+		return null;
+	}
 }

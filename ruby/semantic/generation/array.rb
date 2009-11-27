@@ -2,9 +2,11 @@ class ArrayCode
   def init
     @tmps=@elements.map{|e|tmpVar}
   end
+
   def elements
     @elements
   end
+
   def before
     (@elements.map{|e|e.before}+
     (0...@elements.length).to_a.map{|i|s(@tmps[i]+"="+@elements[i].value.to_s)}).inject([]){|a,b|a+b}
@@ -17,20 +19,20 @@ class ArrayCode
   def code
     []
   end
+
   def value
     "["+@tmps.map{|e|e}.join(",")+"]"
   end
-  
-  def each
-    pp caller
-    exit
-  end
-  
+
   def [](i)
-    @elements[i].value
+    if i.is_a?(Range)
+      @elements[i].map{|e|e.value}
+    else
+      @elements[i].value
+    end
     #raise :FIXME
   end
-  
+
   def size
     @elements.length
   end

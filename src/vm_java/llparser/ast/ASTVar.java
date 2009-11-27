@@ -22,7 +22,6 @@ public class ASTVar extends AST implements ASTRightValue {
 		return context.intern(name);
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new LocalAssignment(context,source,

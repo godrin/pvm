@@ -38,7 +38,6 @@ public class ASTWhile extends AST implements ASTStatementInterface {
 	 * vm_java.llparser.ast.ASTStatementInterface#instantiate(vm_java.context
 	 * .VMContext)
 	 */
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new CodeWhile(context, source, context.intern(condition.name),

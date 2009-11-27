@@ -8,7 +8,6 @@ import vm_java.code.CodeMethodCall;
 import vm_java.code.CodeStatement;
 import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.llparser.LLParser2.ParseError;
@@ -34,7 +33,6 @@ public class ASTMethodCall extends AST implements ASTStatementInterface,
 			throw new ParseError();
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context, ASTVar left)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		List<ObjectName> ps = new ArrayList<ObjectName>();
@@ -49,7 +47,6 @@ public class ASTMethodCall extends AST implements ASTStatementInterface,
 				.intern(var), context.intern(method), ps, mstatic);
 	}
 
-	@Override
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return instantiate(context, null);

@@ -21,4 +21,8 @@ class LasgnCode
   def value
     @name.to_s
   end
+  
+  def as_parameters
+    @name.to_s
+  end
 end

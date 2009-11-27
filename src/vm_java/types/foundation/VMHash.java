@@ -7,10 +7,9 @@ import vm_java.code.Code;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
-import vm_java.types.basic.VMKlassBuiltin;
-import vm_java.types.buildins.BuildInKlass;
+import vm_java.types.basic.VMBuildinObjectBase;
 
-public class VMHash extends VMKlassBuiltin {
+public class VMHash extends VMBuildinObjectBase {
 
 	Map<BasicObject, BasicObject> map;
 

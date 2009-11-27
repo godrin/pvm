@@ -6,7 +6,7 @@ class DefinedCode
 
   def before
     @what.before+
-    s("#{@val}=#{@what.value}.nil?")+
+    s("#{@val}=nil? #{@what.value}")+
     @what.after
   end
 

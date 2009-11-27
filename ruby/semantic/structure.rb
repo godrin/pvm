@@ -1,28 +1,34 @@
 class Base
-
-  Info=Struct.new(:parent,:filename,:line,:compiler)
-
+  Info=Struct.new(:parent,:filename,:line,:compiler,:rubyCode)
   def initialize(info)
     @info=info
     assert{info.is_a?(Info)}
   end
-  
+
   def compiler
     @info.compiler
   end
+
   def parent
     @info.parent
   end
+
   def filename
     @info.filename
   end
+
   def line
     @info.line
   end
+  def rubyCode
+    @info.rubyCode
+  end
 
   def compile(what)
+    assert{@info}
     info=@info.dup
     info.parent=self
+    info.rubyCode=what
     compiler.compile(info,what,filename)
   end
 end
@@ -230,7 +236,7 @@ class ResbodyCode<Base
     @types=compile(types)
     assert{@types.is_a?(ArrayCode)}
     @body=compile(body)
-    assert{@body.nil? or @body.is_a?(BlockCode)}
+    #assert{@body.nil? or @body.is_a?(BlockCode)}
   end
 end
 
@@ -277,21 +283,19 @@ class LasgnCode<Base
   end
 end
 
-
 # @args is set, when decompressing
 class SplatCode<Base
   def initialize(c,args=nil)
+    super(c)
     @args=args
   end
 end
-
-
 
 class GasgnCode<Base
   def initialize(c,name,value)
     super(c)
     @name=name
-    @value=compile(value) 
+    @value=compile(value)
   end
 end
 
@@ -309,11 +313,12 @@ end
 
 # FIXME: dont know
 class IterCode<Base
-  def initialize(c,collection,iterator,block)
+  def initialize(c,function,parameters,block)
     super(c)
-    @collection=compile(collection)
-    @iterator=compile(iterator)
+    @function=compile(function)
+    @parameters=compile(parameters)
     @block=compile(block)
+    assert{@function}
   end
 end
 
@@ -429,7 +434,6 @@ class Op_asgn_orCode<Base
     @right=compile(right)
   end
 end
-
 
 class YieldCode<Base
   def initialize(c,*args)

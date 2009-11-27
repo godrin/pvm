@@ -13,21 +13,24 @@ class IterCode
   # 3) push block as function-parameter
   
   def code
-    @collection.before+
-    s("#{@blockVar}=begin(#{@iterator.value})")+
+    params=""
+    params=@parameters.as_parameters if @parameters
+    
+    @function.before+
+    s("#{@blockVar}=begin(#{params})")+
     (@block.code+
     s("lreturn #{@block.value}")+
     @block.after).indent+
     s("end")+
-    @collection.code([@blockVar])+
+    @function.code([@blockVar])+
     s("clear #{@blockVar}")
   end
 
   def value
-    @collection.value
+    @function.value
   end
 
   def after
-    @collection.after
+    @function.after
   end
 end

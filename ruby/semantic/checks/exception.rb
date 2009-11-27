@@ -18,7 +18,7 @@ smoere=begin
   a
   j=2
 rescue Integer=>x
-rescue String=>e
+rescue String,Numeric=>e
   j=3
   if e=="MyException"
     j=4

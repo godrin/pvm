@@ -1,17 +1,16 @@
 package vm_java.types;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import vm_java.code.VMException;
-import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.types.basic.VMBuildinContextualModule;
+import vm_java.types.basic.VMBuildinObjectBase;
 import vm_java.types.basic.VMKlass;
 import vm_java.types.basic.VMKlassBuiltin;
 import vm_java.types.basic.VMModule;
@@ -117,7 +116,8 @@ public class Buildin {
 
 	}
 
-	public static void expose(VMScope scope, Class<? extends BasicObject> c)
+	public static void expose(VMScope scope,
+			Class<? extends VMBuildinObjectBase> c)
 			throws VMExceptionOutOfMemory, VMException {
 		if (c.getAnnotation(DontExpose.class) != null) {
 			throw new VMException(null, "Class " + c.toString()
@@ -129,6 +129,7 @@ public class Buildin {
 
 		VMKlassBuiltin k = new VMKlassBuiltin(context);
 		k.setName(name);
+		context.setBuildinType(c.getName(), k);
 		for (Method m : c.getMethods()) {
 
 			if (m.getAnnotation(DontExpose.class) != null)

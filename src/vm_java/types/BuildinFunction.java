@@ -11,10 +11,10 @@ import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
+import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunctionHelper;
 import vm_java.types.basic.ObjectName;
-import vm_java.types.basic.VMCException;
 
 /**
  * 
@@ -36,10 +36,10 @@ public class BuildinFunction extends Function {
 		return (method.getModifiers() & Modifier.STATIC) != 0;
 	}
 
-	public static BasicObject run(Task pTask, BasicObject self,
-			Method method, List<BasicObject> bos) throws VMExceptionOutOfMemory {
+	public static BasicObject run(Task pTask, BasicObject self, Method method,
+			List<BasicObject> bos) throws VMExceptionOutOfMemory {
 
-		VMScope scope=pTask.getScope();
+		VMScope scope = pTask.getScope();
 		Object[] args = RuntimeFunctionHelper.toJavaArgs(pTask, bos, method
 				.getParameterTypes());
 		Object result = null;
@@ -47,14 +47,16 @@ public class BuildinFunction extends Function {
 		try {
 			result = method.invoke(self, args);
 		} catch (IllegalArgumentException e) {
-
-			scope.setException(new VMCException(scope.getContext(), e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(scope
+					.getContext(), e));
 			return null;
 		} catch (IllegalAccessException e) {
-			scope.setException(new VMCException(scope.getContext(), e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(scope
+					.getContext(), e));
 			return null;
 		} catch (InvocationTargetException e) {
-			scope.setException(new VMCException(scope.getContext(), e));
+			pTask.setReturn(Type.EXCEPTION, VMExceptions.vmException(scope
+					.getContext(), e));
 			return null;
 		}
 		return BasicObject.convert(self.getContext(), result);
@@ -83,7 +85,7 @@ public class BuildinFunction extends Function {
 
 	@Override
 	public String inlineCode() {
-		return "<buildin function:"+method.getName()+">";
+		return "<buildin function:" + method.getName() + ">";
 	}
 
 }
