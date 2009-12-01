@@ -11,13 +11,18 @@ import java.util.Map.Entry;
 import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
+import vm_java.code.SourceBased.SourceInfo;
+import vm_java.pruby.Authorizations;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.ObjectName;
+import vm_java.types.basic.VMKlass;
 import vm_java.types.basic.VMModule;
 import vm_java.types.basic.VMObject;
+import vm_java.types.foundation.VMArray;
+import vm_java.types.foundation.VMString;
 
 /**
  * 
@@ -32,13 +37,14 @@ public class VMScope {
 
 	public final static String SELF = "nv_self";
 
-	public VMScope(VMContext pContext) throws VMExceptionOutOfMemory {
+	public VMScope(VMContext pContext, Authorizations authorizations)
+			throws VMExceptionOutOfMemory {
 		mContext = pContext;
 		selfModule = new VMModule(mContext);
 		selfModule.setName("root");
 
 		try {
-			Buildin.createBuildins(this);
+			Buildin.createBuildins(this, authorizations);
 		} catch (VMException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -163,11 +169,10 @@ public class VMScope {
 	public void clear(ObjectName name) {
 		mReferences.remove(name);
 	}
-/*
-	public boolean finished() {
-		return returned != null;
-	}
-*/
+
+	/*
+	 * public boolean finished() { return returned != null; }
+	 */
 
 	public String inspect() {
 		StringBuilder sb = new StringBuilder();
@@ -176,11 +181,29 @@ public class VMScope {
 			sb.append("  " + entry.getKey().inspect() + " => "
 					+ entry.getValue().inspect());
 		}
-		//sb.append("  returned:" + returned + "\n");
-		//sb.append("  returnContent:" + returnContent + "\n");
 		sb.append("]\n");
 
 		return sb.toString();
 	}
 
+	public BasicObject exception(String name, String comment,
+			SourceInfo sourceInfo) throws VMExceptionOutOfMemory, VMException {
+		ObjectName iName = getContext().intern(name);
+
+		BasicObject bo = get(iName);
+		VMKlass klass = null;
+		if (bo instanceof VMKlass)
+			klass = (VMKlass) bo;
+		if (klass == null) {
+			klass = new VMKlass(getContext());
+		}
+		put(iName, klass);
+		VMObject vmo = klass._new(getContext());
+		vmo.putInstance(getContext().intern("what"), new VMString(getContext(),
+				comment));
+		VMArray stacktrace = new VMArray(getContext());
+		stacktrace.add(new VMString(getContext(), sourceInfo.toString()));
+		vmo.putInstance(getContext().intern("where"), stacktrace);
+		return vmo;
+	}
 }

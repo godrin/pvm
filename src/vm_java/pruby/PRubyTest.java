@@ -56,13 +56,17 @@ public class PRubyTest extends TestCase {
 		VM vm = new VM(vmParser);
 		PRubyParser rubyParser = new PRubyParserMRIRuby();
 		PRuby pruby = new PRuby(vm, rubyParser);
-		pruby.run(new PRubySourceDef(file, source));
+		pruby.run(new PRubySourceDef(file, source), testAuthorizations());
 		vm.join();
 		String wan = getWantedOutput(source, file);
 		System.out.println("Content:" + VMIO.content());
 		assertEquals(wan, VMIO.content());
 		VMIO.clear();
 
+	}
+
+	private Authorizations testAuthorizations() {
+		return Authorizations.all();
 	}
 
 	private String getWantedOutput(SinglePathSourceSource source, String file) {

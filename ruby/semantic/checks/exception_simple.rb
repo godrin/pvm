@@ -1,5 +1,8 @@
-def a
+def b
   raise 1
+end
+def a
+  b
 end
 x=begin
   a
@@ -10,6 +13,7 @@ rescue
   "HI"
 end
 puts x
+a
 # tmp4=begin_withscope()
 #   tmp1=1
 #   tmp2=tmp1

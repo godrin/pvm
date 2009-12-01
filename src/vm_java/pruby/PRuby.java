@@ -26,44 +26,55 @@ public class PRuby {
 		vmc = vm.createContext();
 	}
 
-	public void run(PRubySourceDef source) throws ParseError, IOException,
+	public void run(PRubySourceDef source, Authorizations authorizations) throws ParseError, IOException,
 			VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		
+
 		String vmSource = parser.parse(source);
 		VMLog.debug("Source:");
 		VMLog.debug(vmSource);
 		ASTProgram astP = vm.getParser().parseData(vmSource, source.getPath());
 		Program prg = astP.instantiate(vmc);
-		VMScope scope = vmc.createScope();
+		VMScope scope = vmc.createScope(authorizations);
 		vm.addJob(prg.execution(scope));
 		VMLog.debug("CODE::::");
 		VMLog.debug(prg.toCode());
 		VMLog.debug("CODE!");
 		vm.run();
 	}
-	
+
 	public static void main(String[] args) throws ParseError, IOException,
 			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
 			InterruptedException {
-		
+
+		Arguments arg = new Arguments(args);
 		// FIXME: parse args correctly
-		runFile(args[0]);
-		
+		runFile(arg);
+
 	}
 
-	private static void runFile(String filename) throws ParseError, IOException, VMExceptionOutOfMemory, BlockIsFinalException, VMException, InterruptedException {
-		File f=new File(filename);
-		File dir=f.getParentFile();
-		String file=f.getName();
-		
+	private static void runFile(Arguments arg) throws ParseError, IOException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			InterruptedException {
+		File f = new File(arg.getScript());
+		File dir = f.getParentFile();
+		String file = f.getName();
+
 		SinglePathSourceSource source = new SinglePathSourceSource(dir);
 		LLParser2 vmParser = new LLParser2();
 		VM vm = new VM(vmParser);
 		PRubyParser rubyParser = new PRubyParserMRIRuby();
 		PRuby pruby = new PRuby(vm, rubyParser);
-		pruby.run(new PRubySourceDef(file, source));
+		pruby.run(new PRubySourceDef(file, source),getAuthorizations(arg));
 		vm.join();
 	}
-	
+
+	private static Authorizations getAuthorizations(Arguments arg) {
+		Authorizations l=new Authorizations();
+		if(arg.isInteractive()) {
+			l.add(new Authorization("VMIO"));
+		}
+		l.commit();
+		return l;
+	}
 
 }

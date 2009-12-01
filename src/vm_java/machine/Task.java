@@ -5,12 +5,17 @@ import java.util.List;
 
 import vm_java.VM;
 import vm_java.code.VMException;
+import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.BasicObject;
+import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.types.VMExceptionFunctionNotFound;
+import vm_java.types.basic.VMObject;
+import vm_java.types.foundation.VMArray;
+import vm_java.types.foundation.VMString;
 
 public abstract class Task {
 	private VMScope scope;
@@ -78,13 +83,33 @@ public abstract class Task {
 		children.remove(pChild);
 	}
 
-	protected void finish() throws VMException {
+	protected void finish(SourceInfo sourceInfo) throws VMException,
+			VMExceptionOutOfMemory {
 		if (children.size() > 0) {
 			throw new VMException(null,
 					"children.size is not null while finishing!");
 		}
 		if (parent != null) {
 			if (getReturnType() != null) {
+				if (getReturnType() == Type.EXCEPTION) {
+					// add source-info as stacktrace
+					VMContext ctx = getReturnValue().getContext();
+					BasicObject bo = getReturnValue();
+					if (bo instanceof VMObject) {
+						VMObject vmo = (VMObject) getReturnValue();
+
+						VMArray a = (VMArray) vmo.getInstance(ctx
+								.intern("where"));
+						if (sourceInfo != null) {
+
+							a.add(new VMString(ctx, sourceInfo.toString()));
+						}
+					} else {
+						VMLog
+								.error("exception is not of internal type VMObject!");
+					}
+				}
+
 				parent.setReturn(getReturnType(), getReturnValue());
 			}
 
@@ -121,12 +146,17 @@ public abstract class Task {
 			VMLog.debug(t);
 		}
 	}
-	
-	
+
 	public void setReturn(Type returnType, BasicObject pReturnContent) {
 		returned = returnType;
 		returnContent = pReturnContent;
+		if (returnType == Type.EXCEPTION) {
+			if (getParent() == null) {
+				VMLog.error("Exception :" + returnContent.inlineCode());
+			}
+		}
 	}
+
 	public Type getReturnType() {
 		return returned;
 	}
@@ -134,6 +164,5 @@ public abstract class Task {
 	public BasicObject getReturnValue() {
 		return returnContent;
 	}
-
 
 }

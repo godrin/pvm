@@ -52,7 +52,7 @@ public class CodeWhile extends CodeStatement {
 				getVM().addJob(b.execution(getScope(), this));
 				getVM().addJob(this);
 			} else {
-				finish();
+				finish(sourceInfo);
 			}
 		}
 

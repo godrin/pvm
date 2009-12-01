@@ -41,7 +41,7 @@ public class VMLog {
 
 		String s = "null";
 		if (x != null) {
-			s=x.toString();
+			s = x.toString();
 		}
 		for (String p : s.split("\n")) {
 			logLine(l, p);
@@ -49,8 +49,9 @@ public class VMLog {
 	}
 
 	private static void logLine(Level l, String line) {
-		if (!mLevels.contains(l))
-			return;
+		if (l != Level.ERROR)
+			if (!mLevels.contains(l))
+				return;
 		Date d = GregorianCalendar.getInstance().getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String level = "[" + l.toString().toLowerCase() + "] ";

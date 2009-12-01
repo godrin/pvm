@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'pp'
-require 'compiler.rb'
+require File.expand_path('../compiler.rb',__FILE__)
 
 def loadFile(fn)
   File.open(fn){|f|

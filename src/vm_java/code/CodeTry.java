@@ -14,7 +14,7 @@ public class CodeTry extends CodeStatement {
 
 	class TryTask extends Task {
 		boolean ran = false;
-		Task bodyTask=null;
+		Task bodyTask = null;
 
 		public TryTask(VMScope pScope, Task pParent) {
 			super(pScope, pParent);
@@ -32,26 +32,27 @@ public class CodeTry extends CodeStatement {
 				VMExceptionFunctionNotFound {
 			if (!ran) {
 				getVM().addJob(this);
-				getVM().addJob(bodyTask=block.execution(getScope(), this));
-				ran=true;
+				getVM().addJob(bodyTask = block.execution(getScope(), this));
+				ran = true;
 			} else {
-				
-				
+
 				if (bodyTask.getReturnType() == Type.EXCEPTION) {
 					BasicObject exception = bodyTask.getReturnValue();
-					
-					for(CodeRescue rescue:rescues) {
-						if(rescue.matches(getScope(),exception)) {
+
+					for (CodeRescue rescue : rescues) {
+						if (rescue.matches(getScope(), exception)) {
 							// FIXME: check for further exceptions
-							setReturn(null,null);
+							setReturn(null, null);
 							getVM().addJob(this);
-							getVM().addJob(bodyTask=rescue.execution(getScope(), this));
+							getVM().addJob(
+									bodyTask = rescue.execution(getScope(),
+											this));
 							return;
 						}
 					}
-				} 
-				getParent().setReturn(getReturnType(),getReturnValue());
-				finish();
+				}
+				getParent().setReturn(getReturnType(), getReturnValue());
+				finish(sourceInfo);
 			}
 
 		}

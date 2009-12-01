@@ -17,6 +17,10 @@ class StrCode
     @v
   end
 
+  def code
+    []
+  end
+
   def after
     s("clear #{@v}")
   end

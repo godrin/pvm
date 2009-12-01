@@ -5,6 +5,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.machine.Task;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.ObjectName;
@@ -23,11 +24,17 @@ public class CodeInclude extends CodeStatement {
 	@Override
 	public void execute(VMScope scope, Task parentTask) throws VMException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		// TODO Auto-generated method stub
 		BasicObject bo = scope.self();
 		if (bo instanceof VMModule) {
 			VMModule mod = (VMModule) bo;
-			mod.include((VMModule) scope.get(moduleName));
+			VMModule target = (VMModule) scope.get(moduleName);
+			if (target == null) {
+				parentTask.setReturn(Type.EXCEPTION, scope.exception(
+						"NameError", "uninitialized constant "
+								+ moduleName.inspect(),sourceInfo));
+				return;
+			}
+			mod.include(target);
 		} else {
 			VMLog.error("No include in " + bo);
 		}

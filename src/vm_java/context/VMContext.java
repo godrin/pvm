@@ -15,6 +15,7 @@ import vm_java.code.CodeBlock;
 import vm_java.code.Program;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.internal.VMLog;
+import vm_java.pruby.Authorizations;
 import vm_java.types.basic.ObjectName;
 
 /**
@@ -63,11 +64,6 @@ public class VMContext {
 		buildinTypes.put(buildInKlassName,klass);
 	}
 	public BasicObject getBuildinType(String buildInKlassName) {
-		System.out.println(buildInKlassName);
-		for(String k:buildinTypes.keySet()) {
-			System.out.println("KEYS:"+k);
-			
-		}
 		return buildinTypes.get(buildInKlassName);
 	}
 
@@ -78,8 +74,8 @@ public class VMContext {
 		mObjects.add(pObject);
 	}
 
-	public VMScope createScope() throws VMExceptionOutOfMemory {
-		return new VMScope(this);
+	public VMScope createScope(Authorizations authorizations) throws VMExceptionOutOfMemory {
+		return new VMScope(this,authorizations);
 	}
 
 	public long getMemoryUsage() {

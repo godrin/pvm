@@ -27,10 +27,6 @@ public class VMHash extends VMBuildinObjectBase {
 		return value;
 	}
 
-/*	public static VMHash _new(VMContext pContext) throws VMExceptionOutOfMemory {
-		return new VMHash(pContext);
-	}
-*/
 	@Override
 	public Code toCode() {
 		Code c = new Code();
@@ -46,8 +42,18 @@ public class VMHash extends VMBuildinObjectBase {
 					+ e.getValue().inlineCode());
 
 		}
-		c.addToLastLine("{");
+		c.addToLastLine("}");
 		return c;
+	}
+
+	@Override
+	public String inlineCode() {
+		return toCode().toString().replace("\n","");
+	}
+
+	@Override
+	public String inspect() {
+		return inlineCode();
 	}
 
 }

@@ -70,16 +70,17 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		BasicObject o = getStaticDirect(name);
 		if (o == null) {
 			for (VMModule m : mMixins) {
+
 				o = m.getStatic(name);
 				if (o != null)
 					break;
 			}
 		}
-		
-		if(o==null && getName().equals("root")) {
+
+		if (o == null && getName().equals("root")) {
 			return getInstance(name);
 		}
-		
+
 		VMLog.debug("found:" + o);
 		return o;
 	}
@@ -88,11 +89,11 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		mStaticObjects.put(name, bo);
 	}
 
-	
 	protected BasicObject getInstanceDirect(ObjectName name) {
 		return mInstanceObjects.get(name);
 
 	}
+
 	public BasicObject getInstance(ObjectName name) {
 		BasicObject o = getInstanceDirect(name);
 		if (o == null) {
@@ -109,37 +110,23 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 	public void putInstance(ObjectName name, BasicObject bo) throws VMException {
 		mInstanceObjects.put(name, bo);
 	}
-	
-	
+
 	@Override
 	public String inspect() {
 		return toCode().toString();
 		// return "[Module]";
 	}
-	
+
 	protected void addStaticsAsInstanceTo(VMModule k) throws VMException {
-		for(Map.Entry<ObjectName, BasicObject> e:mStaticObjects.entrySet()) {
+		for (Map.Entry<ObjectName, BasicObject> e : mStaticObjects.entrySet()) {
 			k.putInstance(e.getKey(), e.getValue());
 		}
 	}
 
-	
-/*
-	public VMModule _newModule(VMContext pContext)
-			throws VMExceptionOutOfMemory, VMException {
-		VMModule mod = new VMModule(pContext);
-		mod.addFunctionsTo(this);
-		return mod;
-	}
-	*/
-/*
-	protected void addFunctionsTo(VMModule mod) throws VMException {
-		for (Map.Entry<ObjectName, BasicObject> entry : mObjects.entrySet()) {
-			mod.put(entry.getKey(), entry.getValue());
-		}
-	}
-*/
 	public void include(VMModule mod) throws VMException {
+		if (mod == null) {
+			throw new VMException(null, "module is null!");
+		}
 		mMixins.add(mod);
 	}
 
@@ -152,10 +139,12 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 			i.add("included " + m.toCode().indent());
 		}
 		for (Map.Entry<ObjectName, BasicObject> e : mStaticObjects.entrySet()) {
-			i.add("static:"+e.getKey().inlineCode() + "=" + e.getValue().inlineCode());
+			i.add("static:" + e.getKey().inlineCode() + "="
+					+ e.getValue().inlineCode());
 		}
 		for (Map.Entry<ObjectName, BasicObject> e : mInstanceObjects.entrySet()) {
-			i.add("inst:"+e.getKey().inlineCode() + "=" + e.getValue().inlineCode());
+			i.add("inst:" + e.getKey().inlineCode() + "="
+					+ e.getValue().inlineCode());
 		}
 		c.add(i.indent());
 		c.add("end");

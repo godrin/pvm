@@ -19,6 +19,7 @@ import vm_java.machine.Options;
 import vm_java.machine.Process;
 import vm_java.machine.Task;
 import vm_java.machine.VMFatalError;
+import vm_java.pruby.Authorizations;
 
 /**
  * 
@@ -50,8 +51,9 @@ public class VM {
 		return s;
 	}
 
-	public void run(Program program) throws VMExceptionOutOfMemory {
-		VMScope scope = new VMScope(program.getContext());
+	public void run(Program program, Authorizations authorizations)
+			throws VMExceptionOutOfMemory {
+		VMScope scope = new VMScope(program.getContext(), authorizations);
 		addJob(program.execution(scope));
 	}
 

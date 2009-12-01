@@ -44,4 +44,14 @@ public class VMArray extends VMBuildinObjectBase {
 		return c;
 	}
 
+	@Override
+	public String inlineCode() {
+		return toCode().toString().replace("\n", "");
+	}
+
+	@Override
+	public String inspect() {
+		return inlineCode();
+	}
+
 }

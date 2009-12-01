@@ -29,6 +29,12 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 			block = codeBlock;
 		}
 
+		private CodeStatement current() {
+			if (line >= 0 && line < block.statements.size())
+				return block.statements.get(line);
+			return null;
+		}
+
 		private CodeStatement next() {
 			CodeStatement cs = null;
 
@@ -46,7 +52,9 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 		public void run() throws VMException, VMExceptionOutOfMemory,
 				VMExceptionFunctionNotFound {
 			if (finished()) {
-				finish();
+				if (current() != null)
+					finish(current().sourceInfo);
+				finish(null);
 				return;
 			}
 			CodeStatement code = next();
@@ -56,7 +64,7 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 
 				getVM().addJob(this);
 			} else {
-				finish();
+				finish(null); // code.sourceInfo);
 			}
 
 		}

@@ -29,7 +29,7 @@ public class RunTask extends Task {
 	public void run() throws VMException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		if (ran) {
-			finish();
+			finish(null);
 		} else {
 			ran = true;
 			runnable.go(getScope(), this);

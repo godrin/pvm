@@ -3,12 +3,14 @@ package vm_java.types;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 import vm_java.code.VMException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.pruby.Authorizations;
 import vm_java.types.basic.VMBuildinContextualModule;
 import vm_java.types.basic.VMBuildinObjectBase;
 import vm_java.types.basic.VMKlass;
@@ -24,13 +26,20 @@ import vm_java.types.foundation.VMInteger;
 import vm_java.types.foundation.VMString;
 
 public class Buildin {
-	public static void createBuildins(VMScope scope) throws VMException,
+	private static final String[] JAVA_DEFAULT_INSTANCE_METHODS = new String[] {
+			"wait", "hasCode", "getClass", "equals", "toString", "notify",
+			"notifyAll" };
+
+	public static void createBuildins(VMScope scope,
+			Authorizations authorizations) throws VMException,
 			VMExceptionOutOfMemory {
 		expose(scope, VMInteger.class);
 		expose(scope, VMString.class);
 		expose(scope, VMArray.class);
 		expose(scope, VMHash.class);
-		exposeSimpleModule(scope, VMIO.class);
+		if (authorizations.contains("VMIO")) {
+			exposeSimpleModule(scope, VMIO.class);
+		}
 		exposeModule(scope, VMCtxLog.class);
 		expose(scope, VMRuntime.class);
 
@@ -108,7 +117,13 @@ public class Buildin {
 				k.putInstance(context.intern(mName), b);
 				k.putInstance(context.intern(shorten(mName)), b);
 			} else {
-				VMLog.error("non static functions wihtin module ???  " + mName);
+				if (Arrays.asList(JAVA_DEFAULT_INSTANCE_METHODS)
+						.contains(mName)) {
+
+				} else {
+					VMLog.error("non static functions within module ???  "
+							+ mName);
+				}
 			}
 		}
 
@@ -136,7 +151,7 @@ public class Buildin {
 				continue;
 
 			String mName = m.getName();
-			// VMLog.debug("Expose:" + mName);
+
 			BuildinFunction b = new BuildinFunction(context, m);
 			if ((m.getModifiers() & Modifier.STATIC) != 0) {
 				k.putStatic(context.intern(mName), b);
