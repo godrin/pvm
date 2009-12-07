@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.CodeBlock;
 import vm_java.code.CodeRescue;
 import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
@@ -47,7 +46,6 @@ public class ASTRescue extends AST implements ASTStatementInterface {
 	 */
 	public CodeRescue instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
-		CodeBlock b = block.instantiate(context);
 		List<ObjectName> types = new ArrayList<ObjectName>();
 		for (ASTVar v : rescueTypes) {
 			vm_java.types.basic.ObjectName on = v.code(context);

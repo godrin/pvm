@@ -1,6 +1,5 @@
 package vm_java.types;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
@@ -55,11 +54,7 @@ public class Buildin {
 					+ " should not be exposed!");
 		}
 
-		Constructor<? extends VMBuildinContextualModule> cnstr;
 		try {
-			cnstr = c.getConstructor(VMContext.class);
-			VMBuildinContextualModule instance = cnstr.newInstance(scope
-					.getContext());
 
 			String name = c.getName().replaceAll(".*\\.", "");
 			VMContext context = scope.getContext();
@@ -172,7 +167,6 @@ public class Buildin {
 						"biggerThan", ">");
 		if (!sh.equals(name)) {
 			VMLog.debug("shortened:" + name + "->" + sh);
-			sh = sh;
 		}
 		return sh;
 	}
