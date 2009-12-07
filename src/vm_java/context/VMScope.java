@@ -12,6 +12,7 @@ import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;
 import vm_java.code.VMException;
 import vm_java.code.SourceBased.SourceInfo;
+import vm_java.internal.VMLog;
 import vm_java.pruby.Authorizations;
 import vm_java.runtime.RuntimeMemberFunction;
 import vm_java.types.Buildin;
@@ -189,6 +190,8 @@ public class VMScope {
 	public BasicObject exception(String name, String comment,
 			SourceInfo sourceInfo) throws VMExceptionOutOfMemory, VMException {
 		ObjectName iName = getContext().intern(name);
+
+		VMLog.debug("create exception:" + name + "  " + comment);
 
 		BasicObject bo = get(iName);
 		VMKlass klass = null;

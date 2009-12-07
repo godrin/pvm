@@ -8,17 +8,22 @@ public class Arguments {
 	Map<String, String> ass = new TreeMap<String, String>();
 	String script;
 	boolean interactive;
+	private boolean debugging = false;
 
 	public Arguments(String argv[]) {
 		interactive = false;
 
 		check(argv);
 	}
-	
+
+	public boolean isDebuggin() {
+		return debugging;
+	}
+
 	public String getScript() {
 		return script;
 	}
-	
+
 	public boolean isInteractive() {
 		return interactive;
 	}
@@ -27,18 +32,19 @@ public class Arguments {
 		for (String arg : argv) {
 			if (arg.matches("^--.*=.*$")) {
 				optionAssign(arg);
-			}
-			else if (arg.matches("^--.*$")) {
+			} else if (arg.matches("^--.*$")) {
 				optionSingle(arg);
 			} else {
-				script=arg;
+				script = arg;
 			}
 		}
 	}
 
 	private void optionSingle(String arg) {
-		if("--interactive".equals(arg)) {
-			interactive=true;
+		if ("--interactive".equals(arg)) {
+			interactive = true;
+		} else if ("--debug".equals(arg)) {
+			debugging = true;
 		}
 	}
 

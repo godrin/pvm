@@ -1,80 +1,134 @@
-class IfCode
-  class LocalBlock
-    def initialize(p,s)
-      assert{s}
-      @parent=p
-      @statement=s
+if false
+  class IfCode
+    class LocalBlock
+      def initialize(p,s)
+        assert{s}
+        @parent=p
+        @statement=s
 
-      @blockName=tmpVar
+        @blockName=tmpVar
+      end
+
+      def tmpVar
+        @parent.tmpVar
+      end
+
+      def before
+        c=@statement.before+
+        @statement.code+
+        @statement.after
+
+        @parent.bgn(@blockName,["*"],c,@statement.value)
+      end
+
+      def value
+        @blockName
+      end
+
+      def after
+        s("clear #{@blockName}")
+      end
+
+      def s(str)
+        @parent.s(str)
+      end
     end
 
-    def tmpVar
-      @parent.tmpVar
+    def init
+      @tmpVar=tmpVar
     end
 
     def before
-      c=@statement.before+
-      @statement.code+
-      @statement.after
+      []
+    end
 
-      @parent.bgn(@blockName,["*"],c,@statement.value)
+    def code
+
+      bcond=@cond
+      bthen=@then
+      belse=@else
+
+      bthen=LocalBlock.new(self,bthen) if bthen
+      belse=LocalBlock.new(self,belse) if belse
+
+      #pp @else
+      #exit
+
+      before=bcond.before+bcond.code
+      before+=bthen.before if bthen
+      before+=belse.before if belse
+
+      after=bcond.after
+      after+=bthen.after if bthen
+      after+=belse.after if belse
+
+      val=bcond.value
+
+      within=[]
+
+      within+=s("if #{val} then #{@tmpVar}=#{bthen.value}()") if @then
+      within+=s("unless #{val} then #{@tmpVar}=#{belse.value}()") if @else
+
+      before+within+after
     end
 
     def value
-      @blockName
+      @tmpVar
     end
 
     def after
-      s("clear #{@blockName}")
-    end
-    def s(str)
-      @parent.s(str)
+      s("clear #{@tmpVar}")
     end
   end
 
-  def init
-    @tmpVar=tmpVar
-  end
+else
+  class IfCode
+    def init
+      @valName=tmpVar
+      @thenName=tmpVar
+      @elseName=tmpVar
+      @condVal=tmpVar
 
-  def before
-    []
-  end
+    end
 
-  def code
+    def before
+      []
+    end
 
-    bcond=@cond
-    bthen=@then
-    belse=@else
+    def code
+      condCode=@cond.code+
+      s("#{@condVal}=#{@cond.value}")
 
-    bthen=LocalBlock.new(self,bthen) if bthen
-    belse=LocalBlock.new(self,belse) if belse
+      result=condCode
 
-    #pp @else
-    #exit
+      if @then
+        result+=bgn(@thenName,["*"],@then.code+
+        s("#{@valName}=#{@then.value}"),
+        @then.value)
+      end
 
-    before=bcond.before+bcond.code
-    before+=bthen.before if bthen
-    before+=belse.before if belse
+      if @else
+        result+=bgn(@elseName,["*"],@else.code+
+        s("#{@valName}=#{@else.value}"),
+        @else.value)
+      end
 
-    after=bcond.after
-    after+=bthen.after if bthen
-    after+=belse.after if belse
+      result+=s("if #{@condVal} then #{@thenName}") if @then
+      result+=s("unless #{@condVal} then #{@elseName}") if @else
 
-    val=bcond.value
+      result
+    end
 
-    within=[]
+    def after
+      s("clear #{@valName}")+
+      s("clear #{@thenName}")+
+      s("clear #{@elseName}")+
+      s("clear #{@condVal}")
+    end
 
-    within+=s("if #{val} then #{@tmpVar}=#{bthen.value}()") if @then
-    within+=s("unless #{val} then #{@tmpVar}=#{belse.value}()") if @else
+    def value
+      @valName
+    end
 
-    before+within+after
-  end
-
-  def value
-    @tmpVar
-  end
-
-  def after
-    s("clear #{@tmpVar}")
   end
 end

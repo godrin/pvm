@@ -19,16 +19,19 @@ public class ASTWhile extends AST implements ASTStatementInterface {
 
 	ASTVar condition;
 	ASTVar blockName;
+	boolean wantedValue;
 
 	/**
 	 * @param pSource
 	 * @param blockName
 	 * @param cond
 	 */
-	public ASTWhile(SourceInfo pSource, ASTVar cond, ASTVar pBlockName) {
+	public ASTWhile(SourceInfo pSource, ASTVar cond, ASTVar pBlockName,
+			boolean pWantedValue) {
 		super(pSource);
 		blockName = pBlockName;
 		condition = cond;
+		wantedValue = pWantedValue;
 	}
 
 	/*
@@ -41,7 +44,7 @@ public class ASTWhile extends AST implements ASTStatementInterface {
 	public CodeStatement instantiate(VMContext context)
 			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
 		return new CodeWhile(context, source, context.intern(condition.name),
-				context.intern(blockName.name));
+				context.intern(blockName.name), wantedValue);
 	}
 
 }

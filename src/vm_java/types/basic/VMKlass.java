@@ -56,14 +56,26 @@ public class VMKlass extends VMModule {
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
 		BasicObject bo = getStatic(name);
-		if (bo == null)
-			bo = getStatic(name);
+
+		return makeFunction(bo,this);
+	}
+
+	public RuntimeFunction getInstanceFunction(ObjectName name,BasicObject target)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
+
+		BasicObject bo = getInstance(name);
+
+		return makeFunction(bo,target);
+	}
+
+	private RuntimeFunction makeFunction(BasicObject bo,Object target)
+			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
 		if (bo instanceof RuntimeFunction)
 			return (RuntimeFunction) bo;
 		if (bo instanceof BuildinFunction) {
 			BuildinFunction bf = (BuildinFunction) bo;
-			return new CodeBuildinFunction(this, bf.method);
+			return new CodeBuildinFunction(target, bf.method);
 		}
 
 		if (bo instanceof Function) {

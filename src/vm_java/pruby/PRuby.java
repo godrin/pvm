@@ -11,6 +11,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
+import vm_java.internal.VMLog.Level;
 import vm_java.llparser.LLParser2;
 import vm_java.llparser.LLParser2.ParseError;
 import vm_java.llparser.ast.ASTProgram;
@@ -26,8 +27,9 @@ public class PRuby {
 		vmc = vm.createContext();
 	}
 
-	public void run(PRubySourceDef source, Authorizations authorizations) throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+	public void run(PRubySourceDef source, Authorizations authorizations)
+			throws ParseError, IOException, VMExceptionOutOfMemory,
+			BlockIsFinalException, VMException {
 
 		String vmSource = parser.parse(source);
 		VMLog.debug("Source:");
@@ -64,16 +66,20 @@ public class PRuby {
 		VM vm = new VM(vmParser);
 		PRubyParser rubyParser = new PRubyParserMRIRuby();
 		PRuby pruby = new PRuby(vm, rubyParser);
-		pruby.run(new PRubySourceDef(file, source),getAuthorizations(arg));
+		pruby.run(new PRubySourceDef(file, source), getAuthorizations(arg));
 		vm.join();
 	}
 
 	private static Authorizations getAuthorizations(Arguments arg) {
-		Authorizations l=new Authorizations();
-		if(arg.isInteractive()) {
+		Authorizations l = new Authorizations();
+		if (arg.isInteractive()) {
 			l.add(new Authorization("VMIO"));
 		}
 		l.commit();
+		if (arg.isDebuggin()) {
+			VMLog.setLogLevels(new Level[] { Level.DEBUG, Level.ERROR,
+					Level.WARN });
+		}
 		return l;
 	}
 

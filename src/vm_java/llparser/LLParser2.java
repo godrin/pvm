@@ -57,9 +57,11 @@ public class LLParser2 {
 	}
 
 	ASTProgram parse(String content) throws ParseError {
-		VMLog.debug(Integer.toString(lineNo) + ": " + content);
+		int cLineNo = 1;
 		for (String line : content.split("\n")) {
 			lines.add(line);
+			VMLog.debug(Integer.toString(cLineNo) + ": " + line);
+			cLineNo++;
 		}
 		ASTProgram program = new ASTProgram();
 		ASTBlock block = new ASTBlock(source());
@@ -266,6 +268,7 @@ public class LLParser2 {
 	}
 
 	private ASTStatementInterface parseWhile() throws ParseError {
+		boolean wantedValue = token() == SYMBOLS.WHILE;
 		fetchToken();
 		ASTVar cond = parseVar();
 		if (fetchToken() != SYMBOLS.DO)
@@ -273,7 +276,7 @@ public class LLParser2 {
 		fetchToken();
 		ASTVar blockName = parseVar();
 		fetchToken();
-		return new ASTWhile(source(), cond, blockName);
+		return new ASTWhile(source(), cond, blockName, wantedValue);
 	}
 
 	private ASTStatementInterface parseIf() throws ParseError {
@@ -328,18 +331,15 @@ public class LLParser2 {
 		}
 
 		parseError();
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	private void parseError() throws ParseError {
-		VMLog.debug("Parse error in line " + lineNo);
-		VMLog.debug("Before: ");
+		VMLog.error("Parse error in line " + lineNo);
+		VMLog.error("Before: ");
 		LineLexer2.output(mResult);
 		LineLexer2.output(results);
 		throw new ParseError();
-		// TODO Auto-generated method stub
-
 	}
 
 	SYMBOLS token() {
@@ -534,9 +534,6 @@ public class LLParser2 {
 		fetchToken();
 		ASTBlock block = new ASTBlock(source());
 		while (token() != SYMBOLS.END && token() != SYMBOLS.RESCUE) {
-			/*
-			 * } if (t == SYMBOLS.END) { parseError(); } else {
-			 */
 			ASTStatementInterface statement = parseLine();
 			if (statement != null) {
 				block.add(statement);

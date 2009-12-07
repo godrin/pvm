@@ -43,6 +43,7 @@ public class VMThread extends Thread {
 						job.go();
 					} else {
 
+						/*
 						VMLog.debug("Not Running Job:" + job.inspect()
 								+ " waiting for " + job.childJobsCount()
 								+ " all ##:" + vm.jobCount());
@@ -50,7 +51,7 @@ public class VMThread extends Thread {
 						if (job.childJobsCount() > 0) {
 							job.debugChildren();
 						}
-
+*/
 						vm.addJob(job);
 						continue;
 

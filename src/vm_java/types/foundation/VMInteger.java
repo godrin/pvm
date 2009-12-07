@@ -3,9 +3,10 @@ package vm_java.types.foundation;
 import vm_java.code.Code;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
+import vm_java.internal.VMLog;
 import vm_java.types.basic.VMBuildinObjectBase;
 
-public class VMInteger extends VMBuildinObjectBase{
+public class VMInteger extends VMBuildinObjectBase {
 	Integer i = null;
 
 	public VMInteger(VMContext context) throws VMExceptionOutOfMemory {
@@ -38,12 +39,18 @@ public class VMInteger extends VMBuildinObjectBase{
 		return new VMInteger(getContext(), i + p.get());
 	}
 
+	public VMInteger minus(VMInteger p) throws VMExceptionOutOfMemory {
+		return new VMInteger(getContext(), i - p.get());
+	}
+
 	public VMBoolean lessThan(VMInteger i) throws VMExceptionOutOfMemory {
 		return new VMBoolean(getContext(), get() < i.get());
 	}
 
 	public VMBoolean biggerThan(VMInteger i) throws VMExceptionOutOfMemory {
-		return new VMBoolean(getContext(), get() > i.get());
+		VMBoolean b= new VMBoolean(getContext(), get() > i.get());
+		VMLog.debug("biggerThan rsult:"+b.inspect()+" ("+get()+">"+i.get()+")");
+		return b;
 	}
 
 	@Override
@@ -61,7 +68,7 @@ public class VMInteger extends VMBuildinObjectBase{
 
 	@Override
 	public String inspect() {
-		// TODO Auto-generated method stub
-		return null;
+		return "<VMInteger:" + i + ">";
 	}
+
 }

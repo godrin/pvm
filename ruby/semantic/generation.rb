@@ -32,22 +32,36 @@ class Base
     bgn(left,parameters,body,result,true)
   end
 
-  def bgn(left,parameters,body,result,scope=false)
+  def bgn(left,parameters,body,result=nil,scope=false)
     if result.is_a?(String)
       assert{result=~/[A-Za-z].*/ || result=="nil"}
     else
       t=tmpVar
-      body+=s("#{t}=#{result}")
-      result=t
+      if result
+        body+=s("#{t}=#{result}")
+        result=t
+      end
       #pp "RESULT:",result
       #raise 1
     end
     #STDERR.puts caller.inspect unless result.is_a?(String)
     beg="begin"
     beg+="_withscope" if scope
-    s("#{left}=#{beg}(#{parameters.join(", ")})")+
+    paramstr="(#{parameters.join(", ")})"
+    if paramstr=="(*)"
+      paramstr=""
+    end
+    s("#{left}=#{beg}#{paramstr}")+
     (body+
-    s("lreturn #{result}")).indent+
+    (
+    if result
+      s("lreturn #{result}")
+    else
+      []
+    end
+    )
+
+    ).indent+
     s("end")
   end
 end
@@ -63,6 +77,7 @@ class Array
   def indent
     map{|l|"  "+l}
   end
+
   def select_until
     n=[]
     ok=true

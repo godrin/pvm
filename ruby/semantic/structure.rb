@@ -323,12 +323,12 @@ class IterCode<Base
 end
 
 class WhileCode<Base
-  def initialize(c,block,dontknow,cond)
+  def initialize(c,cond,block,wished)
     super(c)
     @block=compile(block)
-    @dontknow=compile(dontknow)
-    @cond=cond
-    assert{[true].member?(@cond)}
+    @cond=compile(cond)
+    @wished=wished
+    assert{[true,false].member?(@wished)}
   end
 end
 

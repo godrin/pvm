@@ -27,7 +27,7 @@ public class PRubyTest extends TestCase {
 		String dir = "ruby/semantic/checks";
 
 		if (true) {
-			String file = "exception_simple.rb";
+			String file = "while.rb";
 			test(dir, file);
 		} else {
 

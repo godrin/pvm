@@ -167,9 +167,11 @@ public class Buildin {
 	}
 
 	private static String shorten(String name) {
-		String sh = name.replace("plus", "+").replaceFirst("^_", "").replace(
-				"lessThan", "<");
+		String sh = name.replace("plus", "+").replace("minus", "-")
+				.replaceFirst("^_", "").replace("lessThan", "<").replace(
+						"biggerThan", ">");
 		if (!sh.equals(name)) {
+			VMLog.debug("shortened:" + name + "->" + sh);
 			sh = sh;
 		}
 		return sh;

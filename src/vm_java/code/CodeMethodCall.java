@@ -41,29 +41,30 @@ public class CodeMethodCall extends CodeStatement {
 
 			RuntimeFunction f = null;
 			BasicObject bo = null;
+			VMLog.debug("trying to call " + methodName + " of var " + varName);
 			if (varName == null) {
 				f = scope.getFunction(methodName, mstatic);
 			} else {
 				bo = scope.get(varName, mstatic);
+				VMLog.debug("BO:" + bo);
 				if (bo instanceof FunctionProvider) {
 					FunctionProvider vmo = (FunctionProvider) bo;
 
 					f = vmo.getFunction(methodName);
+				} else {
+					pTask.setReturn(Type.EXCEPTION, scope.exception(
+							"NameError", "No function-provider:" + varName
+									+ " dump:" + bo.inspect(), sourceInfo));
+					return;
+
 				}
 			}
 			if (f == null) {
-				pTask.setReturn(Type.EXCEPTION, scope.exception("NameError",
-						"method not found:" + methodName + " in Object "
-								+ varName, sourceInfo));
+				pTask.setReturn(Type.EXCEPTION, scope
+						.exception("NameError", "method not found:"
+								+ methodName + " in Object " + varName
+								+ " dump:" + bo.inspect(), sourceInfo));
 				return;
-				/*
-				 * VMLog.error(info()); VMLog.warn("Method not found:");
-				 * VMLog.debug(toCode()); // VMLog.warn(scope.inspect());
-				 * VMLog.debug("SELF:"); VMLog.debug(scope.self().inspect()); //
-				 * FIXME: return Quit_exception throw new VMException(this,
-				 * "Function " + methodName + " not found in " + varName + " ("
-				 * + bo + "!");
-				 */
 			}
 
 			List<BasicObject> bos = RuntimeFunctionHelper.createArguments(

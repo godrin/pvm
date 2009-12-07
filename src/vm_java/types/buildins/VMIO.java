@@ -1,5 +1,7 @@
 package vm_java.types.buildins;
 
+import java.io.IOException;
+
 import vm_java.types.DontExpose;
 import vm_java.types.basic.VMBuildinStaticModule;
 
@@ -20,6 +22,10 @@ public class VMIO implements VMBuildinStaticModule {
 	@DontExpose
 	public static void clear() {
 		output = new StringBuilder();
+	}
+	
+	public static int getChar() throws IOException {
+		return System.in.read();
 	}
 
 }
