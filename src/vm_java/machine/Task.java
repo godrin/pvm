@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vm_java.VM;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
@@ -12,6 +12,7 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.internal.VMLog;
 import vm_java.llparser.ast.ASTReturn.Type;
+import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.VMObject;
 import vm_java.types.foundation.VMArray;
@@ -23,21 +24,28 @@ public abstract class Task {
 	private Task parent;
 	private long lastExecution;
 	private long waitAtleastTil;
+	private boolean farToLocal = false;
 
 	private Type returned = null;
 	private BasicObject returnContent = null;
+	private Reference returnReference;
 
 	public Task(VMScope pScope) {
 		scope = pScope;
 		parent = null;
 	}
 
-	public Task(VMScope pScope, Task pParent) {
+	public Task(VMScope pScope, Task pParent, Reference pReturnReference) {
 		scope = pScope;
+		returnReference = pReturnReference;
 		parent = pParent;
 		if (parent != null) {
 			parent.addChild(this);
 		}
+	}
+
+	public void setFarToLocal() {
+		farToLocal = true;
 	}
 
 	public VMScope getScope() {
@@ -66,14 +74,14 @@ public abstract class Task {
 		return parent;
 	}
 
-	public void go() throws VMException, VMExceptionOutOfMemory,
+	public void go() throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		run();
 		lastExecution = System.currentTimeMillis();
 	}
 
-	protected abstract void run() throws VMException, VMExceptionOutOfMemory,
-			VMExceptionFunctionNotFound;
+	protected abstract void run() throws VMInternalException,
+			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
 
 	private void addChild(Task pChild) {
 		children.add(pChild);
@@ -83,10 +91,10 @@ public abstract class Task {
 		children.remove(pChild);
 	}
 
-	protected void finish(SourceInfo sourceInfo) throws VMException,
+	protected void finish(SourceInfo sourceInfo) throws VMInternalException,
 			VMExceptionOutOfMemory {
 		if (children.size() > 0) {
-			throw new VMException(null,
+			throw new VMInternalException(null,
 					"children.size is not null while finishing!");
 		}
 		if (parent != null) {
@@ -104,13 +112,26 @@ public abstract class Task {
 
 							a.add(new VMString(ctx, sourceInfo.toString()));
 						}
+						parent.setReturn(getReturnType(), getReturnValue());
+
 					} else {
 						VMLog
 								.error("exception is not of internal type VMObject!");
 					}
+				} else if (getReturnType() == Type.FAR) {
+					if (returnReference != null) {
+						returnReference.set(getReturnValue());
+					} else if (farToLocal)
+						parent.setReturn(Type.LOCAL, getReturnValue());
+					else
+						parent.setReturn(getReturnType(), getReturnValue());
+				} else if (getReturnType() == Type.LOCAL) {
+					if (returnReference != null) {
+						returnReference.set(getReturnValue());
+					} else {
+						parent.setReturn(getReturnType(), getReturnValue());
+					}
 				}
-
-				parent.setReturn(getReturnType(), getReturnValue());
 			}
 
 			parent.removeChild(this);

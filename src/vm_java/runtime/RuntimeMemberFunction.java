@@ -2,7 +2,7 @@ package vm_java.runtime;
 
 import java.util.List;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -41,9 +41,8 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 	}
 
 	public void run(VMScope parentScope, ObjectName returnName,
-			List<BasicObject> parameters, Task parentTask) throws VMException,
+			List<BasicObject> parameters, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-
 
 		VMScope subScope = createSubScope(parentScope);
 
@@ -53,10 +52,11 @@ public class RuntimeMemberFunction implements RuntimeFunction {
 		}
 
 		VMLog.debug("Running function:" + function);
-		function.runFunction(subScope, returnName, parameters, parentTask);
+		Reference returnRef = new Reference(parentScope, returnName);
+		function.runFunction(subScope, returnRef, parameters, parentTask);
 	}
 
-	protected VMScope createSubScope(VMScope scope) throws VMException {
+	protected VMScope createSubScope(VMScope scope) throws VMInternalException {
 		VMScope subScope = null;
 		if (object != null) {
 			subScope = new VMScope(scope, object);

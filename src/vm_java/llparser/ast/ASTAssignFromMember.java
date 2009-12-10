@@ -6,7 +6,7 @@ package vm_java.llparser.ast;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeAssignmentFromMember;
 import vm_java.code.CodeStatement;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -38,7 +38,7 @@ public class ASTAssignFromMember extends AST implements ASTRightValue {
 	 * vm_java.llparser.ast.ASTVar)
 	 */
 	public CodeStatement instantiate(VMContext context, ASTVar left)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		return new CodeAssignmentFromMember(context, source, context
 				.intern(left.name), context.intern(rightVar.name), context
 				.intern(rightMember.name));

@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -26,7 +26,7 @@ public class CodeBuildinFunction implements RuntimeFunction {
 	}
 
 	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters, Task parentTask) throws VMException,
+			List<BasicObject> parameters, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		List<BasicObject> bos = RuntimeFunctionHelper.createArguments(scope,
 				parameters);

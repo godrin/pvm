@@ -11,6 +11,7 @@ import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
+import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 
 /**
@@ -24,7 +25,14 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 		CodeBlock block;
 
 		public Execution(CodeBlock codeBlock, VMScope pScope, Task parentTask) {
-			super(pScope, parentTask);
+			super(pScope, parentTask, null);
+			line = 0;
+			block = codeBlock;
+		}
+
+		public Execution(CodeBlock codeBlock, VMScope scope, Task parentTask,
+				Reference returnReference) {
+			super(scope, parentTask, returnReference);
 			line = 0;
 			block = codeBlock;
 		}
@@ -49,7 +57,7 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 		}
 
 		@Override
-		public void run() throws VMException, VMExceptionOutOfMemory,
+		public void run() throws VMInternalException, VMExceptionOutOfMemory,
 				VMExceptionFunctionNotFound {
 			if (finished()) {
 				if (current() != null)
@@ -96,9 +104,9 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 	}
 
 	public void add(CodeStatement pStatement) throws BlockIsFinalException,
-			VMException {
+			VMInternalException {
 		if (pStatement == null)
-			throw new VMException(pStatement, "Statement is null");
+			throw new VMInternalException(pStatement, "Statement is null");
 		if (isFinal)
 			throw new BlockIsFinalException();
 		statements.add(pStatement);
@@ -130,5 +138,10 @@ public class CodeBlock extends SourceBased implements LLTaskGenerator {
 	@Override
 	public String inlineCode() {
 		return "begin\n" + toCode().indent().toString() + "end\n";
+	}
+
+	public Task execution(VMScope scope, Task parentTask, Reference returnName) {
+		isFinal = true;
+		return new Execution(this, scope, parentTask, returnName);
 	}
 }

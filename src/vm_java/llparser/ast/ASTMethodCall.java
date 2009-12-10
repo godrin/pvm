@@ -6,7 +6,7 @@ import java.util.List;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeMethodCall;
 import vm_java.code.CodeStatement;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -34,7 +34,7 @@ public class ASTMethodCall extends AST implements ASTStatementInterface,
 	}
 
 	public CodeStatement instantiate(VMContext context, ASTVar left)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		List<ObjectName> ps = new ArrayList<ObjectName>();
 		for (ASTVar p : parameters) {
 			ps.add(p.code(context));
@@ -48,7 +48,7 @@ public class ASTMethodCall extends AST implements ASTStatementInterface,
 	}
 
 	public CodeStatement instantiate(VMContext context)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		return instantiate(context, null);
 	}
 

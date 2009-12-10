@@ -8,9 +8,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TypeCheckError;
+
 import vm_java.code.CodeStatement;
 import vm_java.code.UserFunction;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.internal.VMLog;
 import vm_java.pruby.Authorizations;
@@ -19,6 +21,7 @@ import vm_java.types.Buildin;
 import vm_java.types.Function;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.ObjectName;
+import vm_java.types.basic.VMException;
 import vm_java.types.basic.VMKlass;
 import vm_java.types.basic.VMModule;
 import vm_java.types.basic.VMObject;
@@ -46,13 +49,13 @@ public class VMScope {
 
 		try {
 			Buildin.createBuildins(this, authorizations);
-		} catch (VMException e) {
+		} catch (VMInternalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public VMScope(VMScope scope, VMObject object) throws VMException {
+	public VMScope(VMScope scope, VMObject object) throws VMInternalException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = object;
@@ -61,7 +64,7 @@ public class VMScope {
 		deriveCapitals();
 	}
 
-	public VMScope(VMScope scope, VMModule module) throws VMException {
+	public VMScope(VMScope scope, VMModule module) throws VMInternalException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = null;
@@ -70,7 +73,8 @@ public class VMScope {
 		deriveCapitals();
 	}
 
-	public VMScope(VMScope scope, UserFunction userFunction) throws VMException {
+	public VMScope(VMScope scope, UserFunction userFunction)
+			throws VMInternalException {
 		mContext = scope.getContext();
 		mParentScope = scope;
 		selfObject = null; // scope.selfObject;
@@ -79,7 +83,7 @@ public class VMScope {
 		deriveCapitals();
 	}
 
-	private void deriveCapitals() throws VMException {
+	private void deriveCapitals() throws VMInternalException {
 		for (Entry<ObjectName, BasicObject> entry : mParentScope.mReferences
 				.entrySet()) {
 			if (entry.getKey().isCapital()) {
@@ -146,13 +150,13 @@ public class VMScope {
 	}
 
 	public void put(ObjectName objectName, BasicObject value)
-			throws VMException {
+			throws VMInternalException {
 
 		if (objectName == null)
-			throw new VMException(null, "ojectName is null");
+			throw new VMInternalException(null, "ojectName is null");
 
 		if (SELF.equals(objectName.getName()))
-			throw new VMException(null, "Self accessed!");
+			throw new VMInternalException(null, "Self accessed!");
 
 		mReferences.put(objectName, value);
 	}
@@ -188,7 +192,8 @@ public class VMScope {
 	}
 
 	public BasicObject exception(String name, String comment,
-			SourceInfo sourceInfo) throws VMExceptionOutOfMemory, VMException {
+			SourceInfo sourceInfo) throws VMExceptionOutOfMemory,
+			VMInternalException {
 		ObjectName iName = getContext().intern(name);
 
 		VMLog.debug("create exception:" + name + "  " + comment);
@@ -208,5 +213,68 @@ public class VMScope {
 		stacktrace.add(new VMString(getContext(), sourceInfo.toString()));
 		vmo.putInstance(getContext().intern("where"), stacktrace);
 		return vmo;
+	}
+
+	public VMKlass getExceptionKlass() throws VMInternalException {
+		BasicObject bo = getContext().getBuildinType(
+				VMException.class.getName());
+		if (!(bo instanceof VMKlass)) {
+			throw new VMInternalException(new TypeCheckError(
+					"bo is not of type VMKlass", bo));
+		}
+		return (VMKlass) bo;
+	}
+
+	public VMObject basicException(SourceInfo sourceInfo, String name)
+			throws VMInternalException, VMExceptionOutOfMemory {
+		if (name == null)
+			name = "RuntimeError";
+		// first try to get the class "name" and check if it's an exception
+		// klass
+
+		VMKlass basicExceptionKlass = getExceptionKlass();
+		BasicObject klassObject = get(getContext().intern(name));
+		VMKlass exceptionKlass = null;
+		if (klassObject instanceof VMKlass) {
+			exceptionKlass = (VMKlass) klassObject;
+			BasicObject bo = getContext().getBuildinType(
+					VMException.class.getName());
+
+			if (exceptionKlass.isSubClassOf(basicExceptionKlass)) {
+				// ok
+			} else {
+				exceptionKlass = null;
+			}
+
+		}
+		if (exceptionKlass == null) {
+			// not ok, so create an object from VMException directly
+			BasicObject bo = getContext().getBuildinType(
+					VMException.class.getName());
+			if (!(bo instanceof VMKlass)) {
+				throw new VMInternalException(new TypeCheckError(
+						"bo is not of type VMKlass", bo));
+			}
+			exceptionKlass = (VMKlass) bo;
+		}
+		VMObject vmo = exceptionKlass._new(getContext());
+		// vmo.putInstance(getContext().intern("what"), new
+		// VMString(getContext(),
+		// comment));
+		VMArray stacktrace = new VMArray(getContext());
+		stacktrace.add(new VMString(getContext(), sourceInfo.toString()));
+		vmo.putInstance(getContext().intern("where"), stacktrace);
+		return vmo;
+	}
+
+	public BasicObject encloseInException(SourceInfo sourceInfo,
+			BasicObject object) throws VMInternalException, VMExceptionOutOfMemory {
+		if (!object.is_a(getExceptionKlass())) {
+			VMObject vmo = basicException(sourceInfo, "RuntimeError");
+			vmo.putInstance(getContext().intern("what"), object);
+			object = vmo;
+
+		}
+		return object;
 	}
 }

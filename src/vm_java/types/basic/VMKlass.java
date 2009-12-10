@@ -5,7 +5,7 @@
 
 package vm_java.types.basic;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -57,18 +57,19 @@ public class VMKlass extends VMModule {
 
 		BasicObject bo = getStatic(name);
 
-		return makeFunction(bo,this);
+		return makeFunction(bo, this);
 	}
 
-	public RuntimeFunction getInstanceFunction(ObjectName name,BasicObject target)
-			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
+	public RuntimeFunction getInstanceFunction(ObjectName name,
+			BasicObject target) throws VMExceptionFunctionNotFound,
+			VMExceptionOutOfMemory {
 
 		BasicObject bo = getInstance(name);
 
-		return makeFunction(bo,target);
+		return makeFunction(bo, target);
 	}
 
-	private RuntimeFunction makeFunction(BasicObject bo,Object target)
+	private RuntimeFunction makeFunction(BasicObject bo, Object target)
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 
 		if (bo instanceof RuntimeFunction)
@@ -95,12 +96,20 @@ public class VMKlass extends VMModule {
 	}
 
 	public VMKlass _newKlass(VMContext pContext) throws VMExceptionOutOfMemory,
-			VMException {
+			VMInternalException {
 		VMKlass k = new VMKlass(pContext);
 
 		addStaticsAsInstanceTo(k);
 
 		return k;
+	}
+
+	public boolean isSubClassOf(VMKlass pKlass) {
+		if (this == pKlass)
+			return true;
+		if (mParent != null)
+			return mParent.isSubClassOf(pKlass);
+		return false;
 	}
 
 }

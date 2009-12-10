@@ -6,7 +6,7 @@
 package vm_java;
 
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMExceptionOutOfMemory;
 
 /**
@@ -20,7 +20,7 @@ public class Main {
      * @throws BlockIsFinalException 
      * @throws InterruptedException 
      */
-    public static void main(String[] args) throws VMExceptionOutOfMemory, VMException, BlockIsFinalException, InterruptedException {
+    public static void main(String[] args) throws VMExceptionOutOfMemory, VMInternalException, BlockIsFinalException, InterruptedException {
 /*
       VM vm=new VM();
 

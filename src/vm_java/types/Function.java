@@ -7,13 +7,12 @@ package vm_java.types;
 
 import java.util.List;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
-import vm_java.types.basic.ObjectName;
 
 /**
  * 
@@ -27,9 +26,9 @@ public abstract class Function extends BasicObject {
 
 
 
-	public abstract void runFunction(VMScope pScope, ObjectName returnName,
+	public abstract void runFunction(VMScope pScope, Reference returnRef,
 			List<? extends BasicObject> args, Task parentTask)
-			throws VMException, VMExceptionOutOfMemory,
+			throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound;
 
 	public String inspect() {

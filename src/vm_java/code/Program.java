@@ -26,7 +26,7 @@ public class Program extends BasicObject implements Runnable {
 		mBlock = pBlock;
 	}
 
-	protected void run(VMScope pScope) throws VMException,
+	protected void run(VMScope pScope) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 	}
 
@@ -34,7 +34,7 @@ public class Program extends BasicObject implements Runnable {
 		return mBlock;
 	}
 
-	public void go(VMScope scope,Task pParentTask) throws VMException, VMExceptionOutOfMemory,
+	public void go(VMScope scope,Task pParentTask) throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
 		getVM().enqueue(mBlock.execution(scope, pParentTask));

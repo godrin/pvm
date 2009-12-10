@@ -1,7 +1,7 @@
 package vm_java.machine;
 
 import vm_java.code.Runnable;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -17,7 +17,7 @@ public class RunTask extends Task {
 	}
 
 	public RunTask(VMScope pScope, Task pParent, Runnable r) {
-		super(pScope, pParent);
+		super(pScope, pParent,null);
 		runnable = r;
 	}
 
@@ -26,7 +26,7 @@ public class RunTask extends Task {
 	}
 
 	@Override
-	public void run() throws VMException, VMExceptionOutOfMemory,
+	public void run() throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		if (ran) {
 			finish(null);

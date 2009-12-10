@@ -21,7 +21,7 @@ public class CodeSleep extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		BasicObject bo = scope.get(mTimeName);
 		VMLog.debug("Sleep...");

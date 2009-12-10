@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -18,7 +18,7 @@ public class RuntimeFunctionHelper {
 	public static List<BasicObject> createArguments(VMScope scope,
 			List<? extends BasicObject> args)
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
-			VMException {
+			VMInternalException {
 		List<BasicObject> n = new ArrayList<BasicObject>();
 
 		for (BasicObject bo : args) {

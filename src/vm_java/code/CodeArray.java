@@ -23,15 +23,15 @@ public class CodeArray extends CodeStatement {
 		fromNames = new ArrayList<ObjectName>();
 	}
 
-	public void add(ObjectName name) throws VMException {
+	public void add(ObjectName name) throws VMInternalException {
 		if (fixed) {
-			throw new VMException(this, "CodeArray was already fixed");
+			throw new VMInternalException(this, "CodeArray was already fixed");
 		}
 		fromNames.add(name);
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		VMArray value = new VMArray(scope.getContext());
 		for (ObjectName name : fromNames) {

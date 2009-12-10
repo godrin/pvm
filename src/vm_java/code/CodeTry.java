@@ -17,7 +17,7 @@ public class CodeTry extends CodeStatement {
 		Task bodyTask = null;
 
 		public TryTask(VMScope pScope, Task pParent) {
-			super(pScope, pParent);
+			super(pScope, pParent,null);
 			// TODO Auto-generated constructor stub
 		}
 
@@ -28,7 +28,7 @@ public class CodeTry extends CodeStatement {
 		}
 
 		@Override
-		protected void run() throws VMException, VMExceptionOutOfMemory,
+		protected void run() throws VMInternalException, VMExceptionOutOfMemory,
 				VMExceptionFunctionNotFound {
 			if (!ran) {
 				getVM().addJob(this);
@@ -70,7 +70,7 @@ public class CodeTry extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 
 		getVM().addJob(new TryTask(scope, parentTask));

@@ -6,7 +6,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import vm_java.code.Code;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -14,7 +14,6 @@ import vm_java.context.VMScope;
 import vm_java.llparser.ast.ASTReturn.Type;
 import vm_java.machine.Task;
 import vm_java.runtime.RuntimeFunctionHelper;
-import vm_java.types.basic.ObjectName;
 
 /**
  * 
@@ -63,9 +62,9 @@ public class BuildinFunction extends Function {
 	}
 
 	@Override
-	public void runFunction(VMScope scope, ObjectName returnName,
+	public void runFunction(VMScope scope, Reference returnRef,
 			List<? extends BasicObject> args, Task parentTask)
-			throws VMException, VMExceptionOutOfMemory,
+			throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		BasicObject bo = scope.self();
 
@@ -73,8 +72,8 @@ public class BuildinFunction extends Function {
 				args);
 
 		BasicObject r = run(parentTask, bo, method, bos);
-		if (returnName != null) {
-			scope.put(returnName, r);
+		if (returnRef != null) {
+			returnRef.set(r);
 		}
 	}
 

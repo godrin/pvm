@@ -1,7 +1,7 @@
 package vm_java.machine;
 
 import vm_java.VM;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.internal.VMLog;
 import vm_java.types.VMExceptionFunctionNotFound;
@@ -56,7 +56,7 @@ public class VMThread extends Thread {
 						continue;
 
 					}
-				} catch (VMException e) {
+				} catch (VMInternalException e) {
 					VMLog.error(e);
 				} catch (VMExceptionOutOfMemory e) {
 					VMLog.error(e);

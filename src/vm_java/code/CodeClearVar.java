@@ -18,7 +18,7 @@ public class CodeClearVar extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope,Task parentTask) throws VMException,
+	public void execute(VMScope scope,Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		scope.clear(varName);
 	}

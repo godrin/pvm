@@ -3,7 +3,7 @@ package vm_java.types.buildins;
 import java.lang.reflect.Method;
 
 import vm_java.code.FunctionProvider;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -20,7 +20,7 @@ public abstract class BuildInKlass extends BasicObject implements FunctionProvid
 	}
 
 	public static RuntimeFunction getStaticFunction(ObjectName name,
-			Class<? extends BuildInKlass> klass) throws VMException,
+			Class<? extends BuildInKlass> klass) throws VMInternalException,
 			VMExceptionOutOfMemory {
 
 		if (name.getName().equals("new")) {

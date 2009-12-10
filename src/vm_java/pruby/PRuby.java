@@ -6,7 +6,7 @@ import java.io.IOException;
 import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.Program;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -29,7 +29,7 @@ public class PRuby {
 
 	public void run(PRubySourceDef source, Authorizations authorizations)
 			throws ParseError, IOException, VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException {
+			BlockIsFinalException, VMInternalException {
 
 		String vmSource = parser.parse(source);
 		VMLog.debug("Source:");
@@ -45,7 +45,7 @@ public class PRuby {
 	}
 
 	public static void main(String[] args) throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			InterruptedException {
 
 		Arguments arg = new Arguments(args);
@@ -55,7 +55,7 @@ public class PRuby {
 	}
 
 	private static void runFile(Arguments arg) throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			InterruptedException {
 		File f = new File(arg.getScript());
 		File dir = f.getParentFile();

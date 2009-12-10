@@ -8,7 +8,7 @@ package vm_java.code;
  * 
  * @author davidkamphausen
  */
-public class VMException extends Exception {
+public class VMInternalException extends Exception {
 
 	/**
 	 * 
@@ -18,12 +18,12 @@ public class VMException extends Exception {
 	private String what;
 	private Exception enclosed;
 
-	public VMException(CodeStatement aThis, String string) {
+	public VMInternalException(CodeStatement aThis, String string) {
 		mStatement = aThis;
 		what = string;
 	}
 
-	public VMException(Exception e) {
+	public VMInternalException(Exception e) {
 		enclosed = e;
 	}
 

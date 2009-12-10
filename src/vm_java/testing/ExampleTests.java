@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.Program;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.SourcePath;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -33,7 +33,7 @@ public class ExampleTests extends TestCase {
 	}
 
 	public void testChecks() throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException,
+			BlockIsFinalException, VMInternalException, ParseError, IOException,
 			TestFailedException {
 
 		runExample(new File(getCheckPaths() + "/defn.rb"));
@@ -44,13 +44,13 @@ public class ExampleTests extends TestCase {
 	}
 
 	public void testSingle() throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException,
+			BlockIsFinalException, VMInternalException, ParseError, IOException,
 			TestFailedException {
 		runExample(new File(getExamplePath() + "/if.pvm"));
 	}
 
 	public void testExamples() throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException,
+			BlockIsFinalException, VMInternalException, ParseError, IOException,
 			TestFailedException {
 
 		for (File example : getExamples()) {
@@ -60,7 +60,7 @@ public class ExampleTests extends TestCase {
 	}
 
 	private void runExample(File f) throws VMExceptionOutOfMemory,
-			BlockIsFinalException, VMException, ParseError, IOException,
+			BlockIsFinalException, VMInternalException, ParseError, IOException,
 			TestFailedException {
 		LLParser2 lp = new LLParser2();
 		VM vm = new VM(lp);

@@ -7,7 +7,7 @@ import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeBlock;
 import vm_java.code.CodeStatement;
 import vm_java.code.LocalAssignment;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -29,7 +29,7 @@ public class ASTBlock extends AST implements ASTRightValue {
 	}
 
 	public CodeBlock instantiate(VMContext pContext)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		CodeBlock cb = new CodeBlock(pContext, source);
 		for (ASTStatementInterface s : statements) {
 			cb.add(s.instantiate(pContext));
@@ -39,7 +39,7 @@ public class ASTBlock extends AST implements ASTRightValue {
 	}
 
 	public CodeStatement instantiate(VMContext pContext, ASTVar left)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		CodeBlock cb = new CodeBlock(pContext, source);
 		for (ASTStatementInterface s : statements) {
 			cb.add(s.instantiate(pContext));

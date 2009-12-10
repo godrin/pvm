@@ -7,6 +7,6 @@ import vm_java.types.VMExceptionFunctionNotFound;
 
 public interface Runnable {
 
-	public void go(VMScope scope, Task pParentTask) throws VMException,
+	public void go(VMScope scope, Task pParentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound;
 }

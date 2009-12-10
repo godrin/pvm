@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -23,7 +23,7 @@ public class CreateFunction implements RuntimeFunction {
 	}
 
 	public void run(VMScope scope, ObjectName returnName,
-			List<BasicObject> parameters, Task pTask) throws VMException,
+			List<BasicObject> parameters, Task pTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		Constructor<? extends BasicObject> c;
 		VMContext context=scope.getContext();

@@ -80,7 +80,7 @@ public class LineLexer2 {
 		add("freturn", SYMBOLS.FRETURN);
 		add("parameter\\[[0-9]*\\]", SYMBOLS.PARAMETER);
 		add("[a-zA-Z+_<>-][a-zA-Z0-9_]*", SYMBOLS.VAR);
-		add("==", SYMBOLS.EQUAL);
+		add("==[a-zA-Z0-9_]*", SYMBOLS.VAR);
 		add("=", SYMBOLS.ASSIGN);
 		add("\\.", SYMBOLS.DOT);
 		add(" ", SYMBOLS.WHITESPACE);

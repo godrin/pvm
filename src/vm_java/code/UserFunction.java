@@ -12,6 +12,7 @@ import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.machine.Task;
 import vm_java.types.Function;
+import vm_java.types.Reference;
 import vm_java.types.VMExceptionFunctionNotFound;
 import vm_java.types.basic.ObjectName;
 
@@ -22,28 +23,35 @@ import vm_java.types.basic.ObjectName;
 public class UserFunction extends Function {
 	CodeBlock mBlock;
 	List<ObjectName> mArgs;
+	boolean mWithScope;
 
 	public UserFunction(VMContext pContext, CodeBlock pBlock,
-			List<ObjectName> pArgs) throws VMExceptionOutOfMemory {
+			List<ObjectName> pArgs, boolean pWithScope)
+			throws VMExceptionOutOfMemory {
 		super(pContext);
 		mBlock = pBlock;
 		mArgs = pArgs;
+		mWithScope = pWithScope;
 	}
 
 	@Override
-	public void runFunction(VMScope scope, ObjectName returnName,
+	public void runFunction(VMScope scope, Reference returnRef,
 			List<? extends BasicObject> args, Task parentTask)
-			throws VMException, VMExceptionOutOfMemory,
+			throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound {
 		if (args.size() != mArgs.size())
-			throw new VMException(null, "Argsize is different!");
+			throw new VMInternalException(null, "Argsize is different!");
 
 		// put arguments into scope
 		for (int i = 0; i < mArgs.size(); i++) {
 			scope.put(mArgs.get(i), args.get(i));
 		}
 
-		getVM().addJob(mBlock.execution(scope, parentTask));
+		Task task = mBlock.execution(scope, parentTask, returnRef);
+		if (mWithScope)
+			task.setFarToLocal();
+
+		getVM().addJob(task);
 	}
 
 	@Override

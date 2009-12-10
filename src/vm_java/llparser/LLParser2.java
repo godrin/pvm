@@ -362,6 +362,8 @@ public class LLParser2 {
 			s = new ASTAssign(source(), lValue, parseBegin());
 		} else if (t == SYMBOLS.TYPE || t == SYMBOLS.VAR) {
 			s = new ASTAssign(source(), lValue, parseRValue());
+		} else if (t == SYMBOLS.GLOBAL) {
+			s = new ASTAssign(source(), lValue, parseGlobal());
 		} else if (t == SYMBOLS.STRING) {
 			s = new ASTAssign(source(), lValue,
 					new ASTString(source(), mResult.getString().substring(1,
@@ -381,12 +383,27 @@ public class LLParser2 {
 			s = new ASTAssign(source(), lValue,
 					new ASTDouble(source(), mResult));
 			fetchToken();
+		} else if (t == SYMBOLS.NILQ) {
+			s = new ASTClearVar(source(), lValue);
+			fetchToken();
 		} else {
 			parseError();
 		}
 		if (s == null)
 			parseError();
 		return s;
+	}
+
+	private ASTRightValue parseGlobal() throws ParseError {
+		fetchToken();
+		if (token() == SYMBOLS.VAR) {
+			String s = mResult.getString();
+			fetchToken();
+			return new ASTVar(source(), s);
+		} else {
+			parseError();
+			return null;
+		}
 	}
 
 	private ASTRightValue parseArray() throws ParseError {
@@ -474,6 +491,7 @@ public class LLParser2 {
 	}
 
 	private ASTRightValue parseBegin() throws ParseError {
+		boolean withScope = (token() == SYMBOLS.BEGIN_WITHSCOPE);
 		assertTrue(token() == SYMBOLS.BEGIN
 				|| token() == SYMBOLS.BEGIN_WITHSCOPE);
 		SYMBOLS t = fetchToken();
@@ -483,7 +501,8 @@ public class LLParser2 {
 
 			t = fetchToken();
 			if (t == SYMBOLS.NEWLINE) {
-				return new ASTFunction(source(), parameters, parseBlock());
+				return new ASTFunction(source(), parameters, parseBlock(),
+						withScope);
 			} else {
 				parseError();
 			}

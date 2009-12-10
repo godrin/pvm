@@ -22,6 +22,19 @@ public class VMString extends VMBuildinObjectBase {
 		mContent = s;
 	}
 
+	public boolean equals(Object o) {
+		if (o instanceof VMString) {
+			if (mContent != null)
+				return mContent.equals(((VMString) o).mContent);
+			else
+				return ((VMString) o).mContent == null;
+		} else if (o instanceof java.lang.String) {
+			String s = (String) o;
+			return s.equals(mContent);
+		}
+		return false;
+	}
+
 	public void setContent(java.lang.String pContent) {
 		mContent = pContent;
 	}

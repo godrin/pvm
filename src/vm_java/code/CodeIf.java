@@ -25,7 +25,7 @@ public class CodeIf extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		// TODO Auto-generated method stub
 		BasicObject bo = scope.get(blockName);
@@ -37,13 +37,13 @@ public class CodeIf extends CodeStatement {
 		bo = scope.get(conditionName);
 		if (bo instanceof VMBoolean) {
 			cond = (VMBoolean) bo;
-		}
+		} 
 
 		if (cond == null) {
-			throw new VMException(this, "Condition is not defined");
+			throw new VMInternalException(this, "Condition is not defined");
 		}
 		if (b == null) {
-			throw new VMException(this, "Block is not defined");
+			throw new VMInternalException(this, "Block is not defined");
 		}
 
 		if (cond.get() == wantedValue) {

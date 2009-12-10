@@ -32,7 +32,7 @@ public class LocalAssignment extends CodeStatement {
 
 	public void execute(VMScope scope, Task parentTask)
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
-			VMException {
+			VMInternalException {
 
 		BasicObject bo = rObject;
 		if (bo instanceof ObjectName)

@@ -22,7 +22,7 @@ public class CodeInclude extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 		BasicObject bo = scope.self();
 		if (bo instanceof VMModule) {

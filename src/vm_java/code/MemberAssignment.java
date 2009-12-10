@@ -18,7 +18,7 @@ public class MemberAssignment extends CodeStatement {
 
 	public MemberAssignment(VMContext context, SourceInfo source,
 			ObjectName self, ObjectName leftMember, ObjectName rightObject,
-			boolean pstatic) throws VMExceptionOutOfMemory, VMException {
+			boolean pstatic) throws VMExceptionOutOfMemory, VMInternalException {
 		super(context, source);
 		mstatic = pstatic;
 
@@ -32,7 +32,7 @@ public class MemberAssignment extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionFunctionNotFound, VMExceptionOutOfMemory {
 		BasicObject l = scope.get(lObject);
 		BasicObject r = scope.get(rObject);
@@ -46,7 +46,7 @@ public class MemberAssignment extends CodeStatement {
 		} else {
 			VMLog.debug(lObject);
 			VMLog.debug(l);
-			throw new VMException(this, "l is not member container");
+			throw new VMInternalException(this, "l is not member container");
 		}
 	}
 

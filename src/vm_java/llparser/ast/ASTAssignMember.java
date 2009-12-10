@@ -4,7 +4,7 @@ import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeStatement;
 import vm_java.code.LocalAssignment;
 import vm_java.code.MemberAssignment;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -25,7 +25,7 @@ public class ASTAssignMember extends AST implements ASTStatementInterface {
 	}
 
 	public CodeStatement instantiate(VMContext context)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		if (leftMember != null) {
 			return new MemberAssignment(context, source, context
 					.intern(left.name), context.intern(leftMember.name),

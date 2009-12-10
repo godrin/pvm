@@ -16,7 +16,7 @@ public class CodeWhile extends CodeStatement {
 	class Execution extends Task {
 
 		public Execution(VMScope pScope, Task pParent) {
-			super(pScope, pParent);
+			super(pScope, pParent,null);
 		}
 
 		@Override
@@ -25,7 +25,7 @@ public class CodeWhile extends CodeStatement {
 		}
 
 		@Override
-		protected void run() throws VMException, VMExceptionOutOfMemory,
+		protected void run() throws VMInternalException, VMExceptionOutOfMemory,
 				VMExceptionFunctionNotFound {
 			BasicObject bo = getScope().get(blockName);
 			CodeBlock b = null;
@@ -61,7 +61,7 @@ public class CodeWhile extends CodeStatement {
 				return;
 			}
 			if (b == null) {
-				throw new VMException(CodeWhile.this, "Block is not defined");
+				throw new VMInternalException(CodeWhile.this, "Block is not defined");
 			}
 
 			// spawn somehow
@@ -97,7 +97,7 @@ public class CodeWhile extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
 
 		getVM().addJob(new Execution(scope, parentTask));

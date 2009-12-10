@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 import vm_java.code.Code;
 import vm_java.code.FunctionProvider;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -85,7 +85,7 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		return o;
 	}
 
-	public void putStatic(ObjectName name, BasicObject bo) throws VMException {
+	public void putStatic(ObjectName name, BasicObject bo) throws VMInternalException {
 		mStaticObjects.put(name, bo);
 	}
 
@@ -107,7 +107,7 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		return o;
 	}
 
-	public void putInstance(ObjectName name, BasicObject bo) throws VMException {
+	public void putInstance(ObjectName name, BasicObject bo) throws VMInternalException {
 		mInstanceObjects.put(name, bo);
 	}
 
@@ -117,15 +117,15 @@ public class VMModule extends VMBuildinObjectBase implements MemberContainer,
 		// return "[Module]";
 	}
 
-	protected void addStaticsAsInstanceTo(VMModule k) throws VMException {
+	protected void addStaticsAsInstanceTo(VMModule k) throws VMInternalException {
 		for (Map.Entry<ObjectName, BasicObject> e : mStaticObjects.entrySet()) {
 			k.putInstance(e.getKey(), e.getValue());
 		}
 	}
 
-	public void include(VMModule mod) throws VMException {
+	public void include(VMModule mod) throws VMInternalException {
 		if (mod == null) {
-			throw new VMException(null, "module is null!");
+			throw new VMInternalException(null, "module is null!");
 		}
 		mMixins.add(mod);
 	}

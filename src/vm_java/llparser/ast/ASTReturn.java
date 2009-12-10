@@ -3,7 +3,7 @@ package vm_java.llparser.ast;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeStatement;
 import vm_java.code.DoReturn;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -24,7 +24,7 @@ public class ASTReturn extends AST implements ASTStatementInterface {
 	}
 
 	public CodeStatement instantiate(VMContext context)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		ObjectName varName = context.intern(mVar.name);
 		return new DoReturn(context, source, varName, type);
 	}

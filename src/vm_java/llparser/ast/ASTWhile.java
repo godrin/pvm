@@ -6,7 +6,7 @@ package vm_java.llparser.ast;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeStatement;
 import vm_java.code.CodeWhile;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.code.SourceBased.SourceInfo;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -42,7 +42,7 @@ public class ASTWhile extends AST implements ASTStatementInterface {
 	 * .VMContext)
 	 */
 	public CodeStatement instantiate(VMContext context)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		return new CodeWhile(context, source, context.intern(condition.name),
 				context.intern(blockName.name), wantedValue);
 	}

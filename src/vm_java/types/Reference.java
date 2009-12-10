@@ -1,29 +1,29 @@
 package vm_java.types;
 
 import vm_java.code.Code;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
 import vm_java.types.basic.ObjectName;
 
 public class Reference extends BasicObject {
-	private VMScope otherScope;
-	private ObjectName otherName;
+	private VMScope scope;
+	private ObjectName name;
 
 	public Reference(VMScope pOtherScope, ObjectName pOtherName)
-			throws VMExceptionOutOfMemory, VMException {
+			throws VMExceptionOutOfMemory, VMInternalException {
 
 		super(pOtherScope.getContext());
 		if (pOtherName == null)
-			throw new VMException(null, "Reference othername is null");
+			throw new VMInternalException(null, "Reference othername is null");
 
-		otherName = pOtherName;
-		otherScope = pOtherScope;
+		name = pOtherName;
+		scope = pOtherScope;
 	}
 
-	public void set(BasicObject b) throws VMException {
-		otherScope.put(otherName, b);
+	public void set(BasicObject b) throws VMInternalException {
+		scope.put(name, b);
 	}
 
 	@Override
@@ -33,12 +33,12 @@ public class Reference extends BasicObject {
 
 	@Override
 	public Code toCode() {
-		return otherName.toCode();
+		return name.toCode();
 	}
 
 	@Override
 	public String inlineCode() {
-		return "<reference to " + otherName.getName() + ">";
+		return "<reference to " + name.getName() + ">";
 	}
 
 }

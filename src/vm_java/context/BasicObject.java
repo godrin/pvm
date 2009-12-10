@@ -7,6 +7,8 @@ package vm_java.context;
 import vm_java.VM;
 import vm_java.code.Code;
 import vm_java.internal.VMLog;
+import vm_java.types.basic.VMKlass;
+import vm_java.types.foundation.VMBoolean;
 import vm_java.types.foundation.VMInteger;
 import vm_java.types.foundation.VMString;
 
@@ -52,6 +54,9 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 			VMInteger i = new VMInteger(context);
 			i.set((Integer) o);
 			return i;
+		} else if (o instanceof java.lang.Boolean) {
+			VMBoolean b=new VMBoolean(context, (Boolean)o);
+			return b;
 		}
 		// TODO Auto-generated method stub
 		return null;
@@ -84,5 +89,9 @@ public abstract class BasicObject implements Comparable<BasicObject> {
 
 	public BasicObject getKlass() {
 		return null;
+	}
+
+	public boolean is_a(VMKlass exceptionKlass) {
+		return false;
 	}
 }

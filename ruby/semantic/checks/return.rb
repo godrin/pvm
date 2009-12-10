@@ -6,6 +6,8 @@ def a(hupe)
   234
 end
 z=a("aa")
+puts "HI"
+puts z
 # tmp10=begin_withscope(hupe)
 #   tmp1=hupe
 #   tmp2=puts(tmp1)
@@ -33,3 +35,7 @@ z=a("aa")
 # clear tmp12
 # z=tmp13
 # clear tmp13
+# OUTPUT
+# aa
+# HI
+# 123

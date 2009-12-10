@@ -1,5 +1,6 @@
 package vm_java.code;
 
+import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -20,8 +21,14 @@ public class DoReturn extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException {
-		parentTask.setReturn(type, scope.get(name));
+	public void execute(VMScope scope, Task parentTask)
+			throws VMInternalException, VMExceptionOutOfMemory {
+		BasicObject object = scope.get(name);
+		if (type == Type.EXCEPTION) {
+
+			object = scope.encloseInException(sourceInfo, object);
+		}
+		parentTask.setReturn(type, object);
 	}
 
 	@Override

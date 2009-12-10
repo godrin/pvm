@@ -7,7 +7,7 @@ package vm_java.types;
 
 import java.util.Map;
 
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.types.basic.ObjectName;
 import vm_java.types.basic.VMKlass;
@@ -39,7 +39,7 @@ public class CustomObject implements MemberContainer {
 	}
 
 	public void putStatic(ObjectName memberName, BasicObject r)
-			throws VMException {
+			throws VMInternalException {
 		mClass.putInstance(memberName, r);
 	}
 }

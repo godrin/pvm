@@ -37,7 +37,7 @@ public class CodeAssignmentFromMember extends CodeStatement {
 
 	public void execute(VMScope scope, Task parentTask)
 			throws VMExceptionFunctionNotFound, VMExceptionOutOfMemory,
-			VMException {
+			VMInternalException {
 
 		BasicObject bo = scope.get(rObjectName);
 		if (bo instanceof MemberProvider) {
@@ -47,7 +47,7 @@ public class CodeAssignmentFromMember extends CodeStatement {
 			return;
 		}
 		VMLog.debug("Right:" + bo);
-		throw new VMException(this, "Right value was not found!");
+		throw new VMInternalException(this, "Right value was not found!");
 
 	}
 

@@ -35,7 +35,7 @@ public class CodeMethodCall extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task pTask) throws VMException,
+	public void execute(VMScope scope, Task pTask) throws VMInternalException,
 			VMExceptionOutOfMemory {
 		try {
 
@@ -52,9 +52,18 @@ public class CodeMethodCall extends CodeStatement {
 
 					f = vmo.getFunction(methodName);
 				} else {
-					pTask.setReturn(Type.EXCEPTION, scope.exception(
-							"NameError", "No function-provider:" + varName
-									+ " dump:" + bo.inspect(), sourceInfo));
+					if (bo != null) {
+						pTask.setReturn(Type.EXCEPTION, scope.exception(
+								"NameError", "No function-provider:" + varName
+										+ " dump:" + bo.inspect(), sourceInfo));
+					} else {
+						pTask.setReturn(Type.EXCEPTION, scope
+								.exception("NameError", "No function-provider:"
+										+ varName + " dump: object is null!!",
+										sourceInfo));
+
+					}
+
 					return;
 
 				}

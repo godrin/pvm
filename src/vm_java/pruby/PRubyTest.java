@@ -6,7 +6,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.internal.VMLog;
 import vm_java.internal.VMLog.Level;
@@ -22,12 +22,12 @@ public class PRubyTest extends TestCase {
 	}
 
 	public void testPRuby() throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			InterruptedException {
 		String dir = "ruby/semantic/checks";
 
 		if (true) {
-			String file = "while.rb";
+			String file = "exception.rb";
 			test(dir, file);
 		} else {
 
@@ -41,14 +41,14 @@ public class PRubyTest extends TestCase {
 	}
 
 	public void testPRubyCompile() throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			InterruptedException {
 
 		test("/usr/lib/ruby/1.8/racc/", "parser.rb");
 	}
 
 	private void test(String path, String file) throws ParseError, IOException,
-			VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			InterruptedException {
 		String p = path;
 		SinglePathSourceSource source = new SinglePathSourceSource(new File(p));

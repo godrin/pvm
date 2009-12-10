@@ -30,9 +30,9 @@ public class CodeRescue extends CodeStatement {
 	}
 
 	@Override
-	public void execute(VMScope scope, Task parentTask) throws VMException,
+	public void execute(VMScope scope, Task parentTask) throws VMInternalException,
 			VMExceptionOutOfMemory, VMExceptionFunctionNotFound {
-		throw new VMException(this, "Dont use");
+		throw new VMInternalException(this, "Dont use");
 	}
 
 	@Override
@@ -57,10 +57,10 @@ public class CodeRescue extends CodeStatement {
 	}
 
 	public boolean matches(VMScope scope, BasicObject exception)
-			throws VMException {
+			throws VMInternalException {
 		BasicObject exceptionKlass = exception.getKlass();
 		if (exceptionKlass == null) {
-			throw new VMException(this, "exception has no Class:"
+			throw new VMInternalException(this, "exception has no Class:"
 					+ exception.inspect());
 		}
 		if (typeNames.size() == 0)

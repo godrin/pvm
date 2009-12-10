@@ -3,7 +3,7 @@ package vm_java.llparser.ast;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.CodeBlock;
 import vm_java.code.Program;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 
@@ -15,7 +15,7 @@ public class ASTProgram {
 		
 	}
 	
-	public Program instantiate(VMContext context) throws VMExceptionOutOfMemory, BlockIsFinalException, VMException {
+	public Program instantiate(VMContext context) throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException {
 		CodeBlock block=mBlock.instantiate(context);
 		return new Program(context,block);
 	}

@@ -22,13 +22,13 @@ public abstract class CodeStatement extends SourceBased {
 		super(pContext, source);
 	}
 
-	protected void assertNotNull(ObjectName leftMember) throws VMException {
+	protected void assertNotNull(ObjectName leftMember) throws VMInternalException {
 		if (leftMember == null)
-			throw new VMException(this, "Var is null!");
+			throw new VMInternalException(this, "Var is null!");
 	}
 
 	public abstract void execute(VMScope scope, Task task)
-			throws VMException, VMExceptionOutOfMemory,
+			throws VMInternalException, VMExceptionOutOfMemory,
 			VMExceptionFunctionNotFound;
 
 	public abstract Code toCode();

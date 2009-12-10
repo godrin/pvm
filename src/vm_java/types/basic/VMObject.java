@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 import vm_java.code.Code;
 import vm_java.code.FunctionProvider;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.BasicObject;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
@@ -55,7 +55,7 @@ public class VMObject extends BasicObject implements FunctionProvider,
 	}
 
 	public void putInstance(ObjectName memberName, BasicObject r)
-			throws VMException {
+			throws VMInternalException {
 		data.put(memberName, r);
 	}
 
@@ -82,7 +82,7 @@ public class VMObject extends BasicObject implements FunctionProvider,
 	}
 
 	public void putStatic(ObjectName memberName, BasicObject r)
-			throws VMException {
+			throws VMInternalException {
 		mKlass.putInstance(memberName, r);
 	}
 }

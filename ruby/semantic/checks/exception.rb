@@ -17,13 +17,17 @@ smoere=begin
   j=1
   a
   j=2
-rescue Integer=>x
-rescue String,Numeric=>e
+rescue String=>e
+  puts "Got exception1"
+rescue Integer,RuntimeError,VMException=>e
+  puts "Got exception2"
   j=3
-  if e=="MyException"
+  if e=="My Exception"
     j=4
-  else
+  elsif e.message=="My Exception"
     j=5
+  else
+    j=6
   end
 end
 
@@ -46,3 +50,6 @@ puts j
 #   ereturn tmp6
 # end
 # self@b=tmp10
+# OUTPUT
+# 1
+# 5

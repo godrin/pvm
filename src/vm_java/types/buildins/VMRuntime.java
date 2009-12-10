@@ -9,7 +9,7 @@ import vm_java.VM;
 import vm_java.code.BlockIsFinalException;
 import vm_java.code.Code;
 import vm_java.code.Program;
-import vm_java.code.VMException;
+import vm_java.code.VMInternalException;
 import vm_java.context.VMContext;
 import vm_java.context.VMExceptionOutOfMemory;
 import vm_java.context.VMScope;
@@ -34,7 +34,7 @@ public class VMRuntime extends VMBuildinObjectBase {
 	}
 
 	public static VMScope require(Task task, VMString filename)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			ParseError, IOException {
 		// FIXME: check if already loaded
 
@@ -42,14 +42,14 @@ public class VMRuntime extends VMBuildinObjectBase {
 	}
 
 	public static synchronized VMScope puts(VMScope scope, VMString s)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			ParseError, IOException {
 		System.out.println(s);
 		return scope;
 	}
 
 	public static VMScope load(Task task, VMString filename)
-			throws VMExceptionOutOfMemory, BlockIsFinalException, VMException,
+			throws VMExceptionOutOfMemory, BlockIsFinalException, VMInternalException,
 			ParseError, IOException {
 
 		VMScope scope = task.getScope();

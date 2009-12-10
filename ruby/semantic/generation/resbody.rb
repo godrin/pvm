@@ -7,7 +7,7 @@ class ResbodyCode
     if @types.size==0
       s("rescue")
     else
-      s("rescue #{exceptionType}=>#{exceptionVar}")
+      s("rescue #{exceptionType} => #{exceptionVar}")
     end+
     (
     if @body
